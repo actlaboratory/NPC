@@ -15,5 +15,5 @@ class Peing():
 			json = requests.get("https://peing.net/api/v2/items/?type=answered&account=%s&page=%d" % (self.id, i+1)).json()
 			for item in json["items"]:
 				answers[item["body"]] = item["answer_body"]
-			time.sleep(0.5)
+			time.sleep(0.2)
 		return answers
