@@ -46,6 +46,7 @@ class MainView(BaseView):
 		self.questionList.AppendColumn(_("質問"))
 		self.questionList.AppendColumn(_("回答"))
 		self.questionList.AppendColumn(_("日時"))
+		self.sendQuestion = self.creator.button(_("質問を送る"), self.events.postQuestion)
 		self.button = self.creator.button(_("テスト"), self.events.onButton)
 
 class Menu(BaseMenu):
@@ -66,6 +67,9 @@ class Menu(BaseMenu):
 class Events(BaseEvents):
 	def onButton(self, events):
 		dialog("テストボタンが押されました。")
+
+	def postQuestion(self, event):
+		print("postQuestion process")
 
 	def OnMenuSelect(self,event):
 		"""メニュー項目が選択されたときのイベントハンドら。"""
