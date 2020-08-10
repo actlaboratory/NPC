@@ -35,7 +35,11 @@ def postQ(userId, message):
 			"event_theme_id":None
 		}
 		msg = json.dumps(reqJson)
-		header = {"Content-Type": "application/json", "Accept": "application/json", "X-CSRF-TOKEN": token}
+		header = {
+			"Content-Type": "application/json",
+			"Accept": "application/json",
+			"X-CSRF-TOKEN": token
+		}
 		result = s.post("https://peing.net/ja/%s/message" % (userId), msg, headers=header)
 		return result
 
