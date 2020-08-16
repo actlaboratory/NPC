@@ -44,3 +44,4 @@ def postQ(userId, message):
 		return result
 
 
+answers = getAnswers("yamahubuki")

@@ -6,15 +6,15 @@ class dbManager():
 		self.connection.row_factory = sqlite3.Row
 		self.cursor = self.connection.cursor()
 
-	def select(*args):
+	def select(self, *args):
 		self.cursor.execute(*args)
-		result = cursor.fetchall()
+		result = self.cursor.fetchall()
 		if len(result) == 0:
 			return None
 		return result
 
-	def execute(*args):
-		self.cursor(*args)
+	def execute(self, *args):
+		self.cursor.execute(*args)
 		return
 
 	def __del__(self):
