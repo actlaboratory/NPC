@@ -1,19 +1,51 @@
 import requests
-import time
-class Peing():
-	def __init__(self, userId):
-		self.id = userId
-	def get_user_info(self):
-		json = requests.get("	https://peing.net/api/v1/user/analysis_information/show?account=%s" % (self.id)).json()
-		return json
-	def get_user_answers(self, count):
-		pages = -(count*-1//5)
-		print("answer page count is %d" % pages)
-		answers = {}
-		for i in range(pages):
-			print("getting pages %d" % (i+1))
-			json = requests.get("https://peing.net/api/v2/items/?type=answered&account=%s&page=%d" % (self.id, i+1)).json()
-			for item in json["items"]:
-				answers[item["body"]] = item["answer_body"]
-			time.sleep(0.2)
-		return answers
+import json
+from bs4 import BeautifulSoup
+
+def getUserInfo(userId):
+	page = requests.get("https://peing.net/%s/"% (userId))
+	soup = BeautifulSoup(page.content, "lxml")
+	div = soup.find("div", {"id": "user-id"}).div
+	return json.loads(div.get("data-user-associated-with-page"))
+
+def getAnswers(userId):
+	info = getUserInfo(userId)
+	pages = -(info["answers_count"]*-1//5)
+	answers = []
+	for i in range(pages):
+		answers.append(requests.get("https://peing.net/api/v2/items/?type=answered&account=%s&page=%d" % (userId, i+1)).json())
+	return answers
+
+def postQ(userId, message):
+	with requests.Session() as s:
+		# CSRFトークンとクッキーの取得のために一度アクセスしておく。
+		page = s.get("http://peing.net/%s" % (userId))
+		# htmlを解析
+		soup = BeautifulSoup(page.content, "lxml")
+		tmp = soup.find("meta", {"name": "csrf-token"})
+		token = tmp["content"]
+		# リクエスト用のJSONを作る。
+		reqJson = {
+			"item":{
+				"body":message,
+				"hope_answer_type":"leave",
+				"item_card_color":"default"
+			},
+			"user":{
+			"account":"guredora403"
+		},
+			"type":"question",
+			"event_theme_id":None
+		}
+		msg = json.dumps(reqJson)
+		header = {
+			"Content-Type": "application/json",
+			"Accept": "application/json",
+			"X-CSRF-TOKEN": token
+		}
+		result = s.post("https://peing.net/ja/%s/message" % (userId), msg, headers=header)
+		return result
+
+info = getAnswers("yamahubuki")
+print(info)
+
