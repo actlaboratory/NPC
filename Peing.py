@@ -1,6 +1,7 @@
 import requests
 import json
 from bs4 import BeautifulSoup
+import pprint
 
 def getUserInfo(userId):
 	page = requests.get("https://peing.net/%s/"% (userId))
@@ -48,7 +49,3 @@ def postQ(userId, message):
 		result = s.post("https://peing.net/ja/%s/message" % (userId), msg, headers=header)
 		return result
 
-if __name__ == "__main__":
-	info = getUserInfo("guredora403")
-	print(info["answers_count"])
-	print(len(getAnswers("guredora403")))

@@ -1,5 +1,5 @@
 import dbManager
-import communication
+import peing
 
 class manager():
 	def __init__(self):
@@ -10,16 +10,27 @@ class manager():
 				user_id text not null,
 				user_name text not null,
 				name text not null,
-				answer_count integer not null
 			);""")
 			self.db.execute("""create table answers(
 				id integer primary key,
 				user_id integer not null,
-				user_name text not null,
 				question text not null,
 				answer text not null,
 				answered_add dateTime not null
 			);""")
 			self.db.connection.commit()
+
+	def add_user(self, userName):
+		info = peing.getUserInfo(userName)
+		insert_dicts = {
+			"user_id": info["id"],
+			"user_name": info["account"],
+			"name": info["name"]
+		}
+		self.db.execute("""insert into users (user_id, user_name, name) value(
+			:user_id, :user_name, :name
+			);""", insert_dicts)
+		self.db.connection.commit()
+
 
 test = manager()
