@@ -10,10 +10,12 @@ def getUserInfo(userId):
 
 def getAnswers(userId):
 	info = getUserInfo(userId)
-	pages = -(info["answers_count"]*-1//5)
+	pages = -(info["answers_count"]*-1//3)
 	answers = []
 	for i in range(pages):
-		answers.append(requests.get("https://peing.net/api/v2/items/?type=answered&account=%s&page=%d" % (userId, i+1)).json())
+		page = requests.get("https://peing.net/api/v2/items/?type=answered&account=%s&page=%d" % (userId, i+1)).json()
+		for item in page["items"]:
+			answers.append(item)
 	return answers
 
 def postQ(userId, message):
@@ -46,6 +48,7 @@ def postQ(userId, message):
 		result = s.post("https://peing.net/ja/%s/message" % (userId), msg, headers=header)
 		return result
 
-info = getAnswers("yamahubuki")
-print(info)
-
+if __name__ == "__main__":
+	info = getUserInfo("guredora403")
+	print(info["answers_count"])
+	print(len(getAnswers("guredora403")))

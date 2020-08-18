@@ -1,22 +1,20 @@
 import winsound
 import argparse
-import Peing
+import peing
 import csv
 import io
 
 argparse = argparse.ArgumentParser()
 argparse.add_argument("user")
 args = argparse.parse_args()
-peing = Peing.Peing(args.user)
-info = peing.get_user_info()
-print("item count is %s" % (info["answers_count"]))
-answers = peing.get_user_answers(info["answers_count"])
-with open("%s_answers.csv" % (peing.id), "wb") as f:
+user_id = args.user
+answers = peing.getAnswers(user_id)
+with open("%s_answers.csv" % (user_id), "wb") as f:
 	csvf = io.StringIO()
 	answer_csv = csv.writer(csvf)
-	answer_csv.writerow(("質問", "回答"))
-	for q, a in answers.items():
-		answer_csv.writerow((q, a))
+	answer_csv.writerow(("質問", "回答", "日時"))
+	for answer in answers:
+		answer_csv.writerow((answer["body"], answer["answer_body"], answer["answer_created_at"]))
 	bin = csvf.getvalue().encode("CP932", "replace")
 	csvf.close()
 	f.write(bin)
