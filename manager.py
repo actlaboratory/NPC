@@ -32,5 +32,14 @@ class manager():
 			);""", insert_dicts)
 		self.db.connection.commit()
 
+	def get_answers(self, userId = None):
+		if userId == None:
+			return self.db.select("select * from answers;")
+		return self.db.select("select * from answers where user_id = ?;", (userId))
+
+	def get_userInfo(user_name = None):
+		if user_name = None:
+			return self.db.select("select * from users;")
+		return self.db.select("select * from users where user_name = ?;", (user_name))
 
 test = manager()
