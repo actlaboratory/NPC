@@ -21,6 +21,8 @@ class manager():
 			self.db.connection.commit()
 
 	def add_user(self, userName):
+		if get_userInfo(userName) != None:
+			return False
 		info = peing.getUserInfo(userName)
 		insert_dicts = {
 			"user_id": info["id"],
