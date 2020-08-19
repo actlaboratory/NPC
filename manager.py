@@ -21,7 +21,7 @@ class manager():
 			self.db.connection.commit()
 
 	def add_user(self, userName):
-		if get_userInfo(userName) != None:
+		if self.get_userInfo(userName) != None:
 			return False
 		info = peing.getUserInfo(userName)
 		insert_dicts = {
@@ -34,12 +34,20 @@ class manager():
 			);""", insert_dicts)
 		self.db.connection.commit()
 
+	def delete_user(self, userName):
+		info = get_userInfo(userName)
+		if info == None:
+			return False
+		self.db.execute("delete * from users where id = ?;", (info[0]["id"]))
+		self.db.execute("delete * from answers where user_id = ?;", (info[0]["id"]))
+		return True
+
 	def get_answers(self, userId = None):
 		if userId == None:
 			return self.db.select("select * from answers;")
 		return self.db.select("select * from answers where user_id = ?;", (userId))
 
-	def get_userInfo(user_name = None):
+	def get_userInfo(self, user_name = None):
 		if user_name = None:
 			return self.db.select("select * from users;")
 		return self.db.select("select * from users where user_name = ?;", (user_name))

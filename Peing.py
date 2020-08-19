@@ -9,7 +9,7 @@ def getUserInfo(userId):
 	div = soup.find("div", {"id": "user-id"}).div
 	return json.loads(div.get("data-user-associated-with-page"))
 
-def getAnswers(userId):
+def getAnswers(userId, all=True):
 	info = getUserInfo(userId)
 	pages = -(info["answers_count"]*-1//3)
 	answers = []
@@ -17,6 +17,8 @@ def getAnswers(userId):
 		page = requests.get("https://peing.net/api/v2/items/?type=answered&account=%s&page=%d" % (userId, i+1)).json()
 		for item in page["items"]:
 			answers.append(item)
+			if all = False:
+				return answers
 	return answers
 
 def postQ(userId, message):
