@@ -1,7 +1,6 @@
 import requests
 import json
 from bs4 import BeautifulSoup
-import pprint
 
 def getUserInfo(userId):
 	page = requests.get("https://peing.net/%s/"% (userId))
@@ -9,17 +8,22 @@ def getUserInfo(userId):
 	div = soup.find("div", {"id": "user-id"}).div
 	return json.loads(div.get("data-user-associated-with-page"))
 
-def getAnswers(userId, all=True):
+def getAnswers(userId, page=None):
 	info = getUserInfo(userId)
-	pages = -(info["answers_count"]*-1//3)
+	page_count = -(info["answers_count"]*-1//3)
 	answers = []
-	for i in range(pages):
-		page = requests.get("https://peing.net/api/v2/items/?type=answered&account=%s&page=%d" % (userId, i+1)).json()
-		for item in page["items"]:
+	if page == None:
+		for i in range(page_count):
+			page_content = requests.get("https://peing.net/api/v2/items/?type=answered&account=%s&page=%d" % (userId, i+1)).json()
+			for item in page_content["items"]:
+				answers.append(item)
+		return answers
+	if page >= 1 and page <= page_count:
+		page_content = requests.get("https://peing.net/api/v2/items/?type=answered&account=%s&page=%d" % (userId, page)).json()
+		for item in page_content["items"]:
 			answers.append(item)
-			if all = False:
-				return answers
-	return answers
+		return answers
+	return False
 
 def postQ(userId, message):
 	with requests.Session() as s:
