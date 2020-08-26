@@ -60,7 +60,6 @@ class Menu(BaseMenu):
 		self.RegisterMenuCommand(self.hHelpMenu,"EXAMPLE",_("テストダイアログを閲覧"))
 
 		#メニューバーの生成
-		self.hMenuBar=wx.MenuBar()
 		self.hMenuBar.Append(self.hHelpMenu,_("ヘルプ"))
 		target.SetMenuBar(self.hMenuBar)
 
