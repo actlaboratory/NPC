@@ -17,6 +17,10 @@ class dbManager():
 		self.cursor.execute(*args)
 		return
 
+	def executemany(self, *args):
+		self.cursor.executemany(*args)
+		return
+
 	def __del__(self):
 		self.connection.close()
 		print("closed!")
