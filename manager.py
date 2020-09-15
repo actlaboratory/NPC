@@ -1,5 +1,6 @@
 import dbManager
 import peing
+import dateTime
 
 class manager():
 	def __init__(self):
@@ -62,7 +63,8 @@ class manager():
 				add_answer = peing.getAnswers(user["user_name"])
 				insert_list = []
 				for answer in add_answer:
-					data = (user["id"], answer["body"], answer["answer_body"], answer["answer_created_at"])
+					answered_at = datetime.datetime.fromisoformat(answer["answer_created_at"])
+					data = (user["id"], answer["body"], answer["answer_body"], answered_at)
 					insert_list.append(data)
 				self.db.executemany("""insert into answers(
 					user_id, question, answer, answered_at)
