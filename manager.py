@@ -38,14 +38,8 @@ class manager():
 		info = get_userInfo(userName)
 		if info == None:
 			return False
-<<<<<<< HEAD
-		self.db.execute("delete from users where id = ?;", (info[0]["id"]))
-		self.db.execute("delete from answers where user_id = ?;", (info[0]["id"]))
-		self.db.connection.commit()
-=======
 		self.db.execute("delete * from users where id = ?;", (info[0]["id"],))
 		self.db.execute("delete * from answers where user_id = ?;", (info[0]["id"]))
->>>>>>> 6414522b451e34a9c0994318e86b0d4c9c2265aa
 		return True
 
 	def get_answers(self, userId = None):
@@ -54,11 +48,7 @@ class manager():
 		return self.db.select("select * from answers where user_id = ?;", (userId,))
 
 	def get_userInfo(self, user_name = None):
-<<<<<<< HEAD
-		if user_name = None:
-=======
 		if user_name == None:
->>>>>>> 6414522b451e34a9c0994318e86b0d4c9c2265aa
 			return self.db.select("select * from users;")
 		return self.db.select("select * from users where user_name = ?;", (user_name,))
 
