@@ -9,13 +9,13 @@ class dbManager():
 		sqlite3.register_adapter(bool, self._adapt_boolean)
 		self.cursor = self.connection.cursor()
 
-	def _adapt_boolean(value):
+	def _adapt_boolean(self, value):
 		if value:
 			return 1
 		if not value:
 			return 0
 
-	def _convert_boolean(value):
+	def _convert_boolean(self, value):
 		if int(value) == 0:
 			return False
 		if int(value) == 1:
