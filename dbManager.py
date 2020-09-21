@@ -5,7 +5,7 @@ class dbManager():
 		self.connection = sqlite3.connect(db_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
 		self.connection.row_factory = sqlite3.Row
 		sqlite3.dbapi2.converters["DATETIME"] = sqlite3.dbapi2.converters["TIMESTAMP"]
-		sqlite3.register_converter("BOOL", self._convert_boolean)
+		sqlite3.register_converter("BOOLEAN", self._convert_boolean)
 		sqlite3.register_adapter(bool, self._adapt_boolean)
 		self.cursor = self.connection.cursor()
 

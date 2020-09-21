@@ -5,14 +5,13 @@ import dateTime
 class manager():
 	def __init__(self):
 		self.db = dbManager.dbManager("npc.db")
-		if not self.db.select("SELECT * FROM sqlite_master;"):
-			self.db.execute("""create table users(
+		self.db.execute("""create table if not exists users(
 				id integer primary key,
 				user_id text not null,
 				user_name text not null,
 				name text not null
 			);""")
-			self.db.execute("""create table answers(
+			self.db.execute("""create table if not exists answers(
 				id integer primary key,
 				user_id integer not null,
 				question text not null,
@@ -45,8 +44,8 @@ class manager():
 
 	def get_answers(self, userId = None):
 		if userId == None:
-			return self.db.select("select * from answers;")
-		return self.db.select("select * from answers where user_id = ?;", (userId,))
+			return self.db.select("select * from answers order by answered_at desc;")
+		return self.db.select("select * from answers order by answered_at desc where user_id = ?;", (userId,))
 
 	def get_userInfo(self, user_name = None):
 		if user_name == None:
@@ -60,14 +59,40 @@ class manager():
 		for user in users:
 			added_answer = self.get_answers(user["id"])
 			if added_answer == None:
-				add_answer = peing.getAnswers(user["user_name"])
-				insert_list = []
-				for answer in add_answer:
-					answered_at = datetime.datetime.fromisoformat(answer["answer_created_at"])
-					data = (user["id"], answer["body"], answer["answer_body"], answered_at)
-					insert_list.append(data)
-				self.db.executemany("""insert into answers(
+				self._first_answer_add(user)
+			else:
+				self._add_answer_to_time(user, added_answer[1]["answered_at"])
+		return True
+
+	def _fast_answer_add(self, user):
+		add_answer = peing.getAnswers(user["user_name"])
+		insert_list = []
+		for answer in add_answer:
+			answered_at = datetime.datetime.fromisoformat(answer["answer_created_at"])
+			data = (user["id"], answer["body"], answer["answer_body"], answered_at)
+			insert_list.append(data)
+		self.db.executemany("""insert into answers(
+			user_id, question, answer, answered_at)
+		values(?,?,?,?);			""", insert_list)
+		self.db.connection.commit()
+		return True
+
+	def _add_answer_to_time(self, user, time):
+		page = 1
+		while True:
+			add_answer = peing.getAnswers(user["user_name"], page=page)
+			for answer in add_answer:
+				answered_at = datetime.datetime.fromisoformat(answer["answer_created_at"])
+				if answered_at == time:
+					all = True
+					break
+				data = (user["id"], answer["body"], answer["answer_body"], answered_at)
+				self.db.execute("""insert into answers(
 					user_id, question, answer, answered_at)
 					values(?,?,?,?);
-				""", insert_list)
-				self.db.connection.commit()
+				""", data)
+			if all:
+				break
+			page += 1
+		self.db.connection.commit()
+		return
