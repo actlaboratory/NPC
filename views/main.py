@@ -41,7 +41,7 @@ class MainView(BaseView):
 			self.app.config.getint(self.identifier,"positionY",50,0)
 		)
 		self.InstallMenuEvent(Menu(self.identifier),self.events.OnMenuSelect)
-		self.questionList = self.creator.ListCtrl(0, 0, style=wx.LC_REPORT, name=_("質問リスト"))
+		self.questionList, self.questionStatic = self.creator.listCtrl(_("質問リスト"), None, wx.LC_REPORT)
 		self.questionList.AppendColumn(_("名前"))
 		self.questionList.AppendColumn(_("質問"))
 		self.questionList.AppendColumn(_("回答"))
