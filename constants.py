@@ -10,9 +10,11 @@ APP_VERSION="0.01"
 APP_COPYRIGHT_YEAR="20XX"
 APP_DEVELOPERS="Ananimous"
 
-SUPPORTING_LANGUAGE=("ja-JP","en-US")
+SUPPORTING_LANGUAGE={"ja-JP":"日本語"}
 
 #各種ファイル名
+LOG_PREFIX="app"
+LOG_FILE_NAME="application.log"
 SETTING_FILE_NAME="settings.ini"
 KEYMAP_FILE_NAME="keymap.ini"
 
