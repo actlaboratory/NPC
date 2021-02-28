@@ -1,5 +1,6 @@
-﻿wxpython
+﻿wxpython>=4.1
 pywin32
 winpaths
-pyinstaller
-requests
+pyinstaller>=4
+pyperclip
+ https://github.com/actlaboratory/proxyutil/archive/0.2.3.zip

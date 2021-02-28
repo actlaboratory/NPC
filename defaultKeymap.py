@@ -5,5 +5,14 @@
 defaultKeymap={}
 
 defaultKeymap["mainView"]={
-	"EXAMPLE": "ctrl+F12/shift+delete/ctrl+c/INSERT/ctrl+BACK",
+	"FILE_ADD_USER": "ctrl+o",
+	"FILE_RELOAD":"F5",
+	"FILE_SHOW_DETAIL":"ctrl+shift+enter",
+	"FILE_OPEN_CONTEXTMENU":"shift+F10",
+	"HELP_UPDATE":"",
+	"HELP_VERSIONINFO":"",
+}
+
+defaultKeymap["contextmenu"]={
+	"FILE_SHOW_DETAIL":"ctrl+shift+enter",
 }

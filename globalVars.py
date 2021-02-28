@@ -3,3 +3,4 @@
 #Copyright (C) 20XX anonimous <anonimous@sample.com>
 
 app=None
+update = None

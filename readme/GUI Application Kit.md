@@ -5,13 +5,13 @@ wxPython を用いて音声読み上げ・弱視者向け表示設定に対応�
 
 ## 環境構築
 - シェル:コマンドプロンプトなど
-- python 3.7 (3.8では動作しません)
+- python 3.8
 -シェルから以下のコマンドを実行
 	python -m pip install -r requirements.txt
 .exeではなく.pyから実行する場合、一部機能を正しく実行するには.pyを *可変個引数を受け入れる形で* python.exeに関連付けしている必要がある。通常の関連付けではうまく動作しないので注意。
 
 ## 作成したソフトウェアの実行
-python falcon.py  
+python application.py
 
 ## exeファイルにビルド
 python tools\build.py
@@ -27,5 +27,4 @@ python tools\updateTranslation.py
 - 新規言語の場合は、constants.SUPPORTING_LANGUAGEに言語コードを追加
 
 ## 著作権
-- 本キットの著作権はキット製作者にあるが、本キットを利用して制作されたアプリケーション、モジュール、拡張されたキット等について何らの権利も主張しない。
-
+- 本キットはApache Licenseに基づき自由に利用することができる

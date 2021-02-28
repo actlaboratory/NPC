@@ -1,29 +1,38 @@
 ﻿# -*- coding: utf-8 -*-
 #Simple dialog
-#Copyright (C) 2020 guredora <contact@guredora.com>
 
-import ctypes
-import winsound
 import wx
-import constants
+import ctypes
+import sys
 
-def winDialog(title,message):
-	ctypes.windll.user32.MessageBoxW(0,message,title,0x00000040)
-def qDialog(message, title="確認"):
-	dialog = wx.MessageDialog(None,message,title,wx.YES_NO|wx.ICON_QUESTION)
-	winsound.MessageBeep(winsound.MB_ICONEXCLAMATION)
+def dialog(title, message,parent=None):
+	dialog = wx.MessageDialog(parent,message,title,wx.OK)
+	dialog.ShowModal()
+	dialog.Destroy()
+	return
+
+def yesNoDialog(title, message,parent=None):
+	dialog = wx.MessageDialog(parent,message,title,wx.YES_NO)
 	result = dialog.ShowModal()
 	dialog.Destroy()
 	return result
-def dialog(message, title=constants.APP_NAME):
-	dialog = wx.MessageDialog(None,message,title,wx.OK|wx.ICON_INFORMATION)
-	winsound.MessageBeep(winsound.MB_ICONEXCLAMATION)
+
+def errorDialog(message,parent=None):
+	dialog = wx.MessageDialog(parent,message,"error",wx.OK|wx.ICON_ERROR)
 	dialog.ShowModal()
 	dialog.Destroy()
 	return
-def errorDialog(message):
-	dialog = wx.MessageDialog(None, message, _("エラー"), wx.OK|wx.ICON_ERROR)
-	winsound.MessageBeep(winsound.MB_ICONEXCLAMATION)
-	dialog.ShowModal()
-	dialog.Destroy()
-	return
+
+def debugDialog(message):
+	if hasattr(sys, "frozen") == False:
+		import pprint
+		dialog = wx.MessageDialog(None,pprint.pformat(message),"debug",wx.OK)
+		dialog.ShowModal()
+		dialog.Destroy()
+		return
+
+def winDialog(title,message):
+	ctypes.windll.user32.MessageBoxW(0,message,title,0x00000040)
+
+def simpleDialog(title,message):
+	ctypes.windll.user32.MessageBoxW(0,message,title,0x00000040)

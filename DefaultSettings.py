@@ -14,7 +14,8 @@ class DefaultSettings:
 		}
 		config["view"]={
 			"font": "bold 'ＭＳ ゴシック' 22 windows-932",
-			"colorMode":"normal"
+			"colorMode":"normal",
+			"textwrapping":"off"
 		}
 		config["speech"]={
 			"reader" : "AUTO"
