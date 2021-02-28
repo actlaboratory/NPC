@@ -41,7 +41,7 @@ class Service():
 				return False
 			except Exception as e:
 				self.log.error(e)
-				raise dbException.DbException()
+				raise e
 		elif type(info)==str:	#accountで紹介
 			try:
 				if self.userDao.getFromUserName(info) != []:
@@ -49,7 +49,7 @@ class Service():
 				return False
 			except Exception as e:
 				self.log.error(e)
-				raise exceptions.dbException.DbException
+				raise e
 		else:
 			raise ValueError
 
@@ -72,8 +72,6 @@ class Service():
 		if ret==True:
 			self.log.warning("this user already registered.")
 			return errorCodes.DUPLICATED
-		elif ret==errorCodes.UNKNOWN:
-			return ret
 
 		#STEP2:データ追加
 		data = {
@@ -88,7 +86,7 @@ class Service():
 		except Exception as e:
 			self.log.error(e)
 			self.connection.rollback()
-			raise exceptions.dbException.DbException
+			raise e
 
 	def deleteUser(self, userId):
 		self.log.debug("delete user target="+str(userId))
@@ -105,7 +103,7 @@ class Service():
 		except Exception as e:
 			self.log.error(e)
 			return self.connection.rollback()
-			return errorCodes.UNKNOWN
+			raise e
 
 	#有効なユーザIDの一覧を返す
 	def getEnableUserList(self):
@@ -130,11 +128,10 @@ class Service():
 		try:
 			data = self.answerDao.get(id)[0]
 			user = self.userDao.get(data["user_id"])[0]
+			return self._createAnswerObj(data,user)
 		except Exception as e:
 			self.log.error(e)
-			return errorCodes.UNKNOWN
-
-		return self._createAnswerObj(data,user)
+			raise e
 
 	#
 	#	更新系
@@ -153,7 +150,7 @@ class Service():
 
 	#指定ユーザの全ての回答を取得
 	def _addAllAnswers(self, user):
-		self.log.debug("addAllAnswers from user "+str(user.id))
+		self.log.debug("addAllAnswers from user "+str(user))
 		try:
 			answers = peing.getAnswers(user.account)
 		except:
@@ -197,7 +194,7 @@ class Service():
 				except Exception as e:
 					return self.connection.rollback()
 					self.log.error(e)
-					return errorCodes.UNKNOWN
+					raise e
 				lastAdd = answered_at
 			if flg:
 				break
