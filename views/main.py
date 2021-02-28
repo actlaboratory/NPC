@@ -10,18 +10,20 @@ import wx
 import re
 import ctypes
 import pywintypes
+import simpleDialog
 
 import constants
 import errorCodes
 import globalVars
 import menuItemsStore
+import service
 
-from logging import getLogger
-from simpleDialog import dialog
 from .base import *
 from simpleDialog import *
-
-from views import mkDialog
+from views import detailDialog
+from views import progress
+from views import SympleImputDialog
+from views import versionDialog
 
 
 class MainView(BaseView):
@@ -39,35 +41,79 @@ class MainView(BaseView):
 			self.app.config.getint(self.identifier,"positionY",50,0)
 		)
 		self.InstallMenuEvent(Menu(self.identifier),self.events.OnMenuSelect)
-		self.questionList = self.creator.ListCtrl(0, 0, style=wx.LC_REPORT, name=_("質問リスト"))
-		self.questionList.AppendColumn(_("名前"))
-		self.questionList.AppendColumn(_("質問"))
-		self.questionList.AppendColumn(_("回答"))
-		self.questionList.AppendColumn(_("日時"))
-		self.sendQuestion = self.creator.button(_("質問を送る"), self.events.postQuestion)
-		self.button = self.creator.button(_("テスト"), self.events.onButton)
+
+		self.service=service.Service()
+		self.answerIdList=[]
+
+		self.lst,dummy = self.creator.listCtrl("",style=wx.LC_REPORT,proportion=1,sizerFlag=wx.EXPAND)
+		self.creator.GetPanel().Layout()
+
+		self.lst.AppendColumn("名前",width=200)
+		self.lst.AppendColumn("質問",width=200)
+		self.lst.AppendColumn("回答",width=200)
+		self.lst.AppendColumn("日時",width=200)
+		self.lst.AppendColumn("種別",width=100)
+
+		self.lst.Bind(wx.EVT_CONTEXT_MENU, self.events.ContextMenu)
+
+
+
+		import entity.user
+		self.service.addUser(entity.user.User(0,"吹雪","yamahubuki",47,36,"なし",20))
+
+		self.refresh()
+
+	#DBの内容でビューを更新する
+	def refresh(self):
+		self.log.debug("refresh view")
+		index = self.lst.GetFirstSelected()
+		if index!=-1:
+			index=self.answerIdList[index]
+
+		data=self.service.getViewData()
+		self.answerIdList=[]
+		self.lst.DeleteAllItems()
+		for i in data:
+			self.lst.Append(i[1:])
+			self.answerIdList.append(i[0])
+
+		if index!=-1:
+			for i,id in enumerate(self.answerIdList):
+				if id <= index:
+					self.lst.Select(i)
+					self.lst.Focus(i)
+					break
+		self.lst.SetFocus()
+		self.log.debug("refresh finished.")
+		return 
 
 class Menu(BaseMenu):
 	def Apply(self,target):
 		"""指定されたウィンドウに、メニューを適用する。"""
 
 		#メニューの大項目を作る
+		self.hFileMenu=wx.Menu()
 		self.hHelpMenu=wx.Menu()
 
+		#ファイルメニュー
+		self.RegisterMenuCommand(self.hFileMenu,[
+				"FILE_ADD_USER",
+				"FILE_RELOAD",
+				"FILE_SHOW_DETAIL",
+		])
+
 		#ヘルプメニューの中身
-		self.RegisterMenuCommand(self.hHelpMenu,"EXAMPLE",_("テストダイアログを閲覧"))
+		self.RegisterMenuCommand(self.hHelpMenu,[
+				"HELP_UPDATE",
+				"HELP_VERSIONINFO",
+		])
 
 		#メニューバーの生成
+		self.hMenuBar.Append(self.hFileMenu,_("ファイル"))
 		self.hMenuBar.Append(self.hHelpMenu,_("ヘルプ"))
 		target.SetMenuBar(self.hMenuBar)
 
 class Events(BaseEvents):
-	def onButton(self, events):
-		dialog("テストボタンが押されました。")
-
-	def postQuestion(self, event):
-		print("postQuestion process")
-
 	def OnMenuSelect(self,event):
 		"""メニュー項目が選択されたときのイベントハンドら。"""
 		#ショートカットキーが無効状態のときは何もしない
@@ -77,9 +123,83 @@ class Events(BaseEvents):
 
 		selected=event.GetId()#メニュー識別しの数値が出る
 
-		if selected==menuItemsStore.getRef("EXAMPLE"):
-			d = mkDialog.Dialog()
-			d.Initialize(_("テスト"), _("テストダイアログ"), (_("Hello World! を表示"), _("キャンセル")))
+		if selected==menuItemsStore.getRef("FILE_ADD_USER"):
+			d = SympleImputDialog.Dialog("ユーザの追加","peingページURLまたはTwitterユーザ名")
+			d.Initialize()
 			r = d.Show()
-			if r == 0:
-				print("Hello World!")
+			if r==wx.ID_CANCEL:
+				return
+			prm=d.GetValue()
+			#TODO:URLでの登録に対応する
+			if self.parent.service.isUserRegistered(prm)==True:
+				errorDialog(_("指定されたユーザは既に登録済みです。"),self.parent.hFrame)
+				return errorCodes.DUPLICATED
+			user = self.parent.service.getUserInfo(prm)
+			if user==errorCodes.PEING_ERROR:
+				self.showError(user)
+				return user
+			if yesNoDialog(_("ユーザ追加"),_("以下のユーザを追加しますか？\n\nID:%d\n%s(%s)") % (user.id,user.name,user.account),self.parent.hFrame)==wx.ID_NO:
+				return
+			if self.parent.service.addUser(user)==errorCodes.OK:
+				dialog(_("登録完了"),_("ユーザの登録に成功しました。今回登録したユーザの回答を表示するには、ビューを再読み込みしてください。"),self.parent.hFrame)
+			else:
+				errorDialog(_("ユーザの登録に失敗しました。"),self.parent.hFrame)
+
+		if selected==menuItemsStore.getRef("FILE_RELOAD"):
+			d=progress.Dialog()
+			d.Initialize(_("準備中")+"...",_("回答データを取得しています")+"...")
+			d.Show(modal=False)
+			self.parent.hFrame.Disable()
+			ret = errorCodes.OK
+
+			users = self.parent.service.getEnableUserList()
+			for i,user in enumerate(users):
+				d.update(None,user.getViewString())
+				ret = self.parent.service.update(user)
+				if ret!=errorCodes.OK or (not d.isOk()):
+					break
+				d.update(int(i/len(users)))
+
+			self.showError(ret,d.wnd)
+			self.parent.refresh()
+
+			self.parent.hFrame.Enable()
+			d.Destroy()
+
+		if selected==menuItemsStore.getRef("FILE_SHOW_DETAIL"):
+			index = self.parent.lst.GetFirstSelected()
+			answer = self.parent.service.getAnswer(self.parent.answerIdList[index])
+			d = detailDialog.Dialog(answer)
+			d.Initialize()
+			d.Show()
+			return
+
+		if selected==menuItemsStore.getRef("FILE_OPEN_CONTEXTMENU"):
+			menu=self.parent.service.makeContextMenu()
+			self.parent.lst.PopupMenu(menu,self.parent.lst.getPopupMenuPosition())
+
+
+		if selected == menuItemsStore.getRef("HELP_UPDATE"):
+			globalVars.update.update()
+
+		if selected==menuItemsStore.getRef("HELP_VERSIONINFO"):
+			d = versionDialog.versionDialog()
+
+	def ContextMenu(self,event):
+		menu=self.parent.service.makeContextMenu()
+		self.parent.lst.PopupMenu(menu,event)
+
+	#エラーコードを受け取り、必要があればエラー表示
+	def showError(self,code,parent=None):
+		if parent==None:
+			parent=self.parent.hFrame
+		if code==None:
+			code=errorCodes.UNKNOWN
+
+		if code==errorCodes.OK:
+			return
+		elif code==errorCodes.PEING_ERROR:
+			errorDialog(_("指定されたユーザが存在しないか、通信に失敗しました。以下の対処をお試しください。\n\n・入力内容が正しいか、再度お確かめください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),parent)
+		else:
+			errorDialog(_("不明なエラー%dが発生しました。大変お手数ですが、本ソフトの実行ファイルのあるディレクトリに生成された%sを添付し、作者までご連絡ください。") %(code,constants.LOG_FILE_NAME),parent)
+		return
