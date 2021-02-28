@@ -31,8 +31,7 @@ class Dialog(BaseDialog):
 		self.edit,self.static=self.creator.inputbox(self.detail,x=-1,style=wx.BORDER_RAISED|wx.TE_DONTWRAP)
 		self.edit.hideScrollBar(wx.HORIZONTAL)
 
-
-		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,20)
+		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,20,style=wx.ALIGN_RIGHT)
 		self.bOk=self.creator.okbutton(_("ＯＫ"),None)
 		self.bCancel=self.creator.cancelbutton(_("キャンセル"),None)
 

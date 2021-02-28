@@ -48,3 +48,6 @@ UPDATER_WAKE_WORD = "hello"
 
 
 FLG_USER_DISABLE=1		#アカウント名が変更されている
+
+FLG_ANSWER_AUTOQUESTION=1		#運営からの自動質問
+FLG_ANSWER_BATON_QUESTION=4		#バトン質問

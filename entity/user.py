@@ -14,6 +14,5 @@ class User:
 	def __str__(self):
 		return "userEntity:%s" % self.getViewString()
 
-
 	def getViewString(self):
 		return self.name+"(@"+self.account+")"

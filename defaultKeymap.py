@@ -6,8 +6,9 @@ defaultKeymap={}
 
 defaultKeymap["mainView"]={
 	"FILE_ADD_USER": "ctrl+o",
+	"FILE_POST_QUESTION":"ctrl+return",
 	"FILE_RELOAD":"F5",
-	"FILE_SHOW_DETAIL":"ctrl+shift+enter",
+	"FILE_SHOW_DETAIL":"ctrl+shift+return",
 	"FILE_OPEN_CONTEXTMENU":"shift+F10",
 	"HELP_UPDATE":"",
 	"HELP_VERSIONINFO":"",

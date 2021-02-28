@@ -144,36 +144,15 @@ class Service():
 			self.log.error(e)
 			raise e
 		if lastAnswer == []:
-			return self._addAllAnswers(user)
+			return self._updateAnswer(user, datetime.datetime.fromtimestamp(0).replace(tzinfo=JST))
 		else:
 			return self._updateAnswer(user, lastAnswer[0]["answered_at"].replace(tzinfo=JST))
-
-	#指定ユーザの全ての回答を取得
-	def _addAllAnswers(self, user):
-		self.log.debug("addAllAnswers from user "+str(user))
-		try:
-			answers = peing.getAnswers(user.account)
-		except:
-			return errorCodes.PEING_ERROR
-		values = []
-		for answer in answers:
-			answered_at=answer["answer_created_at"][0:10]+" "+answer["answer_created_at"][11:19]
-			data = (answer["answer_id"],user.id, answer["body"], answer["answer_body"], answered_at)
-			values.append(data)
-		try:
-			self.answerDao.insertMany(values)
-			self.connection.commit()
-			return errorCodes.OK
-		except Exception as e:
-			return self.connection.rollback()
-			self.log.error(e)
-			raise e
 
 	#指定ユーザの指定時刻以降の回答を取得
 	def _updateAnswer(self, user, time):
 		flg = False
 		page = 1
-		lastAdd = datetime.datetime.now(JST)
+		lastAdd = datetime.datetime.now().replace(tzinfo=JST)
 		while True:
 			try:
 				answers = peing.getAnswers(user.account, page=page)
@@ -181,18 +160,29 @@ class Service():
 				self.connection.rollback()
 				self.log.error(e)
 				return errorCodes.PEING_ERROR
+			if answers == []:
+				break
 			for answer in answers:
 				answered_at = datetime.datetime.fromisoformat(answer["answer_created_at"])
 				if answered_at <= time:		#これより先は前回以前に取得済みのため扶養
 					flg = True
 					break
-				if lastAdd >= answered_at: # このループ中に追加の質問回答をした場合に発生する重複受信
+				if lastAdd <= answered_at: # このループ中に追加の質問回答をした場合に発生する重複受信
 					continue
-				data = (answer["answer_id"],user["id"], answer["body"], answer["answer_body"], answered_at)
+				flag=0
+				if answer["question_type"]=="auto_question":
+					flag|=constants.FLG_ANSWER_AUTOQUESTION
+				elif answer["question_type"]=="baton_question":
+					flag|=constants.FLG_ANSWER_BATON_QUESTION
+				elif answer["question_type"] in ("normal_question"):
+					pass
+				else:
+					self.log.warning("unknown question type %s found." % answer["question_type"])
+				data = (answer["answer_id"],user.id, answer["body"], answer["answer_body"], answered_at.replace(tzinfo=None),flag)
 				try:
 					self.answerDao.insert(data)
 				except Exception as e:
-					return self.connection.rollback()
+					self.connection.rollback()
 					self.log.error(e)
 					raise e
 				lastAdd = answered_at
@@ -201,6 +191,18 @@ class Service():
 			page += 1
 		self.connection.commit()
 		return errorCodes.OK
+
+	#
+	#	質問投稿
+	#
+	def postQuestion(self,user,question):
+		self.log.debug("post question %s to %s" %(question, user.account))
+		try:
+			return peing.postQuestion(user.account,question)
+		except Exception as e:
+			self.log.error(e)
+			return errorCodes.PEING_ERROR
+
 
 	#
 	#	ビュー補助

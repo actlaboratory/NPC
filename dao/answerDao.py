@@ -19,7 +19,7 @@ class AnswerDao(dao.baseDao.BaseDao):
 		self.connection.commit()
 
 	def get(self,id):
-		return self.select("SELECT * FROM answers where id = ? ORDER BY answered_at DESC;", (id,))
+		return self.select("SELECT * FROM answers WHERE id = ? ORDER BY answered_at DESC;", (id,))
 
 	def getFromUser(self, userId=-1):
 		if userId == -1:
@@ -32,20 +32,20 @@ class AnswerDao(dao.baseDao.BaseDao):
 
 	def getViewData(self,userId=-1):
 		if userId==-1:
-			return self.select("SELECT answers.id,users.name,question,answer,answered_at FROM answers INNER JOIN users ON users.id=answers.user_id ORDER BY answered_at DESC;",())
+			return self.select("SELECT answers.id,users.name,question,answer,answered_at,answers.flag FROM answers INNER JOIN users ON users.id=answers.user_id ORDER BY answered_at DESC;",())
 		else:
-			return self.select("select id,users.name,question,answer,answered_at from answers INNER JOIN users ON users.id=answers.user_id ORDER BY answered_at DESC where user_id = ?;", (userId,))
+			return self.select("select answers.id,users.name,question,answer,answered_at,answers.flag from answers INNER JOIN users ON users.id=answers.user_id ORDER BY answered_at DESC WHERE user_id = ?;", (userId,))
 
 	def insert(self,values):
-		return self.connection.execute("""insert into answers(
-			id,user_id, question, answer, answered_at)
-			values(?,?,?,?);
-			""", data)
+		return self.connection.execute("""INSERT INTO answers(
+			id,user_id, question, answer, answered_at,flag)
+			values(?,?,?,?,?,?);
+			""", values)
 
 	def insertMany(self,values):
 		return self.connection.executemany("""insert into answers(
-			id,user_id, question, answer, answered_at)
-			values(?,?,?,?,?);
+			id,user_id, question, answer, answered_at,flag)
+			values(?,?,?,?,?,?);
 			""", values)
 
 	def deleteFromUser(self,userId):

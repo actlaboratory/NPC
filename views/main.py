@@ -22,7 +22,7 @@ from .base import *
 from simpleDialog import *
 from views import detailDialog
 from views import progress
-from views import SympleImputDialog
+from views import SimpleImputDialog
 from views import versionDialog
 
 
@@ -53,13 +53,7 @@ class MainView(BaseView):
 		self.lst.AppendColumn("回答",width=200)
 		self.lst.AppendColumn("日時",width=200)
 		self.lst.AppendColumn("種別",width=100)
-
 		self.lst.Bind(wx.EVT_CONTEXT_MENU, self.events.ContextMenu)
-
-
-
-		import entity.user
-		self.service.addUser(entity.user.User(0,"吹雪","yamahubuki",47,36,"なし",20))
 
 		self.refresh()
 
@@ -74,7 +68,8 @@ class MainView(BaseView):
 		self.answerIdList=[]
 		self.lst.DeleteAllItems()
 		for i in data:
-			self.lst.Append(i[1:])
+			s=self.answerFlag2String(i[5])
+			self.lst.Append((i[1],i[2],i[3],i[4],s))
 			self.answerIdList.append(i[0])
 
 		if index!=-1:
@@ -87,6 +82,18 @@ class MainView(BaseView):
 		self.log.debug("refresh finished.")
 		return 
 
+	def answerFlag2String(self,flag):
+		ret=[]
+		dic={
+			constants.FLG_ANSWER_AUTOQUESTION:_("運営"),
+			constants.FLG_ANSWER_BATON_QUESTION:_("バトン"),
+		}
+		for i,s in dic.items():
+			if flag&i==i:
+				ret.append(s)
+		return ",".join(ret)
+
+
 class Menu(BaseMenu):
 	def Apply(self,target):
 		"""指定されたウィンドウに、メニューを適用する。"""
@@ -98,6 +105,7 @@ class Menu(BaseMenu):
 		#ファイルメニュー
 		self.RegisterMenuCommand(self.hFileMenu,[
 				"FILE_ADD_USER",
+				"FILE_POST_QUESTION",
 				"FILE_RELOAD",
 				"FILE_SHOW_DETAIL",
 		])
@@ -124,7 +132,7 @@ class Events(BaseEvents):
 		selected=event.GetId()#メニュー識別しの数値が出る
 
 		if selected==menuItemsStore.getRef("FILE_ADD_USER"):
-			d = SympleImputDialog.Dialog("ユーザの追加","peingページURLまたはTwitterユーザ名")
+			d = SimpleImputDialog.Dialog("ユーザの追加","peingページURLまたはTwitterユーザ名")
 			d.Initialize()
 			r = d.Show()
 			if r==wx.ID_CANCEL:
@@ -145,6 +153,21 @@ class Events(BaseEvents):
 			else:
 				errorDialog(_("ユーザの登録に失敗しました。"),self.parent.hFrame)
 
+		if selected==menuItemsStore.getRef("FILE_POST_QUESTION"):
+			index = self.parent.lst.GetFirstSelected()
+			target = self.parent.service.getAnswer(self.parent.answerIdList[index]).user
+			d = SimpleImputDialog.Dialog("質問を投稿",_("%sさんへの質問内容") % target.getViewString())
+			d.Initialize()
+			r = d.Show()
+			if r==wx.ID_CANCEL:
+				return
+			prm=d.GetValue()
+			ret = self.parent.service.postQuestion(target,prm)
+			if ret == errorCodes.OK:
+				dialog(_("投稿完了"),_("質問を投稿しました。"))
+			else:
+				self.showError(ret)
+
 		if selected==menuItemsStore.getRef("FILE_RELOAD"):
 			d=progress.Dialog()
 			d.Initialize(_("準備中")+"...",_("回答データを取得しています")+"...")
@@ -158,7 +181,7 @@ class Events(BaseEvents):
 				ret = self.parent.service.update(user)
 				if ret!=errorCodes.OK or (not d.isOk()):
 					break
-				d.update(int(i/len(users)))
+				d.update(int(i/len(users)),None,len(users))
 
 			self.showError(ret,d.wnd)
 			self.parent.refresh()

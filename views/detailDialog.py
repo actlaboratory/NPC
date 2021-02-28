@@ -9,7 +9,7 @@ import webbrowser
 
 class Dialog(BaseDialog):
 	def __init__(self, answer):
-		super().__init__("viewCommentDialog")
+		super().__init__("detailDialog")
 		self.answer = answer
 
 	def Initialize(self):
@@ -34,6 +34,8 @@ class Dialog(BaseDialog):
 		user.hideScrollBar(wx.HORIZONTAL)
 		at,dummy = grid.inputbox(_("回答日時"), None, str(self.answer.answered_at), wx.TE_READONLY|wx.BORDER_RAISED, 320)
 		at.hideScrollBar(wx.HORIZONTAL)
+		type,dummy = grid.inputbox(_("種別"), None, globalVars.app.hMainView.answerFlag2String(self.answer.flag), wx.TE_READONLY|wx.BORDER_RAISED, 320)
+		type.hideScrollBar(wx.HORIZONTAL)
 
 		self.closeButton=self.creator.okbutton(_("閉じる"), None)
 
