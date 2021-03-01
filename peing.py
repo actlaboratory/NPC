@@ -8,8 +8,10 @@ from bs4 import BeautifulSoup
 def getUserInfo(userId):
 	page = requests.get("https://peing.net/%s/"% (userId))
 	soup = BeautifulSoup(page.content, "lxml")
-	div = soup.find("div", {"id": "user-id"}).div
-	return json.loads(div.get("data-user-associated-with-page"))
+	entity = soup.find("div", {"id": "user-id"})
+	if entity==None:	#ユーザ不存在
+		return None
+	return json.loads(entity.div.get("data-user-associated-with-page"))
 
 def getAnswers(userId, page):
 	assert page > 0

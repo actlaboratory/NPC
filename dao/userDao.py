@@ -37,8 +37,15 @@ class UserDao(dao.baseDao.BaseDao):
 			:id, :account, :name, :items, :answers, :profile, :followees
 			);""", values)
 
-	#def update(self,user):
-
+	def update(self,values):
+		return self.connection.execute("""UPDATE users SET
+			account = :account,
+			name = :name,
+			items = :items,
+			answers = :answers,
+			profile = :profile,
+			followees = :followees
+			WHERE id = :id;""", values)
 
 	def delete(self,id):
 		return self.connection.execute("DELETE FROM users WHERE id = ?;",(id,))

@@ -53,11 +53,15 @@ class Service():
 		else:
 			raise ValueError
 
-	#peingのidまたはaccountからUserオブジェクトを得る
+	#peingのaccountからUserオブジェクトを得る
 	def getUserInfo(self,key):
-		assert type(key) in (int,str)
+		assert type(key)==str
+		self.log.debug("get user info:"+key)
 		try:
 			info = peing.getUserInfo(key)
+			if info==None:
+				self.log.info("requested user %s not found." % key)
+				return errorCodes.NOT_FOUND
 			return entity.user.User(info["id"],info["name"],info["account"],info["items_count"],info["answers_count"],info["profile"],info["followees_count"])
 		except Exception as e:
 			self.log.error(e)
@@ -112,6 +116,17 @@ class Service():
 		for user in users:
 			result.append(self._createUserObj(user))
 		return result
+
+	def updateUserInfo(self,user):
+		try:
+			self.userDao.update(user)
+			self.connection.commit()
+			return errorCodes.OK			
+		except Exception as e:
+			self.log.debug("update user info:"+user.account)
+			self.log.error(e)
+			return self.connection.rollback()
+			raise e
 
 	def getViewData(self,userId=-1):
 		self.log.debug("getViewData.target="+str(userId))

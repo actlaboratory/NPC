@@ -9,9 +9,10 @@ defaultKeymap["mainView"]={
 	"FILE_POST_QUESTION":"ctrl+return",
 	"FILE_RELOAD":"F5",
 	"FILE_DELETE_USER":"delete",
-	"FILE_SHOW_DETAIL":"ctrl+shift+return",
+	"FILE_SHOW_DETAIL":"return",
+	"FILE_SHOW_USER_DETAIL":"shift+return",
 	"FILE_OPEN_CONTEXTMENU":"shift+F10",
-
+	"FILE_SHOW_USER_WEB":"ctrl+shift+return",
 	"HELP_UPDATE":"",
 	"HELP_VERSIONINFO":"",
 }

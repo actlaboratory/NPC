@@ -147,7 +147,7 @@ class Events(BaseEvents):
 				errorDialog(_("指定されたユーザは既に登録済みです。"),self.parent.hFrame)
 				return errorCodes.DUPLICATED
 			user = self.parent.service.getUserInfo(prm)
-			if user==errorCodes.PEING_ERROR:
+			if user in (errorCodes.PEING_ERROR,errorCodes.NOT_FOUND):
 				self.showError(user)
 				return user
 			if yesNoDialog(_("ユーザ追加"),_("以下のユーザを追加しますか？\n\nID:%d\n%s(%s)") % (user.id,user.name,user.account),self.parent.hFrame)==wx.ID_NO:
@@ -182,10 +182,25 @@ class Events(BaseEvents):
 			users = self.parent.service.getEnableUserList()
 			for i,user in enumerate(users):
 				d.update(None,user.getViewString())
+				info = self.parent.service.getUserInfo(user.account)
+				if info==None:
+					d.update(i,None,len(users))
+					self.log.info("skip update because user not found:"+user.account)
+					continue
+				elif info.id!=user.id:		#当該アカウント名が別ユーザの登録にかわっている
+					info.flag|=constants.FLG_USER_DISABLE
+					self.log.warning("add exclude flag:"+user.account)
+					self.parent.service.updateUserInfo(info)
+					dialog(_("登録ユーザの更新除外について"),_("登録していた以下のユーザは、アカウント名が変更されたか、削除されました。その後、同一アカウント名を別のユーザが取得しているため、今後このアカウントの回答は更新から除外します。もし、再取得したアカウントが同一人物であるなど今後もこのアカウントの回答の更新を希望する場合には、再度ユーザ追加を行ってください。\n\n該当ユーザ：%s") % user.getViewString())
+					d.update(i,None,len(users))
+					continue
+				else:
+					self.parent.service.updateUserInfo(info)
+
 				ret = self.parent.service.update(user)
 				if ret!=errorCodes.OK or (not d.isOk()):
 					break
-				d.update(int(i/len(users)),None,len(users))
+				d.update(i,None,len(users))
 
 			self.showError(ret,d.wnd)
 			self.parent.refresh()
@@ -251,7 +266,7 @@ class Events(BaseEvents):
 
 		if code==errorCodes.OK:
 			return
-		elif code==errorCodes.PEING_ERROR:
+		elif code==errorCodes.PEING_ERROR or code==errorCodes.NOT_FOUND:
 			errorDialog(_("指定されたユーザが存在しないか、通信に失敗しました。以下の対処をお試しください。\n\n・入力内容が正しいか、再度お確かめください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),parent)
 		else:
 			errorDialog(_("不明なエラー%dが発生しました。大変お手数ですが、本ソフトの実行ファイルのあるディレクトリに生成された%sを添付し、作者までご連絡ください。") %(code,constants.LOG_FILE_NAME),parent)
