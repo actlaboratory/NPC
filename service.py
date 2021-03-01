@@ -209,7 +209,8 @@ class Service():
 		menu=wx.Menu()
 		helper.RegisterMenuCommand(menu,[
 			"FILE_SHOW_DETAIL",
-			"FILE_DELETE_USER"
+			"FILE_DELETE_USER",
+			"FILE_SHOW_USER_WEB"
 		])
 		return menu
 
@@ -219,7 +220,7 @@ class Service():
 	#sqlite3.Rowからentity.user.Userに変換
 	def _createUserObj(self,user):
 		try:
-			return entity.user.User(user["id"],user["name"],user["account"],user["items"],user["answers"],user["profile"],user["followees"])
+			return entity.user.User(user["id"],user["name"],user["account"],user["items"],user["answers"],user["profile"],user["followees"],user["flag"])
 		except exception as e:
 			self.log.error(e)
 			raise e

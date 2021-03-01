@@ -11,6 +11,7 @@ import re
 import ctypes
 import pywintypes
 import simpleDialog
+import webbrowser
 
 import constants
 import errorCodes
@@ -198,6 +199,15 @@ class Events(BaseEvents):
 				return
 			self.parent.service.deleteUser(user)
 			self.parent.refresh()
+
+		if selected==menuItemsStore.getRef("FILE_SHOW_USER_WEB"):
+			index = self.parent.lst.GetFirstSelected()
+			user = self.parent.service.getAnswer(self.parent.answerIdList[index]).user
+			if user.flag&constants.FLG_USER_DISABLE==constants.FLG_USER_DISABLE:
+				errorDialog(_("このユーザは既に退会したか、peingIDを変更しているため開くことができません。"))
+				return
+			webbrowser.open_new("https://peing.net/"+user.account)
+			return
 
 		if selected==menuItemsStore.getRef("FILE_SHOW_DETAIL"):
 			index = self.parent.lst.GetFirstSelected()
