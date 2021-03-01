@@ -77,7 +77,11 @@ class Service():
 		data = {
 			"id": user.id,
 			"account": user.account,
-			"name": user.name
+			"name": user.name,
+			"items": user.items,
+			"answers": user.answers,
+			"profile": user.profile,
+			"followees": user.followees,
 		}
 		try:
 			self.userDao.insert(data)
@@ -210,7 +214,8 @@ class Service():
 		helper.RegisterMenuCommand(menu,[
 			"FILE_SHOW_DETAIL",
 			"FILE_DELETE_USER",
-			"FILE_SHOW_USER_WEB"
+			"FILE_SHOW_USER_WEB",
+			"FILE_SHOW_USER_DETAIL"
 		])
 		return menu
 

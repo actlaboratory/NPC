@@ -33,8 +33,8 @@ class UserDao(dao.baseDao.BaseDao):
 		return self.select("SELECT * FROM users WHERE account = ?;", (userName,))
 
 	def insert(self, values):
-		return self.connection.execute("""INSERT INTO users (id, account, name) VALUES(
-			:id, :account, :name
+		return self.connection.execute("""INSERT INTO users (id, account, name, items, answers, profile, followees) VALUES(
+			:id, :account, :name, :items, :answers, :profile, :followees
 			);""", values)
 
 	#def update(self,user):

@@ -24,6 +24,7 @@ from simpleDialog import *
 from views import detailDialog
 from views import progress
 from views import SimpleImputDialog
+from views import userDetailDialog
 from views import versionDialog
 
 
@@ -110,6 +111,7 @@ class Menu(BaseMenu):
 				"FILE_RELOAD",
 				"FILE_DELETE_USER",
 				"FILE_SHOW_DETAIL",
+				"FILE_SHOW_USER_DETAIL",
 		])
 
 		#ヘルプメニューの中身
@@ -213,6 +215,14 @@ class Events(BaseEvents):
 			index = self.parent.lst.GetFirstSelected()
 			answer = self.parent.service.getAnswer(self.parent.answerIdList[index])
 			d = detailDialog.Dialog(answer)
+			d.Initialize()
+			d.Show()
+			return
+
+		if selected==menuItemsStore.getRef("FILE_SHOW_USER_DETAIL"):
+			index = self.parent.lst.GetFirstSelected()
+			user = self.parent.service.getAnswer(self.parent.answerIdList[index]).user
+			d = userDetailDialog.Dialog(user)
 			d.Initialize()
 			d.Show()
 			return

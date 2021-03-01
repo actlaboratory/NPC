@@ -5,6 +5,8 @@ dic={
 	"FILE_DELETE_USER":_("ユーザを削除"),
 	"FILE_OPEN_CONTEXTMENU":_("コンテキストメニューを開く"),
 	"FILE_SHOW_DETAIL":_("詳細情報を表示")+"...",
+	"FILE_SHOW_USER_DETAIL":_("ユーザ情報を表示")+"...",
+
 	"FILE_SHOW_USER_WEB":_("ブラウザでユーザのページを開く"),
 
 	"HELP_UPDATE":_("最新バージョンを確認(&U)")+"...",
