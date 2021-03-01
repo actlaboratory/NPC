@@ -1,7 +1,5 @@
 
 import dao.baseDao
-import peing
-
 
 class UserDao(dao.baseDao.BaseDao):
 	def __init__(self):

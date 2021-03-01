@@ -4,7 +4,7 @@ import errorCodes
 import entity.user
 import entity.answer
 import exceptions.dbException
-import peing
+import Peing
 import views.main
 
 import datetime
