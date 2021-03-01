@@ -41,4 +41,4 @@ class UserDao(dao.baseDao.BaseDao):
 
 
 	def delete(self,id):
-		return self.connection.execute("DELETE FROM users WHERE id = ?;",id)
+		return self.connection.execute("DELETE FROM users WHERE id = ?;",(id,))

@@ -107,6 +107,7 @@ class Menu(BaseMenu):
 				"FILE_ADD_USER",
 				"FILE_POST_QUESTION",
 				"FILE_RELOAD",
+				"FILE_DELETE_USER",
 				"FILE_SHOW_DETAIL",
 		])
 
@@ -188,6 +189,15 @@ class Events(BaseEvents):
 
 			self.parent.hFrame.Enable()
 			d.Destroy()
+
+		if selected==menuItemsStore.getRef("FILE_DELETE_USER"):
+			index = self.parent.lst.GetFirstSelected()
+			user = self.parent.service.getAnswer(self.parent.answerIdList[index]).user
+			ret = yesNoDialog(_("ユーザの削除"),_("以下のユーザの登録と、過去の回答履歴を削除しますか？\n\n%s")%user.getViewString())
+			if ret == wx.ID_NO:
+				return
+			self.parent.service.deleteUser(user)
+			self.parent.refresh()
 
 		if selected==menuItemsStore.getRef("FILE_SHOW_DETAIL"):
 			index = self.parent.lst.GetFirstSelected()

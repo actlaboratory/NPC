@@ -42,10 +42,10 @@ class AnswerDao(dao.baseDao.BaseDao):
 			""", values)
 
 	def insertMany(self,values):
-		return self.connection.executemany("""insert into answers(
+		return self.connection.executemany("""INSERT INTO answers(
 			id,user_id, question, answer, answered_at,flag)
 			values(?,?,?,?,?,?);
 			""", values)
 
 	def deleteFromUser(self,userId):
-		return self.connection.execute("delete * from answers where user_id = ?;", (info[0]["id"]))
+		return self.connection.execute("DELETE FROM answers WHERE user_id = ?;", (userId,))

@@ -88,15 +88,11 @@ class Service():
 			self.connection.rollback()
 			raise e
 
-	def deleteUser(self, userId):
-		self.log.debug("delete user target="+str(userId))
+	def deleteUser(self, user):
+		self.log.debug("delete user target="+user.getViewString())
 		try:
-			info = self.userDao.get(userId)
-			self.log.debug("target user = "+info[0]["account"])
-			if info == None:
-				return errorCodes.NOT_FOUND
-			self.userDao.delete((info[0]["id"],))
-			self.answerDao.deleteFromUser((info[0]["id"],))
+			self.userDao.delete(user.id)
+			self.answerDao.deleteFromUser(user.id)
 			self.connection.commit()
 			self.log.debug("user has been deleted.")
 			return errorCodes.OK
@@ -212,7 +208,8 @@ class Service():
 		helper=views.main.Menu("mainView")
 		menu=wx.Menu()
 		helper.RegisterMenuCommand(menu,[
-			"FILE_SHOW_DETAIL"
+			"FILE_SHOW_DETAIL",
+			"FILE_DELETE_USER"
 		])
 		return menu
 
