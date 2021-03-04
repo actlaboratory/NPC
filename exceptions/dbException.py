@@ -1,5 +1,0 @@
-
-
-
-class DbException(Exception):
-	pass
