@@ -47,7 +47,7 @@ class MainView(BaseView):
 		self.service=service.Service()
 		self.answerIdList=[]
 
-		self.lst,dummy = self.creator.listCtrl("",style=wx.LC_REPORT,proportion=1,sizerFlag=wx.EXPAND)
+		self.lst,dummy = self.creator.virtualListCtrl("",style=wx.LC_REPORT,proportion=1,sizerFlag=wx.EXPAND)
 		self.creator.GetPanel().Layout()
 
 		self.lst.AppendColumn("名前",width=200)
@@ -112,6 +112,7 @@ class Menu(BaseMenu):
 				"FILE_DELETE_USER",
 				"FILE_SHOW_DETAIL",
 				"FILE_SHOW_USER_DETAIL",
+				"FILE_EXPORT",
 		])
 
 		#ヘルプメニューの中身
@@ -241,6 +242,11 @@ class Events(BaseEvents):
 			d.Initialize()
 			d.Show()
 			return
+
+		if selected==menuItemsStore.getRef("FILE_EXPORT"):
+			r = self.parent.service.export("out.csv",self.parent.lst)
+			if r != True:
+				errorDialog(r,self.parent.hFrame)
 
 		if selected==menuItemsStore.getRef("FILE_OPEN_CONTEXTMENU"):
 			menu=self.parent.service.makeContextMenu()

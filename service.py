@@ -1,9 +1,9 @@
 import constants
+import csvExporter
 import dao
 import errorCodes
 import entity.user
 import entity.answer
-import exceptions.dbException
 import peing
 import views.main
 
@@ -233,6 +233,13 @@ class Service():
 			"FILE_SHOW_USER_DETAIL"
 		])
 		return menu
+
+	def export(self,fileName,lst):
+		exporter = csvExporter.CsvExporter()
+		if exporter.exportVirtualList(fileName,lst,"\t"):
+			return True
+		else:
+			return exporter.getErrorMessage()
 
 	#
 	#	内部用
