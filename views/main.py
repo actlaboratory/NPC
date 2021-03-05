@@ -48,7 +48,7 @@ class MainView(BaseView):
 		self.service=service.Service()
 		self.answerIdList=[]
 
-		self.lst,dummy = self.creator.virtualListCtrl("",style=wx.LC_REPORT,proportion=1,sizerFlag=wx.EXPAND)
+		self.lst,dummy = self.creator.virtualListCtrl("",style=wx.LC_SINGLE_SEL|wx.LC_REPORT,proportion=1,sizerFlag=wx.EXPAND)
 		self.creator.GetPanel().Layout()
 
 		self.lst.AppendColumn("名前",width=200)
