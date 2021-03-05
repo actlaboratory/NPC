@@ -8,7 +8,7 @@ class CsvExporter:
 	def exportVirtualList(self,fileName,listCtrl,delimiter=","):
 		try:
 			with open(fileName, 'w', encoding="utf-8") as f:
-				writer = csv.writer(f,delimiter=delimiter)
+				writer = csv.writer(f,delimiter=delimiter,lineterminator="\n")
 				for i in range(len(listCtrl)):
 					writer.writerow(listCtrl[i])
 				return True
