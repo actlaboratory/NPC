@@ -31,9 +31,9 @@ class AnswerDao(dao.baseDao.BaseDao):
 
 	def getViewData(self,userId=-1):
 		if userId==-1:
-			return self.select("SELECT answers.id,users.name,question,answer,answered_at,answers.flag FROM answers INNER JOIN users ON users.id=answers.user_id ORDER BY answered_at DESC;",())
+			return self.select("SELECT answers.id,users.name,question,answer,answered_at,answers.flag,users.id FROM answers INNER JOIN users ON users.id=answers.user_id ORDER BY answered_at DESC;",())
 		else:
-			return self.select("select answers.id,users.name,question,answer,answered_at,answers.flag from answers INNER JOIN users ON users.id=answers.user_id ORDER BY answered_at DESC WHERE user_id = ?;", (userId,))
+			return self.select("select answers.id,users.name,question,answer,answered_at,answers.flag,users.id from answers INNER JOIN users ON users.id=answers.user_id ORDER BY answered_at DESC WHERE user_id = ?;", (userId,))
 
 	def insert(self,values):
 		return self.connection.execute("""INSERT INTO answers(

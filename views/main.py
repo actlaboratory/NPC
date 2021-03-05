@@ -15,6 +15,7 @@ import webbrowser
 
 import constants
 import errorCodes
+import filter
 import globalVars
 import menuItemsStore
 import service
@@ -71,6 +72,8 @@ class MainView(BaseView):
 		self.lst.DeleteAllItems()
 		for i in data:
 			s=self.answerFlag2String(i[5])
+			if not self.testFilter(i):
+				continue
 			self.lst.Append((i[1],i[2],i[3],i[4],s))
 			self.answerIdList.append(i[0])
 
@@ -95,6 +98,12 @@ class MainView(BaseView):
 				ret.append(s)
 		return ",".join(ret)
 
+	#表示情報タプルiを基に、有効になっているフィルタにかけた結果、表示すべきか否かを判断して返す
+	def testFilter(self,i):
+		for f in filter.getFilterList():
+			if not f.test(userId=i[6],answerFlag=i[5]):
+				return False
+		return True
 
 class Menu(BaseMenu):
 	def Apply(self,target):
@@ -102,17 +111,25 @@ class Menu(BaseMenu):
 
 		#メニューの大項目を作る
 		self.hFileMenu=wx.Menu()
+		self.hFilterMenu=wx.Menu()
 		self.hHelpMenu=wx.Menu()
 
 		#ファイルメニュー
 		self.RegisterMenuCommand(self.hFileMenu,[
-				"FILE_ADD_USER",
-				"FILE_POST_QUESTION",
-				"FILE_RELOAD",
-				"FILE_DELETE_USER",
-				"FILE_SHOW_DETAIL",
-				"FILE_SHOW_USER_DETAIL",
-				"FILE_EXPORT",
+			"FILE_ADD_USER",
+			"FILE_POST_QUESTION",
+			"FILE_RELOAD",
+			"FILE_DELETE_USER",
+			"FILE_SHOW_DETAIL",
+			"FILE_SHOW_USER_DETAIL",
+			"FILE_EXPORT",
+		])
+
+		#フィルタメニュー
+		self.RegisterCheckMenuCommand(self.hFilterMenu,[
+			"FILTER_AUTO_QUESTION",
+			"FILTER_BATON",
+			"FILTER_USER",
 		])
 
 		#ヘルプメニューの中身
@@ -123,6 +140,7 @@ class Menu(BaseMenu):
 
 		#メニューバーの生成
 		self.hMenuBar.Append(self.hFileMenu,_("ファイル"))
+		self.hMenuBar.Append(self.hFilterMenu,_("フィルタ"))
 		self.hMenuBar.Append(self.hHelpMenu,_("ヘルプ"))
 		target.SetMenuBar(self.hMenuBar)
 
@@ -251,6 +269,31 @@ class Events(BaseEvents):
 		if selected==menuItemsStore.getRef("FILE_OPEN_CONTEXTMENU"):
 			menu=self.parent.service.makeContextMenu()
 			self.parent.lst.PopupMenu(menu,self.parent.lst.getPopupMenuPosition())
+
+
+		if selected==menuItemsStore.getRef("FILTER_AUTO_QUESTION"):
+			self.log.debug("set autoQuestionFilter = "+str(event.IsChecked()))
+			filter.AutoQuestionFilter().enable(event.IsChecked())
+			self.parent.refresh()
+			event.Skip()
+
+		if selected==menuItemsStore.getRef("FILTER_BATON"):
+			self.log.debug("set battonFilter = "+str(event.IsChecked()))
+			filter.BatonFilter().enable(event.IsChecked())
+			self.parent.refresh()
+			event.Skip()
+
+		if selected==menuItemsStore.getRef("FILTER_USER"):
+			index = self.parent.lst.GetFirstSelected()
+			target = self.parent.service.getAnswer(self.parent.answerIdList[index]).user
+			if event.IsChecked():
+				self.log.debug("set userFilter = "+str(target.id))
+				filter.UserFilter(target).enable(event.IsChecked())
+			else:
+				self.log.debug("set battonFilter = "+str(event.IsChecked()))
+				filter.UserFilter(0).enable(event.IsChecked())
+			self.parent.refresh()
+			event.Skip()
 
 
 		if selected == menuItemsStore.getRef("HELP_UPDATE"):
