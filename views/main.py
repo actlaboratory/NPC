@@ -54,8 +54,9 @@ class MainView(BaseView):
 		self.lst.AppendColumn("名前",width=200)
 		self.lst.AppendColumn("質問",width=200)
 		self.lst.AppendColumn("回答",width=200)
-		self.lst.AppendColumn("日時",width=200)
-		self.lst.AppendColumn("種別",width=100)
+		self.lst.AppendColumn("日時",width=320)
+		self.lst.AppendColumn("種別",width=130)
+		self.lst.loadColumnInfo(self.identifier, "lst")
 		self.lst.Bind(wx.EVT_CONTEXT_MENU, self.events.ContextMenu)
 
 		self.refresh()
@@ -327,3 +328,7 @@ class Events(BaseEvents):
 		else:
 			errorDialog(_("不明なエラー%dが発生しました。大変お手数ですが、本ソフトの実行ファイルのあるディレクトリに生成された%sを添付し、作者までご連絡ください。") %(code,constants.LOG_FILE_NAME),parent)
 		return
+
+	def Exit(self,event=None):
+		self.parent.lst.saveColumnInfo()
+		super().Exit(event)

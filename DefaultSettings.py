@@ -21,8 +21,8 @@ class DefaultSettings:
 			"reader" : "AUTO"
 		}
 		config["mainView"]={
-			"sizeX": "800",
-			"sizeY": "600",
+			"sizeX": "1080",
+			"sizeY": "675",
 		}
 		return config
 
