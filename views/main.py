@@ -262,7 +262,10 @@ class Events(BaseEvents):
 			return
 
 		if selected==menuItemsStore.getRef("FILE_EXPORT"):
-			r = self.parent.service.export("out.csv",self.parent.lst)
+			d = wx.FileDialog(None, _("出力先ファイルの指定"), style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT, wildcard=_("CSVファイル(*.csv) | *.csv; | すべてのファイル(*.*) | *.*"))
+			if d.ShowModal() == wx.ID_CANCEL:
+				return
+			r = self.parent.service.export(d.GetPath(),self.parent.lst)
 			if r != True:
 				errorDialog(r,self.parent.hFrame)
 
