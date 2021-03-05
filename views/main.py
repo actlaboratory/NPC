@@ -123,6 +123,7 @@ class Menu(BaseMenu):
 			"FILE_SHOW_DETAIL",
 			"FILE_SHOW_USER_DETAIL",
 			"FILE_EXPORT",
+			"FILE_EXIT",
 		])
 
 		#フィルタメニュー
@@ -268,6 +269,9 @@ class Events(BaseEvents):
 			r = self.parent.service.export(d.GetPath(),self.parent.lst)
 			if r != True:
 				errorDialog(r,self.parent.hFrame)
+
+		if selected==menuItemsStore.getRef("FILE_EXIT"):
+			self.parent.hFrame.Close()
 
 		if selected==menuItemsStore.getRef("FILE_OPEN_CONTEXTMENU"):
 			menu=self.parent.service.makeContextMenu()
