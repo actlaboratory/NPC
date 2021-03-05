@@ -14,6 +14,8 @@ dic={
 	"FILTER_BATON":_("バトン質問を非表示(&B)"),
 	"FILTER_USER":_("選択中ユーザのみ表示"),
 
+	"OPTION_LIST_CONFIG":_("リスト表示設定"),
+
 	"HELP_UPDATE":_("最新バージョンを確認(&U)")+"...",
 	"HELP_VERSIONINFO":_("バージョン情報(&V)")+"...",
 }

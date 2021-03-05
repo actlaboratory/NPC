@@ -385,6 +385,14 @@ class virtualListCtrl(listCtrlBase.listCtrl):
         self.columns.remove(removedColumn)
         return result
 
+    def GetColumn(self,col):
+        info = wx.ListItem()
+        info.SetText(self.getCol(col).heading)
+        info.SetWidth(self.getCol(col).width)
+        info.SetAlign(self.getCol(col).format)
+        info.SetColumn(col)
+        return info
+
     def SetColumnsOrder(self, orders):
         super().DeleteAllColumns()
         tmp = list(range(len(self.columns)))
@@ -430,7 +438,7 @@ class virtualListCtrl(listCtrlBase.listCtrl):
         if event in (wx.EVT_LIST_END_LABEL_EDIT,wx.EVT_LIST_COL_END_DRAG):
             self.bindFunctions[event.typeId]=handler
             #別途self内の関数をBind済み
-            return			#wx標準でも戻り値はNoneである
+            return            #wx標準でも戻り値はNoneである
         return super().Bind(event, handler, source=source, id=id, id2=id2)
 
     def columnEvent(self,event):

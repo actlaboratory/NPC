@@ -23,6 +23,7 @@ import service
 from .base import *
 from simpleDialog import *
 from views import detailDialog
+from views import listConfigurationDialog
 from views import progress
 from views import SimpleImputDialog
 from views import userDetailDialog
@@ -112,6 +113,7 @@ class Menu(BaseMenu):
 
 		#メニューの大項目を作る
 		self.hFileMenu=wx.Menu()
+		self.hOptionMenu=wx.Menu()
 		self.hFilterMenu=wx.Menu()
 		self.hHelpMenu=wx.Menu()
 
@@ -125,6 +127,10 @@ class Menu(BaseMenu):
 			"FILE_SHOW_USER_DETAIL",
 			"FILE_EXPORT",
 			"FILE_EXIT",
+		])
+
+		self.RegisterCheckMenuCommand(self.hOptionMenu,[
+			"OPTION_LIST_CONFIG"
 		])
 
 		#フィルタメニュー
@@ -143,6 +149,7 @@ class Menu(BaseMenu):
 		#メニューバーの生成
 		self.hMenuBar.Append(self.hFileMenu,_("ファイル"))
 		self.hMenuBar.Append(self.hFilterMenu,_("フィルタ"))
+		self.hMenuBar.Append(self.hOptionMenu,_("オプション"))
 		self.hMenuBar.Append(self.hHelpMenu,_("ヘルプ"))
 		target.SetMenuBar(self.hMenuBar)
 
@@ -303,6 +310,11 @@ class Events(BaseEvents):
 			self.parent.refresh()
 			event.Skip()
 
+
+		if selected == menuItemsStore.getRef("OPTION_LIST_CONFIG"):
+			d = listConfigurationDialog.Dialog(self.parent.lst)
+			d.Initialize()
+			d.Show()
 
 		if selected == menuItemsStore.getRef("HELP_UPDATE"):
 			globalVars.update.update()
