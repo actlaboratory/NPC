@@ -7,10 +7,10 @@ class CsvExporter:
 
 	def exportVirtualList(self,fileName,listCtrl,delimiter=","):
 		try:
-			with open(fileName, 'w', encoding="utf-8") as f:
+			with open(fileName, 'w',encoding='cp932',errors="replace") as f:
 				writer = csv.writer(f,delimiter=delimiter,lineterminator="\n")
 				for i in range(len(listCtrl)):
-					writer.writerow(listCtrl[i])
+					writer.writerow([x for x in listCtrl[i]])
 				return True
 		except Exception as e:
 			self.error=e
