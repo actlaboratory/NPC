@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #Falcon globalKeyConfig view
-#Copyright (C) 2020 yamahubuki <itiro.ishino@gmail.com>
+#Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
 #Note: All comments except these top lines will be written in Japanese. 
 
 import copy
@@ -131,6 +131,7 @@ class SettingDialog(views.KeyValueSettingDialogBase.SettingDialogBase):
 			self.edits[no].SetValue(d.GetValue())
 		return
 
+	#同一パターンを２重指定している場合の処理をしてから閉じる
 	def Validation(self,event):
 		lst=[]
 		for i in range(1,6):
