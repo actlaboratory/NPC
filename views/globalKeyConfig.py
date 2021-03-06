@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #Falcon globalKeyConfig view
 #Copyright (C) 2020 yamahubuki <itiro.ishino@gmail.com>
 #Note: All comments except these top lines will be written in Japanese. 
@@ -130,3 +130,14 @@ class SettingDialog(views.KeyValueSettingDialogBase.SettingDialogBase):
 			dialog(_("設定完了"), _("%s に設定しました。") % (d.GetValue()),self.wnd)
 			self.edits[no].SetValue(d.GetValue())
 		return
+
+	def Validation(self,event):
+		lst=[]
+		for i in range(1,6):
+			if self.edits[i].GetLineText(0)!=_("なし"):
+				entry = keymap.makeEntry(self.edits[0].GetLineText(0),self.edits[i].GetLineText(0),None,self.log)
+				if entry not in lst:
+					lst.append(entry)
+				else:
+					self.edits[i].SetValue(_("なし"))
+		event.Skip()
