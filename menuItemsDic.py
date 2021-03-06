@@ -1,3 +1,13 @@
+
+import re
+
+def getValueString(ref_id):
+	""" ナビキーとダイアログ文字列を消去した文字列を取り出し """
+	dicVal = dic[ref_id]
+	s = re.sub("\.\.\.$", "", dicVal)
+	s = re.sub("\(&.\)$", "", s)
+	return re.sub("&", "", s)
+
 dic={
 	"FILE_ADD_USER":_("ユーザの追加")+"...",
 	"FILE_POST_QUESTION":_("質問を投稿"),
@@ -14,6 +24,7 @@ dic={
 	"FILTER_BATON":_("バトン質問を非表示(&B)"),
 	"FILTER_USER":_("選択中ユーザのみ表示"),
 
+	"OPTION_KEY_CONFIG":_("ショートカットキーの設定"),
 	"OPTION_LIST_CONFIG":_("リスト表示設定"),
 
 	"HELP_UPDATE":_("最新バージョンを確認(&U)")+"...",

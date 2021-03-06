@@ -13,6 +13,7 @@ import pywintypes
 import simpleDialog
 import webbrowser
 
+import ConfigManager
 import constants
 import errorCodes
 import filter
@@ -23,6 +24,7 @@ import service
 from .base import *
 from simpleDialog import *
 from views import detailDialog
+from views import globalKeyConfig
 from views import listConfigurationDialog
 from views import progress
 from views import SimpleImputDialog
@@ -111,6 +113,9 @@ class Menu(BaseMenu):
 	def Apply(self,target):
 		"""指定されたウィンドウに、メニューを適用する。"""
 
+		#メニュー内容をいったんクリア
+		self.hMenuBar=wx.MenuBar()
+
 		#メニューの大項目を作る
 		self.hFileMenu=wx.Menu()
 		self.hOptionMenu=wx.Menu()
@@ -130,6 +135,7 @@ class Menu(BaseMenu):
 		])
 
 		self.RegisterCheckMenuCommand(self.hOptionMenu,[
+			"OPTION_KEY_CONFIG",
 			"OPTION_LIST_CONFIG"
 		])
 
@@ -311,6 +317,13 @@ class Events(BaseEvents):
 			event.Skip()
 
 
+		if selected == menuItemsStore.getRef("OPTION_KEY_CONFIG"):
+			if self.setKeymap(self.parent.identifier,_("ショートカットキーの設定"),filter=keymap.KeyFilter().SetDefault(True,False)):
+				#ショートカットキーの変更適用とメニューバーの再描画
+				self.parent.menu.InitShortcut()
+				self.parent.menu.ApplyShortcut(self.parent.hFrame)
+				self.parent.menu.Apply(self.parent.hFrame)
+
 		if selected == menuItemsStore.getRef("OPTION_LIST_CONFIG"):
 			d = listConfigurationDialog.Dialog(self.parent.lst)
 			d.Initialize()
@@ -344,3 +357,45 @@ class Events(BaseEvents):
 	def Exit(self,event=None):
 		self.parent.lst.saveColumnInfo()
 		super().Exit(event)
+
+
+
+
+	def setKeymap(self, identifier,ttl, keymap=None,filter=None):
+		if keymap:
+			try:
+				keys=keymap.map[identifier.upper()]
+			except KeyError:
+				keys={}
+		else:
+			try:
+				keys=self.parent.menu.keymap.map[identifier.upper()]
+			except KeyError:
+				keys={}
+		keyData={}
+		menuData={}
+		for refName in defaultKeymap.defaultKeymap[identifier].keys():
+			title=menuItemsDic.getValueString(refName)
+			if refName in keys:
+				keyData[title]=keys[refName]
+			else:
+				keyData[title]=_("なし")
+			menuData[title]=refName
+
+		d=views.globalKeyConfig.Dialog(keyData,menuData,[],filter)
+		d.Initialize(ttl)
+		if d.Show()==wx.ID_CANCEL: return False
+
+		keyData,menuData=d.GetValue()
+
+		#キーマップの既存設定を置き換える
+		newMap=ConfigManager.ConfigManager()
+		newMap.read(constants.KEYMAP_FILE_NAME)
+		for name,key in keyData.items():
+			if key!=_("なし"):
+				newMap[identifier.upper()][menuData[name]]=key
+			else:
+				newMap[identifier.upper()][menuData[name]]=""
+		newMap.write()
+		return True
+

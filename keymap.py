@@ -10,10 +10,16 @@ class KeymapHandler(keymapHandlerBase.KeymapHandlerBase):
 		super().__init__(dict, filter, permitConfrict=permitConfrict)
 
 
+str2key = keymapHandlerBase.str2key
+def makeEntry(*pArgs, **kArgs):
+	return keymapHandlerBase.makeEntry(*pArgs,*kArgs)
+
+
 #複数メニューに対するキーの割り当ての重複を許すか否かを調べる
 #itemsには調べたいAcceleratorEntryのリストを入れる
 def permitConfrict(items,log):
 	return False
+
 
 class KeyFilter(keymapHandlerBase.KeyFilterBase):
 	pass

@@ -12,7 +12,7 @@ import keymap
 import views.keyConfig
 import views.KeyValueSettingDialogBase
 
-from simpleDialog import dialog
+from simpleDialog import dialog,errorDialog
 
 class Dialog(views.KeyValueSettingDialogBase.KeyValueSettingDialogBase):
 	def __init__(self,keyConfig,menuIds,checkEntries=[],filter=None):
@@ -58,7 +58,7 @@ class Dialog(views.KeyValueSettingDialogBase.KeyValueSettingDialogBase):
 				for name in names:
 					entries.append(keymap.makeEntry(self.values[1][name],key,None,self.log))
 				if not keymap.permitConfrict(entries,self.log):
-					dialog(_("エラー"),_("以下の項目において、重複するキー %(key)s が設定されています。\n\n%(command)s") % {"key": key,"command": names})
+					dialog(_("エラー"),_("以下の項目において、重複するキー %(key)s が設定されています。\n\n%(command)s") % {"key": key,"command": names},self.wnd)
 					return
 		event.Skip()
 
@@ -119,14 +119,14 @@ class SettingDialog(views.KeyValueSettingDialogBase.SettingDialogBase):
 		before=self.edits[no].GetLineText(0)
 		if before!=_("なし"):
 			if not self.filter.Check(before):
-				dialog(_("エラー"),_("このショートカットは変更できません。"))
+				errorDialog(_("エラー"),_("このショートカットは変更できません。"),self.wnd)
 				return
 		d=views.keyConfig.Dialog(self.wnd,self.filter)
 		d.Initialize()
 		if d.Show()==wx.ID_CANCEL:
-			dialog(_("設定完了"), _("解除しました。"))
+			dialog(_("設定完了"), _("解除しました。"),self.wnd)
 			self.edits[no].SetValue(_("なし"))
 		else:
-			dialog(_("設定完了"), _("%s に設定しました。") % (d.GetValue()))
+			dialog(_("設定完了"), _("%s に設定しました。") % (d.GetValue()),self.wnd)
 			self.edits[no].SetValue(d.GetValue())
 		return
