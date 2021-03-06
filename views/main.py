@@ -61,6 +61,7 @@ class MainView(BaseView):
 		self.lst.AppendColumn("種別",width=130)
 		self.lst.loadColumnInfo(self.identifier, "lst")
 		self.lst.Bind(wx.EVT_CONTEXT_MENU, self.events.ContextMenu)
+		self.lst.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.events.listActivated)
 
 		self.refresh()
 
@@ -261,12 +262,7 @@ class Events(BaseEvents):
 			return
 
 		if selected==menuItemsStore.getRef("FILE_SHOW_DETAIL"):
-			index = self.parent.lst.GetFirstSelected()
-			answer = self.parent.service.getAnswer(self.parent.answerIdList[index])
-			d = detailDialog.Dialog(answer)
-			d.Initialize()
-			d.Show()
-			return
+			self.listActivated()
 
 		if selected==menuItemsStore.getRef("FILE_SHOW_USER_DETAIL"):
 			index = self.parent.lst.GetFirstSelected()
@@ -338,6 +334,15 @@ class Events(BaseEvents):
 	def ContextMenu(self,event):
 		menu=self.parent.service.makeContextMenu()
 		self.parent.lst.PopupMenu(menu,event)
+
+	def listActivated(self,event=None):
+		index = self.parent.lst.GetFirstSelected()
+		answer = self.parent.service.getAnswer(self.parent.answerIdList[index])
+		d = detailDialog.Dialog(answer)
+		d.Initialize()
+		d.Show()
+		return
+
 
 	#エラーコードを受け取り、必要があればエラー表示
 	def showError(self,code,parent=None):

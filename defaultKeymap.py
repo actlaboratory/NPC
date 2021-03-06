@@ -11,12 +11,18 @@ defaultKeymap["mainView"]={
 	"FILE_DELETE_USER":"delete",
 	"FILE_SHOW_DETAIL":"return",
 	"FILE_SHOW_USER_DETAIL":"shift+return",
-	"FILE_OPEN_CONTEXTMENU":"shift+F10",
+	"FILE_EXPORT":"ctrl+e",
 	"FILE_SHOW_USER_WEB":"ctrl+shift+return",
+
+	"FILE_OPEN_CONTEXTMENU":"shift+F10",
+
+	"FILTER_AUTO_QUESTION":"",
+	"FILTER_BATON":"",
+	"FILTER_USER":"",
+
+	"OPTION_KEY_CONFIG":"",
+	"OPTION_LIST_CONFIG":"",
+
 	"HELP_UPDATE":"",
 	"HELP_VERSIONINFO":"",
-}
-
-defaultKeymap["contextmenu"]={
-	"FILE_SHOW_DETAIL":"ctrl+shift+enter",
 }
