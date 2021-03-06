@@ -10,10 +10,9 @@ import views.main
 import datetime
 import wx
 
-from dao import userDao, answerDao
-from exceptions import *
-
 from logging import getLogger
+
+from dao import userDao, answerDao
 
 
 JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
