@@ -119,7 +119,7 @@ class SettingDialog(views.KeyValueSettingDialogBase.SettingDialogBase):
 		before=self.edits[no].GetLineText(0)
 		if before!=_("なし"):
 			if not self.filter.Check(before):
-				errorDialog(_("エラー"),_("このショートカットは変更できません。"),self.wnd)
+				errorDialog(_("このショートカットは変更できません。"),self.wnd)
 				return
 		d=views.keyConfig.Dialog(self.wnd,self.filter)
 		d.Initialize()
