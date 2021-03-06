@@ -40,7 +40,6 @@ class UserFilter(FilterBase):
 		self.targetUserId = user.id
 
 	def test(self,**args):
-		print(args["userId"])
 		return args["userId"]==self.targetUserId
 
 
