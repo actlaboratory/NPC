@@ -5,7 +5,7 @@ import wx
 import globalVars
 import views.ViewCreator
 from views.baseDialog import *
-import webbrowser
+
 
 class Dialog(BaseDialog):
 	def __init__(self, answer):
@@ -37,7 +37,4 @@ class Dialog(BaseDialog):
 		type,dummy = grid.inputbox(_("種別"), None, globalVars.app.hMainView.answerFlag2String(self.answer.flag), wx.TE_READONLY|wx.BORDER_RAISED, 320)
 		type.hideScrollBar(wx.HORIZONTAL)
 
-		self.closeButton=self.creator.okbutton(_("閉じる"), None)
-
-	def processEnter(self,event):
-		self.wnd.EndModal(wx.ID_OK)
+		self.closeButton=self.creator.okbutton(_("閉じる(&C)"))

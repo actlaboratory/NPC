@@ -3,10 +3,11 @@
 # Copyright (C) 2020 Hiroki Fujii <hfujii@hisystron.com>
 
 import wx
-import globalVars
+
 import views.ViewCreator
-from logging import getLogger
+
 from views.baseDialog import *
+
 
 class Dialog(BaseDialog):
 	def __init__(self):

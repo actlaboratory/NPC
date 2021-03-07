@@ -2,10 +2,8 @@
 
 
 import wx
-import globalVars
 import views.ViewCreator
 from views.baseDialog import *
-import webbrowser
 
 class Dialog(BaseDialog):
 	def __init__(self, user):
@@ -25,7 +23,7 @@ class Dialog(BaseDialog):
 		grid=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.creator.GetSizer(),views.ViewCreator.FlexGridSizer,20,2)
 		name,dummy = grid.inputbox(_("表示名"), None, self.user.name, wx.TE_READONLY|wx.BORDER_RAISED, 320)
 		name.hideScrollBar(wx.HORIZONTAL)
-		account,dummy = grid.inputbox("ID", None, self.user.account, wx.TE_READONLY|wx.BORDER_RAISED, 320)
+		account,dummy = grid.inputbox("アカウント", None, self.user.account, wx.TE_READONLY|wx.BORDER_RAISED, 320)
 		account.hideScrollBar(wx.HORIZONTAL)
 		p = 0
 		if self.user.items>0:
@@ -39,7 +37,4 @@ class Dialog(BaseDialog):
 		profile.hideScrollBar(wx.VERTICAL)
 		profile.Bind(wx.EVT_TEXT_ENTER,self.processEnter)
 
-		self.closeButton=self.creator.okbutton(_("閉じる"), None)
-
-	def processEnter(self,event):
-		self.wnd.EndModal(wx.ID_OK)
+		self.closeButton=self.creator.okbutton(_("閉じる(&C)"))
