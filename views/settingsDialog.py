@@ -19,15 +19,15 @@ class configType(Enum):
 
 
 class Dialog(BaseDialog):
-	readerSelection = {
-		"NOSPEECH": _("音声なし"),
-		"AUTO": _("自動選択"),
-		"SAPI5": "SAPI5",
-		"CLIPBOARD": _("クリップボード出力"),
-		"PCTK": "PC-Talker",
-		"NVDA": "NVDA",
-		"JAWS": "JAWS for Windows"
-	}
+	#readerSelection = {
+	#	"NOSPEECH": _("音声なし"),
+	#	"AUTO": _("自動選択"),
+	#	"SAPI5": "SAPI5",
+	#	"CLIPBOARD": _("クリップボード出力"),
+	#	"PCTK": "PC-Talker",
+	#	"NVDA": "NVDA",
+	#	"JAWS": "JAWS for Windows"
+	#}
 	colorModeSelection = {
 		"white": _("標準"),
 		"dark": _("ダーク")
@@ -61,7 +61,7 @@ class Dialog(BaseDialog):
 		creator=views.ViewCreator.ViewCreator(self.viewMode,self.tab,None,views.ViewCreator.GridBagSizer,label=_("一般"),style=wx.ALL,margin=20)
 		self.autoreload = creator.checkbox(_("起動時に最新の情報を取得する"))
 		creator.GetSizer().SetItemSpan(self.autoreload.GetParent(),2)
-		self.reader, static = creator.combobox(_("出力先(&O)"), list(self.readerSelection.values()))
+		#self.reader, static = creator.combobox(_("出力先(&O)"), list(self.readerSelection.values()))
 
 		# view
 		creator=views.ViewCreator.ViewCreator(self.viewMode,self.tab,None,views.ViewCreator.GridBagSizer,label=_("表示/言語"),style=wx.ALL,margin=20)
@@ -84,7 +84,7 @@ class Dialog(BaseDialog):
 	def load(self):
 		# general
 		self._setValue(self.autoreload,"general","auto_reload",configType.BOOL)
-		self._setValue(self.reader,"speech","reader",configType.DIC,self.readerSelection)
+		#self._setValue(self.reader,"speech","reader",configType.DIC,self.readerSelection)
 
 		# view
 		self._setValue(self.language,"general","language",configType.DIC,self.languageSelection)
@@ -96,10 +96,6 @@ class Dialog(BaseDialog):
 		self._setValue(self.usemanualsetting, "proxy", "usemanualsetting", configType.BOOL)
 		self._setValue(self.server, "proxy", "server", configType.STRING)
 		self._setValue(self.port, "proxy", "port", configType.STRING)
-
-
-	def save(self):
-		pass
 
 	def onOkButton(self, event):
 		result = self._save()
@@ -141,4 +137,4 @@ class Dialog(BaseDialog):
 				conf[v[1]][v[2]] = list(v[3].keys())[obj.GetSelection()]
 			else:
 				conf[v[1]][v[2]] = obj.GetValue()
-		self.app.InitSpeech()
+		#self.app.InitSpeech()
