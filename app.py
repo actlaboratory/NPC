@@ -25,6 +25,8 @@ class Main(AppBase.MainBase):
 		from views import main
 		self.hMainView=main.MainView()
 		self.hMainView.Show()
+		if self.config.getboolean("general","auto_reload",False):
+			self.hMainView.events.reload()
 		return True
 
 	def setGlobalVars(self):

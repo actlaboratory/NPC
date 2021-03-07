@@ -214,40 +214,7 @@ class Events(BaseEvents):
 				self.showError(ret)
 
 		if selected==menuItemsStore.getRef("FILE_RELOAD"):
-			d=progress.Dialog()
-			d.Initialize(_("準備中")+"...",_("回答データを取得しています")+"...")
-			d.Show(modal=False)
-			self.parent.hFrame.Disable()
-			ret = errorCodes.OK
-
-			users = self.parent.service.getEnableUserList()
-			for i,user in enumerate(users):
-				d.update(None,user.getViewString())
-				info = self.parent.service.getUserInfo(user.account)
-				if info==None:
-					d.update(i,None,len(users))
-					self.log.info("skip update because user not found:"+user.account)
-					continue
-				elif info.id!=user.id:		#当該アカウント名が別ユーザの登録にかわっている
-					info.flag|=constants.FLG_USER_DISABLE
-					self.log.warning("add exclude flag:"+user.account)
-					self.parent.service.updateUserInfo(info)
-					dialog(_("登録ユーザの更新除外について"),_("登録していた以下のユーザは、アカウント名が変更されたか、削除されました。その後、同一アカウント名を別のユーザが取得しているため、今後このアカウントの回答は更新から除外します。もし、再取得したアカウントが同一人物であるなど今後もこのアカウントの回答の更新を希望する場合には、再度ユーザ追加を行ってください。\n\n該当ユーザ：%s") % user.getViewString())
-					d.update(i,None,len(users))
-					continue
-				else:
-					self.parent.service.updateUserInfo(info)
-
-				ret = self.parent.service.update(user)
-				if ret!=errorCodes.OK or (not d.isOk()):
-					break
-				d.update(i,None,len(users))
-
-			self.showError(ret,d.wnd)
-			self.parent.refresh()
-
-			self.parent.hFrame.Enable()
-			d.Destroy()
+			self.reload()
 
 		if selected==menuItemsStore.getRef("FILE_DELETE_USER"):
 			index = self.parent.lst.GetFirstSelected()
@@ -367,6 +334,42 @@ class Events(BaseEvents):
 			"FILE_SHOW_USER_WEB",
 			"FILTER_USER",
 		], enable)
+
+	def reload(self):
+		d=progress.Dialog()
+		d.Initialize(_("準備中")+"...",_("回答データを取得しています")+"...")
+		d.Show(modal=False)
+		self.parent.hFrame.Disable()
+		ret = errorCodes.OK
+
+		users = self.parent.service.getEnableUserList()
+		for i,user in enumerate(users):
+			d.update(None,user.getViewString())
+			info = self.parent.service.getUserInfo(user.account)
+			if info==None:
+				d.update(i,None,len(users))
+				self.log.info("skip update because user not found:"+user.account)
+				continue
+			elif info.id!=user.id:		#当該アカウント名が別ユーザの登録にかわっている
+				info.flag|=constants.FLG_USER_DISABLE
+				self.log.warning("add exclude flag:"+user.account)
+				self.parent.service.updateUserInfo(info)
+				dialog(_("登録ユーザの更新除外について"),_("登録していた以下のユーザは、アカウント名が変更されたか、削除されました。その後、同一アカウント名を別のユーザが取得しているため、今後このアカウントの回答は更新から除外します。もし、再取得したアカウントが同一人物であるなど今後もこのアカウントの回答の更新を希望する場合には、再度ユーザ追加を行ってください。\n\n該当ユーザ：%s") % user.getViewString())
+				d.update(i,None,len(users))
+				continue
+			else:
+				self.parent.service.updateUserInfo(info)
+
+			ret = self.parent.service.update(user)
+			if ret!=errorCodes.OK or (not d.isOk()):
+				break
+			d.update(i,None,len(users))
+
+		self.showError(ret,d.wnd)
+		self.parent.refresh()
+
+		self.parent.hFrame.Enable()
+		d.Destroy()
 
 	#エラーコードを受け取り、必要があればエラー表示
 	def showError(self,code,parent=None):
