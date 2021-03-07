@@ -20,6 +20,7 @@ defaultKeymap["mainView"]={
 	"FILTER_BATON":"",
 	"FILTER_USER":"",
 
+	"OPTION_OPTION":"",
 	"OPTION_KEY_CONFIG":"",
 	"OPTION_LIST_CONFIG":"",
 

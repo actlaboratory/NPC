@@ -10,7 +10,9 @@ class DefaultSettings:
 		config["general"]={
 			"language": "ja-JP",
 			"fileVersion": "100",
-			"locale": "ja-JP"
+			"locale": "ja-JP",
+			"update" : True,
+			"auto_reload" : False,
 		}
 		config["view"]={
 			"font": "bold 'ＭＳ ゴシック' 22 windows-932",
@@ -24,6 +26,13 @@ class DefaultSettings:
 			"sizeX": "1080",
 			"sizeY": "675",
 		}
+		config["proxy"]={
+			"usemanualsetting" : False,
+			"server" : "localhost",
+			"port" : 8080,
+
+		}
+
 		return config
 
 initialValues={}

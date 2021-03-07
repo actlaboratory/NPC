@@ -27,6 +27,7 @@ from views import detailDialog
 from views import globalKeyConfig
 from views import listConfigurationDialog
 from views import progress
+from views import settingsDialog
 from views import SimpleImputDialog
 from views import userDetailDialog
 from views import versionDialog
@@ -140,6 +141,7 @@ class Menu(BaseMenu):
 		])
 
 		self.RegisterCheckMenuCommand(self.hOptionMenu,[
+			"OPTION_OPTION",
 			"OPTION_KEY_CONFIG",
 			"OPTION_LIST_CONFIG"
 		])
@@ -316,6 +318,11 @@ class Events(BaseEvents):
 			self.parent.refresh()
 			event.Skip()
 
+
+		if selected == menuItemsStore.getRef("OPTION_OPTION"):
+			d = settingsDialog.Dialog()
+			d.Initialize()
+			d.Show()
 
 		if selected == menuItemsStore.getRef("OPTION_KEY_CONFIG"):
 			if self.setKeymap(self.parent.identifier,_("ショートカットキーの設定"),filter=keymap.KeyFilter().SetDefault(True,False)):

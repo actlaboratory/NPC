@@ -22,10 +22,11 @@ dic={
 
 	"FILTER_AUTO_QUESTION":_("運営からの質問を非表示(&A)"),
 	"FILTER_BATON":_("バトン質問を非表示(&B)"),
-	"FILTER_USER":_("選択中ユーザのみ表示"),
+	"FILTER_USER":_("選択中ユーザのみ表示(&U)"),
 
-	"OPTION_KEY_CONFIG":_("ショートカットキーの設定"),
-	"OPTION_LIST_CONFIG":_("リスト表示設定"),
+	"OPTION_OPTION":_("設定(&S)")+"...",
+	"OPTION_KEY_CONFIG":_("ショートカットキーの設定(&K)")+"...",
+	"OPTION_LIST_CONFIG":_("リスト表示設定(&L)")+"...",
 
 	"HELP_UPDATE":_("最新バージョンを確認(&U)")+"...",
 	"HELP_VERSIONINFO":_("バージョン情報(&V)")+"...",
