@@ -1,0 +1,26 @@
+Copyright (c)2021 yamahubuki,ACT laboratory All rights reserved.
+
+本ソフトウェアは、Apache license v2の条件に従い、自由に利用することができます。
+本ソフトウェアのソースコードは、readme.txtに記載のURLよりダウンロード可能です。
+
+※本ソフトウェアには、以下の各ライセンスに従い他者の成果物を含みます。
+
+・Apacheライセンスv2に基づく以下のライブラリ
+	requests　(https://github.com/psf/requests)
+	pypac	(https://pypi.org/project/pypac/)
+	libloader　(https://github.com/bmarwell/libloader/)
+
+
+・BSDライセンス
+	pyperclip	(https://pypi.org/project/pyperclip/)
+
+・MITライセンスに基づく以下のライブラリ
+	AccessibleOutput2　(https://pypi.org/project/accessible-output2/)
+
+・MS-PL
+	DotNetZip
+
+その他、個別のライセンスに基づく複数のライブラリ
+
+各ライセンスは、licensesディレクトリ内に格納されています。
+

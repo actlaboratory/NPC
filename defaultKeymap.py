@@ -5,10 +5,10 @@
 defaultKeymap={}
 
 defaultKeymap["mainView"]={
-	"FILE_ADD_USER": "ctrl+o",
+	"FILE_ADD_USER": "ctrl+a",
 	"FILE_POST_QUESTION":"ctrl+return",
-	"FILE_RELOAD":"F5",
-	"FILE_DELETE_USER":"delete",
+	"FILE_RELOAD":"F5/ctrl+r",
+	"FILE_DELETE_USER":"delete/ctrl+d",
 	"FILE_SHOW_DETAIL":"return",
 	"FILE_SHOW_USER_DETAIL":"shift+return",
 	"FILE_EXPORT":"ctrl+e",
