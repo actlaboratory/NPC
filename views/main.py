@@ -62,6 +62,9 @@ class MainView(BaseView):
 		self.lst.loadColumnInfo(self.identifier, "lst")
 		self.lst.Bind(wx.EVT_CONTEXT_MENU, self.events.ContextMenu)
 		self.lst.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.events.listActivated)
+		self.lst.Bind(wx.EVT_LIST_ITEM_SELECTED, self.events.listSelectEvent)
+		self.lst.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.events.listSelectEvent)
+		self.events.listSelectEvent()		#最初に１度実行し、未選択状態をメニューに反映
 
 		self.refresh()
 
@@ -131,6 +134,7 @@ class Menu(BaseMenu):
 			"FILE_DELETE_USER",
 			"FILE_SHOW_DETAIL",
 			"FILE_SHOW_USER_DETAIL",
+			"FILE_SHOW_USER_WEB",
 			"FILE_EXPORT",
 			"FILE_EXIT",
 		])
@@ -284,9 +288,9 @@ class Events(BaseEvents):
 			self.parent.hFrame.Close()
 
 		if selected==menuItemsStore.getRef("FILE_OPEN_CONTEXTMENU"):
-			menu=self.parent.service.makeContextMenu()
-			self.parent.lst.PopupMenu(menu,self.parent.lst.getPopupMenuPosition())
-
+			if self.parent.lst.HasFocus() == True and self.parent.lst.GetFirstSelected() >= 0:
+				menu=self.parent.service.makeContextMenu()
+				self.parent.lst.PopupMenu(menu,self.parent.lst.getPopupMenuPosition())
 
 		if selected==menuItemsStore.getRef("FILTER_AUTO_QUESTION"):
 			self.log.debug("set autoQuestionFilter = "+str(event.IsChecked()))
@@ -332,9 +336,11 @@ class Events(BaseEvents):
 			d = versionDialog.versionDialog()
 
 	def ContextMenu(self,event):
-		menu=self.parent.service.makeContextMenu()
-		self.parent.lst.PopupMenu(menu,event)
+		if self.parent.lst.HasFocus() == True and self.parent.lst.GetFirstSelected() >= 0:
+			menu=self.parent.service.makeContextMenu()
+			self.parent.lst.PopupMenu(menu,event)
 
+	#lst上でのEnterキー処理
 	def listActivated(self,event=None):
 		index = self.parent.lst.GetFirstSelected()
 		answer = self.parent.service.getAnswer(self.parent.answerIdList[index])
@@ -343,6 +349,17 @@ class Events(BaseEvents):
 		d.Show()
 		return
 
+	#lst上での項目選択/選択解除
+	def listSelectEvent(self,event=None):
+		enable = self.parent.lst.HasFocus() == True and self.parent.lst.GetFirstSelected() >= 0
+		self.parent.menu.EnableMenu([
+			"FILE_POST_QUESTION",
+			"FILE_DELETE_USER",
+			"FILE_SHOW_DETAIL",
+			"FILE_SHOW_USER_DETAIL",
+			"FILE_SHOW_USER_WEB",
+			"FILTER_USER",
+		], enable)
 
 	#エラーコードを受け取り、必要があればエラー表示
 	def showError(self,code,parent=None):

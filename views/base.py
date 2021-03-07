@@ -255,6 +255,13 @@ class BaseMenu(object):
 		return self.menu.Check(menuItemsStore.getRef(ref_id),state)
 
 	def EnableMenu(self,ref_id,enable=True):
+		if type(ref_id)!=str and hasattr(ref_id,"__iter__"):
+			for i in ref_id:
+				self._EnableMenu(i,enable)
+		else:
+			self._EnableMenu(ref_id,enable)
+
+	def _EnableMenu(self,ref_id,enable):
 		if type(ref_id)==int:
 			return self.Enable(ref_id,enable)
 		else:
