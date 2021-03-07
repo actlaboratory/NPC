@@ -91,7 +91,7 @@ class MaiｎBase(wx.App):
 			traceback.print_exc()
 		self.log=getLogger(constants.LOG_PREFIX+".Main")
 		r="executable" if self.frozen else "interpreter"
-		self.log.info("Starting"+constants.APP_NAME+" as %s!" % r)
+		self.log.info("Starting"+constants.APP_NAME+" "+constants.APP_VERSION+" as %s!" % r)
 
 	def LoadSettings(self):
 		"""設定ファイルを読み込む。なければデフォルト設定を適用し、設定ファイルを書く。"""
