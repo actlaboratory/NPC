@@ -182,8 +182,8 @@ class Events(BaseEvents):
 			r = d.Show()
 			if r==wx.ID_CANCEL:
 				return
-			prm=d.GetValue()
-			#TODO:URLでの登録に対応する
+			prm = re.sub("https://peing.net/[^/]+/","", d.GetValue())
+
 			if self.parent.service.isUserRegistered(prm)==True:
 				errorDialog(_("指定されたユーザは既に登録済みです。"),self.parent.hFrame)
 				return errorCodes.DUPLICATED
