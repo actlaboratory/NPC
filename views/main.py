@@ -142,8 +142,9 @@ class Menu(BaseMenu):
 
 		self.RegisterCheckMenuCommand(self.hOptionMenu,[
 			"OPTION_OPTION",
+			"OPTION_LIST_CONFIG",
 			"OPTION_KEY_CONFIG",
-			"OPTION_LIST_CONFIG"
+
 		])
 
 		#フィルタメニュー
