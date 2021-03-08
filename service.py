@@ -118,7 +118,6 @@ class Service():
 
 	def updateUserInfo(self,user):
 		try:
-			print(user)
 			self.userDao.update(user.__dict__)
 			self.connection.commit()
 			return errorCodes.OK			
