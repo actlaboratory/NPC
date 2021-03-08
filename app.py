@@ -42,7 +42,6 @@ class Main(AppBase.MainBase):
 		self.hMainView.Show()
 
 	def OnEventLoopEnter(self,loop):
-		print("come")
 		if loop and loop.IsMain() and self.config.getboolean("general","auto_reload",False):
 			self.log.info("start: auto_reload")
 			self.hMainView.events.reload()
