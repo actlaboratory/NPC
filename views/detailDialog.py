@@ -38,3 +38,6 @@ class Dialog(BaseDialog):
 		type.hideScrollBar(wx.HORIZONTAL)
 
 		self.closeButton=self.creator.okbutton(_("閉じる(&C)"))
+
+	def processEnter(self,event):
+		self.wnd.Close()
