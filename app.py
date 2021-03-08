@@ -40,12 +40,12 @@ class Main(AppBase.MainBase):
 		from views import main
 		self.hMainView=main.MainView()
 		self.hMainView.Show()
+		wx.CallAfter(self.autoReload)
 
-	def OnEventLoopEnter(self,loop):
-		print("come")
-		if loop and loop.IsMain() and self.config.getboolean("general","auto_reload",False):
-			self.log.info("start: auto_reload")
-			self.hMainView.events.reload()
+	
+	def autoReload(self):
+		self.log.info("start: auto_reload")
+		self.hMainView.events.reload()
 
 
 	def setGlobalVars(self):
