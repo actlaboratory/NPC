@@ -252,7 +252,7 @@ class Events(BaseEvents):
 				return
 			r = self.parent.service.export(d.GetPath(),self.parent.lst)
 			if r != True:
-				errorDialog(r,self.parent.hFrame)
+				errorDialog(r.getErrorMessage(),self.parent.hFrame)
 
 		if selected==menuItemsStore.getRef("FILE_EXIT"):
 			self.parent.hFrame.Close()
