@@ -282,7 +282,7 @@ class Events(BaseEvents):
 				filter.UserFilter(target).enable(event.IsChecked())
 			else:
 				self.log.debug("set battonFilter = "+str(event.IsChecked()))
-				filter.UserFilter(0).enable(event.IsChecked())
+				filter.UserFilter().enable(event.IsChecked())
 			self.parent.refresh()
 			event.Skip()
 
