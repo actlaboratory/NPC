@@ -203,6 +203,7 @@ class Service():
 			if flg:
 				break
 			page += 1
+			wx.YieldIfNeeded()
 		self.connection.commit()
 		return errorCodes.OK
 
