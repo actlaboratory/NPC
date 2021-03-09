@@ -161,10 +161,10 @@ class Menu(BaseMenu):
 		])
 
 		#メニューバーの生成
-		self.hMenuBar.Append(self.hFileMenu,_("ファイル"))
-		self.hMenuBar.Append(self.hFilterMenu,_("フィルタ"))
-		self.hMenuBar.Append(self.hOptionMenu,_("オプション"))
-		self.hMenuBar.Append(self.hHelpMenu,_("ヘルプ"))
+		self.hMenuBar.Append(self.hFileMenu,_("ファイル(&F)"))
+		self.hMenuBar.Append(self.hFilterMenu,_("フィルタ(&I)"))
+		self.hMenuBar.Append(self.hOptionMenu,_("オプション(&O)"))
+		self.hMenuBar.Append(self.hHelpMenu,_("ヘルプ(&H)"))
 		target.SetMenuBar(self.hMenuBar)
 
 class Events(BaseEvents):
@@ -192,7 +192,7 @@ class Events(BaseEvents):
 			if user in (errorCodes.PEING_ERROR,errorCodes.NOT_FOUND):
 				self.showError(user)
 				return user
-			if yesNoDialog(_("ユーザ追加"),_("以下のユーザを追加しますか？\n\nID:%d\n%s(%s)") % (user.id,user.name,user.account),self.parent.hFrame)==wx.ID_NO:
+			if yesNoDialog(_("ユーザ追加"),_("以下のユーザを追加しますか？\n\nID:%(id)d\n%(name)s(%(account)s)") % {"id":user.id,"name":user.name,"account":user.account},self.parent.hFrame)==wx.ID_NO:
 				return
 			if self.parent.service.addUser(user)==errorCodes.OK:
 				dialog(_("登録完了"),_("ユーザの登録に成功しました。今回登録したユーザの回答を表示するには、ビューを再読み込みしてください。"),self.parent.hFrame)
@@ -384,7 +384,7 @@ class Events(BaseEvents):
 		elif code==errorCodes.PEING_ERROR or code==errorCodes.NOT_FOUND:
 			errorDialog(_("指定されたユーザが存在しないか、通信に失敗しました。以下の対処をお試しください。\n\n・入力内容が正しいか、再度お確かめください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),parent)
 		else:
-			errorDialog(_("不明なエラー%dが発生しました。大変お手数ですが、本ソフトの実行ファイルのあるディレクトリに生成された%sを添付し、作者までご連絡ください。") %(code,constants.LOG_FILE_NAME),parent)
+			errorDialog(_("不明なエラー%(code)dが発生しました。大変お手数ですが、本ソフトの実行ファイルのあるディレクトリに生成された%(log)sを添付し、作者までご連絡ください。") %{"code":code,"log":constants.LOG_FILE_NAME},parent)
 		return
 
 	def Exit(self,event=None):
