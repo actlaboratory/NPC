@@ -348,7 +348,7 @@ class Events(BaseEvents):
 			d.update(None,user.getViewString())
 			info = self.parent.service.getUserInfo(user.account)
 			if info==None:
-				d.update(i,None,len(users))
+				d.update(i+1,None,len(users))
 				self.log.info("skip update because user not found:"+user.account)
 				continue
 			elif info.id!=user.id:		#当該アカウント名が別ユーザの登録にかわっている
