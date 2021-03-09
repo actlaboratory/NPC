@@ -23,7 +23,7 @@ class Dialog(BaseDialog):
 		grid=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.creator.GetSizer(),views.ViewCreator.FlexGridSizer,20,2)
 		name,dummy = grid.inputbox(_("表示名"), None, self.user.name, wx.TE_READONLY|wx.BORDER_RAISED, 320)
 		name.hideScrollBar(wx.HORIZONTAL)
-		account,dummy = grid.inputbox("アカウント", None, self.user.account, wx.TE_READONLY|wx.BORDER_RAISED, 320)
+		account,dummy = grid.inputbox(_("アカウント"), None, self.user.account, wx.TE_READONLY|wx.BORDER_RAISED, 320)
 		account.hideScrollBar(wx.HORIZONTAL)
 		p = 0
 		if self.user.items>0:

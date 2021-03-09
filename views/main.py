@@ -178,7 +178,7 @@ class Events(BaseEvents):
 		selected=event.GetId()#メニュー識別しの数値が出る
 
 		if selected==menuItemsStore.getRef("FILE_ADD_USER"):
-			d = SimpleImputDialog.Dialog("ユーザの追加","peingページURLまたはTwitterユーザ名")
+			d = SimpleImputDialog.Dialog(_("ユーザの追加","peingページURLまたはTwitterユーザ名"))
 			d.Initialize()
 			r = d.Show()
 			if r==wx.ID_CANCEL:
