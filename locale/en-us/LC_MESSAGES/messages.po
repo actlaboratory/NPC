@@ -1,0 +1,746 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the NPC package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: NPC\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-03-09 18:32+0900\n"
+"PO-Revision-Date: 2021-03-09 19:08+0900\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.2\n"
+
+#: AppBase.py:45
+msgid ""
+"ログ機能の初期化に失敗しました。下記のファイルへのアクセスが可能であることを"
+"確認してください。"
+msgstr ""
+"Failed to initialize logger. Make sure you have permission to access to the "
+"following file:"
+
+#: keymapHandlerBase.py:690 keymapHandlerBase.py:720
+#, python-format
+msgid "%s は存在しないキーです。"
+msgstr "%s does not exist."
+
+#: keymapHandlerBase.py:761
+#, python-format
+msgid "%s は使用できないキーです。"
+msgstr "%s is unusable key."
+
+#: keymapHandlerBase.py:770
+msgid "修飾キーのみのパターンは設定できません。"
+msgstr "Keystroke which consists of only modifier keys cannot be added."
+
+#: keymapHandlerBase.py:772
+msgid "このキーは修飾キーと合わせて指定する必要があります。"
+msgstr "This key must be added with some modifier keys."
+
+#: keymapHandlerBase.py:777
+msgid "修飾キーでないキーを複数指定することはできません。"
+msgstr "This key combination is not supported."
+
+#: keymapHandlerBase.py:780 keymapHandlerBase.py:788
+msgid "このキーは、SHIFTキー以外の修飾キーと合わせて指定する必要があります。"
+msgstr "This key cannot be added with Shift key."
+
+#: keymapHandlerBase.py:783
+msgid "修飾キーのみの組み合わせは指定できません。"
+msgstr "Keystroke which consists of only modifier keys cannot be added."
+
+#: keymapHandlerBase.py:792
+msgid "この組み合わせは別の用途で予約されているため、利用できません。"
+msgstr "This keystroke is already reserved."
+
+#: menuItemsDic.py:12
+msgid "ユーザの追加(&A)"
+msgstr "&Add a user"
+
+#: menuItemsDic.py:13
+msgid "質問を投稿(&Q)"
+msgstr "Post a &question"
+
+#: menuItemsDic.py:14
+msgid "最新の情報に更新(&R)"
+msgstr "&reload"
+
+#: menuItemsDic.py:15
+msgid "ユーザを削除(&D)"
+msgstr "&Delete user"
+
+#: menuItemsDic.py:16
+msgid "コンテキストメニューを開く"
+msgstr "Open context menu"
+
+#: menuItemsDic.py:17
+msgid "詳細情報を表示(&V)"
+msgstr "&View more information"
+
+#: menuItemsDic.py:18
+msgid "ユーザ情報を表示(&U)"
+msgstr "View &user information"
+
+#: menuItemsDic.py:19
+msgid "表示中のリスト内容をCSVファイルにエクスポート(&E)"
+msgstr "&Export as CSV"
+
+#: menuItemsDic.py:20
+msgid "ブラウザでユーザのページを開く(&B)"
+msgstr "Open a user's page in a &browser"
+
+#: menuItemsDic.py:21
+msgid "終了(&X)"
+msgstr "E&xit"
+
+#: menuItemsDic.py:23
+msgid "運営からの質問を非表示(&M)"
+msgstr "Hide questions from &Management"
+
+#: menuItemsDic.py:24
+msgid "バトン質問を非表示(&B)"
+msgstr "Hide &Baton Questions"
+
+#: menuItemsDic.py:25
+msgid "選択中ユーザのみ表示(&U)"
+msgstr "Show only selected &user"
+
+#: menuItemsDic.py:27
+msgid "設定(&S)"
+msgstr "&Settings"
+
+#: menuItemsDic.py:28
+msgid "ショートカットキーの設定(&K)"
+msgstr "Set shortcut &keys"
+
+#: menuItemsDic.py:29
+msgid "リスト表示設定(&L)"
+msgstr "&List display settings"
+
+#: menuItemsDic.py:31
+msgid "最新バージョンを確認(&U)"
+msgstr "Check for &Updates"
+
+#: menuItemsDic.py:32
+msgid "バージョン情報(&V)"
+msgstr "&Version Info"
+
+#: update.py:50 update.py:59 update.py:73 update.py:79 update.py:90
+#: update.py:98 update.py:103 update.py:108 update.py:160
+#: views\updateDialog.py:39
+msgid "アップデート"
+msgstr "update"
+
+#: update.py:50
+msgid "このバージョンではアップデートを使用できません。"
+msgstr "You cannot use update with this version."
+
+#: update.py:59
+msgid ""
+"アップデータが利用できません。お手数ですが、再度ソフトウェアをダウンロードし"
+"てください。"
+msgstr "Updater is not available. Download this software again."
+
+#: update.py:73
+msgid "サーバーへの通信がタイムアウトしました。"
+msgstr "Connection timeout."
+
+#: update.py:79
+msgid "サーバーへの接続に失敗しました。インターネット接続などをご確認ください"
+msgstr "Connection failed. Check the internet connection."
+
+#: update.py:85
+msgid "サーバーとの通信中に不明なエラーが発生しました。"
+msgstr "Unknown error has occurred while connecting."
+
+#: update.py:90
+msgid "サーバーとの通信に失敗しました。"
+msgstr "Connection failed."
+
+#: update.py:98
+msgid "現在のバージョンが最新です。アップデートの必要はありません。"
+msgstr "This is the latest version."
+
+#: update.py:103
+msgid "リクエストパラメーターが不正です。開発者まで連絡してください"
+msgstr ""
+"Request parameter is invalid. Contact to the developer for further "
+"assistance."
+
+#: update.py:108
+msgid "アップデーターが登録されていません。開発者に連絡してください。"
+msgstr ""
+"Updater is not registered. Contact to the developer for further assistance."
+
+#: update.py:160
+msgid ""
+"ダウンロードが完了しました。\n"
+"ソフトウェア終了時に、自動でアップデートされます。"
+msgstr ""
+"Download has finished.\n"
+"When you close this application, update will be installed."
+
+#: views\base.py:67
+msgid "現在メニューは操作できません"
+msgstr "You cannot use the menu at the moment."
+
+#: views\base.py:114
+msgid ""
+"で設定されたショートカットキーが正しくありません。キーの重複、存在しないキー"
+"名の指定、使用できないキーパターンの指定などが考えられます。以下のキーの設定"
+"内容をご確認ください。\n"
+"\n"
+msgstr ""
+"keyboard shortcut is invalid. Please check for conflicting / unusable key "
+"combinations and key names.\n"
+
+#: views\base.py:117 views\fontManager.py:25 views\fontManager.py:50
+#: views\globalKeyConfig.py:61 views\KeyValueSettingDialogBase.py:279
+#: views\KeyValueSettingDialogBase.py:330 views\updateDialog.py:66
+msgid "エラー"
+msgstr "error"
+
+#: views\detailDialog.py:17 views\userDetailDialog.py:15
+msgid "詳細情報"
+msgstr "details"
+
+#: views\detailDialog.py:33
+msgid "回答者"
+msgstr "Respondents"
+
+#: views\detailDialog.py:35
+msgid "回答日時"
+msgstr "Answered date and time"
+
+#: views\detailDialog.py:37
+msgid "種別"
+msgstr "Type"
+
+#: views\detailDialog.py:40 views\userDetailDialog.py:40
+msgid "閉じる(&C)"
+msgstr "&Close"
+
+#: views\fontManager.py:25
+msgid ""
+"設定されているフォント情報が不正です。デフォルトのフォントを適用します。"
+msgstr "Font configuration is invalid. Default settings will be applied."
+
+#: views\fontManager.py:50
+msgid "原因不明のエラーにより、フォントの変更に失敗しました。"
+msgstr "Font configuration has failed."
+
+#: views\globalKeyConfig.py:20 views\globalKeyConfig.py:74
+msgid "名前"
+msgstr "name"
+
+#: views\globalKeyConfig.py:21
+msgid "ショートカット"
+msgstr "shortcut"
+
+#: views\globalKeyConfig.py:22 views\globalKeyConfig.py:74
+msgid "識別子"
+msgstr "identifier"
+
+#: views\globalKeyConfig.py:31 views\main.py:296
+msgid "ショートカットキーの設定"
+msgstr "Shortcut Key Configuration"
+
+#: views\globalKeyConfig.py:54 views\globalKeyConfig.py:71
+#: views\globalKeyConfig.py:102 views\globalKeyConfig.py:107
+#: views\globalKeyConfig.py:120 views\globalKeyConfig.py:128
+#: views\globalKeyConfig.py:138 views\globalKeyConfig.py:143
+#: views\keyConfig.py:57 views\KeyValueSettingDialogBase.py:315
+#: views\main.py:415 views\main.py:428
+msgid "なし"
+msgstr "None"
+
+#: views\globalKeyConfig.py:61
+#, python-format
+msgid ""
+"以下の項目において、重複するキー %(key)s が設定されています。\n"
+"\n"
+"%(command)s"
+msgstr ""
+"%(key)s is configured in following items.\n"
+"\n"
+"\n"
+"%(command)s"
+
+#: views\globalKeyConfig.py:74
+msgid "ショートカット1"
+msgstr "shortcut 1"
+
+#: views\globalKeyConfig.py:74
+msgid "ショートカット2"
+msgstr "shortcut 2"
+
+#: views\globalKeyConfig.py:74
+msgid "ショートカット3"
+msgstr "shortcut 3"
+
+#: views\globalKeyConfig.py:74
+msgid "ショートカット4"
+msgstr "shortcut 4"
+
+#: views\globalKeyConfig.py:74
+msgid "ショートカット5"
+msgstr "shortcut 5"
+
+#: views\globalKeyConfig.py:75 views\settingsDialog.py:47
+msgid "設定"
+msgstr "settings"
+
+#: views\globalKeyConfig.py:80
+msgid "登録内容の入力"
+msgstr "register set contents"
+
+#: views\globalKeyConfig.py:122
+msgid "このショートカットは変更できません。"
+msgstr "This shortcut cannot be modified."
+
+#: views\globalKeyConfig.py:127 views\globalKeyConfig.py:130
+msgid "設定完了"
+msgstr "Setup has been completed"
+
+#: views\globalKeyConfig.py:127
+msgid "解除しました。"
+msgstr "unregistered."
+
+#: views\globalKeyConfig.py:130
+#, python-format
+msgid "%s に設定しました。"
+msgstr "Registered as %s."
+
+#: views\keyConfig.py:31
+msgid "キー設定"
+msgstr "Key Configuration"
+
+#: views\keyConfig.py:39
+msgid ""
+"設定するには、使用したいキーの組み合わせを押します。\n"
+"設定を解除するには、Escキーを押します。"
+msgstr ""
+"Press preferred key combination to register.\n"
+"Press Esc to remove configuration."
+
+#: views\keyConfig.py:45
+msgid "設定解除"
+msgstr "remove registered configuration"
+
+#: views\KeyValueSettingDialogBase.py:51
+msgid "現在の登録内容"
+msgstr "Current Settings"
+
+#: views\KeyValueSettingDialogBase.py:72
+msgid "追加(&A)"
+msgstr "&Add "
+
+#: views\KeyValueSettingDialogBase.py:73
+msgid "変更(&M)"
+msgstr "&Modify"
+
+#: views\KeyValueSettingDialogBase.py:75
+msgid "削除(&D)"
+msgstr "&Delete"
+
+#: views\KeyValueSettingDialogBase.py:80 views\KeyValueSettingDialogBase.py:258
+#: views\listConfigurationDialog.py:54 views\SimpleImputDialog.py:35
+msgid "ＯＫ"
+msgstr "OK"
+
+#: views\KeyValueSettingDialogBase.py:81 views\KeyValueSettingDialogBase.py:259
+#: views\listConfigurationDialog.py:55 views\settingsDialog.py:82
+#: views\SimpleImputDialog.py:36 views\updateDialog.py:45
+msgid "キャンセル"
+msgstr "cancel"
+
+#: views\KeyValueSettingDialogBase.py:122
+#: views\KeyValueSettingDialogBase.py:152
+#, python-format
+msgid "この%sは既に登録されています。登録を上書きしますか？"
+msgstr "This %s is already registered. Do you wish to overwrite?"
+
+#: views\KeyValueSettingDialogBase.py:122
+#: views\KeyValueSettingDialogBase.py:152
+msgid "上書き確認"
+msgstr "Overwriting Confirmation"
+
+#: views\KeyValueSettingDialogBase.py:279
+#, python-format
+msgid "%sを空白や半角の=を含む値に設定することはできません。"
+msgstr "%s cannot include space and equals sign."
+
+#: views\KeyValueSettingDialogBase.py:319
+#, python-format
+msgid "%(v1)sと%(v2)sに同じショートカットキー%(key)sが設定されています。\n"
+msgstr "%(v1)s and %(v2)s has same shortcut key %(key)s.\n"
+
+#: views\KeyValueSettingDialogBase.py:322
+#, python-format
+msgid ""
+"%(v1)s、%(v2)sなど計%(count)d箇所に同じショートカットキー%(key)sが設定されて"
+"います。\n"
+msgstr "%(key)s is registered at %(count)i items, %(v1)s, %(v2)s and more.\n"
+
+#: views\KeyValueSettingDialogBase.py:326
+#, python-format
+msgid ""
+"設定されたショートカット%sが認識できません。お手数ですが、このエラーメッセー"
+"ジを作者へご連絡ください。\n"
+msgstr "Configured shortcut %s cannot be recognized. Contact to developer.\n"
+
+#: views\KeyValueSettingDialogBase.py:328
+#, python-format
+msgid ""
+"%(command)sに設定されたショートカットキー%(key)sは、別の場所で利用されていま"
+"す。\n"
+msgstr "Shortcut key %(key)s set to %(command)s is used elsewhere.\n"
+
+#: views\listConfigurationDialog.py:23
+msgid "リスト表示設定"
+msgstr "List display settings"
+
+#: views\listConfigurationDialog.py:34 views\listConfigurationDialog.py:35
+msgid "カラム"
+msgstr "Column"
+
+#: views\listConfigurationDialog.py:48
+msgid "表示(&D)"
+msgstr "&View"
+
+#: views\listConfigurationDialog.py:49
+msgid "左へ(&L)"
+msgstr "Move &Left"
+
+#: views\listConfigurationDialog.py:51
+msgid "右へ(&R)"
+msgstr "Move &Right"
+
+#: views\listConfigurationDialog.py:79
+msgid "全ての列を非表示にすることはできません。"
+msgstr "Not all columns can be hidden."
+
+#: views\main.py:102
+msgid "運営"
+msgstr "Management"
+
+#: views\main.py:103
+msgid "バトン"
+msgstr "Baton"
+
+#: views\main.py:164
+msgid "ファイル(&F)"
+msgstr "&File"
+
+#: views\main.py:165
+msgid "フィルタ(&I)"
+msgstr "F&ilter"
+
+#: views\main.py:166
+msgid "オプション(&O)"
+msgstr "&Options"
+
+#: views\main.py:167
+msgid "ヘルプ(&H)"
+msgstr "&Help"
+
+#: views\main.py:189
+msgid "指定されたユーザは既に登録済みです。"
+msgstr "The specified user is already registered."
+
+#: views\main.py:195
+msgid "ユーザ追加"
+msgstr "Add user"
+
+#: views\main.py:195
+#, python-format
+msgid ""
+"以下のユーザを追加しますか？\n"
+"\n"
+"ID:%(id)d\n"
+"%(name)s(%(account)s)"
+msgstr ""
+"Do you want to add the following users?\n"
+"\n"
+"ID:%(id)d\n"
+"%(name)s (%(account)s)"
+
+#: views\main.py:198
+msgid "登録完了"
+msgstr "Registeration Completed"
+
+#: views\main.py:198
+msgid ""
+"ユーザの登録に成功しました。今回登録したユーザの回答を表示するには、ビューを"
+"再読み込みしてください。"
+msgstr ""
+"The user was successfully registered. To view the answers of the users who "
+"registered this time, please reload the view."
+
+#: views\main.py:200
+msgid "ユーザの登録に失敗しました。"
+msgstr "User registration failed."
+
+#: views\main.py:205
+#, python-format
+msgid "%sさんへの質問内容"
+msgstr "question to %s"
+
+#: views\main.py:213
+msgid "投稿完了"
+msgstr "Post completed"
+
+#: views\main.py:213
+msgid "質問を投稿しました。"
+msgstr "Your question successfully posted."
+
+#: views\main.py:223
+msgid "ユーザの削除"
+msgstr "Delete a user"
+
+#: views\main.py:223
+#, python-format
+msgid ""
+"以下のユーザの登録と、過去の回答履歴を削除しますか？\n"
+"\n"
+"%s"
+msgstr ""
+"Do you want to delete the following user registrations and past response his/"
+"her history?\n"
+"\n"
+"%s"
+
+#: views\main.py:233
+msgid ""
+"このユーザは既に退会したか、peingIDを変更しているため開くことができません。"
+msgstr ""
+"This user cannot be opened because he has already unsubscribed or changed "
+"his peingID."
+
+#: views\main.py:250
+msgid "出力先ファイルの指定"
+msgstr "Specify destination file"
+
+#: views\main.py:250
+msgid "CSVファイル(*.csv) | *.csv; | すべてのファイル(*.*) | *.*"
+msgstr "CSV file (*.csv) | *.csv; | All files (*.*) | *.*"
+
+#: views\main.py:341
+msgid "準備中"
+msgstr "Preparing"
+
+#: views\main.py:341
+msgid "回答データを取得しています"
+msgstr "Retrieving answer data"
+
+#: views\main.py:358
+msgid "登録ユーザの更新除外について"
+msgstr "About update exclusions for registered users"
+
+#: views\main.py:358
+#, python-format
+msgid ""
+"登録していた以下のユーザは、アカウント名が変更されたか、削除されました。その"
+"後、同一アカウント名を別のユーザが取得しているため、今後このアカウントの回答"
+"は更新から除外します。もし、再取得したアカウントが同一人物であるなど今後もこ"
+"のアカウントの回答の更新を希望する場合には、再度ユーザ追加を行ってくださ"
+"い。\n"
+"\n"
+"該当ユーザ：%s"
+msgstr ""
+"The following registered user have had their account names changed or "
+"deleted: We will then exclude the answers for this account from updating in "
+"the future because another user has obtained the same account name. If you "
+"wish to continue updating the answers to this account, such as if the re-"
+"acquired account is the same person, please add the user again.\n"
+"\n"
+"Applicable user: %s"
+
+#: views\main.py:385
+msgid ""
+"指定されたユーザが存在しないか、通信に失敗しました。以下の対処をお試しくださ"
+"い。\n"
+"\n"
+"・入力内容が正しいか、再度お確かめください。\n"
+"・peing.netにアクセスできるか、ブラウザから確認してください。\n"
+"・しばらくたってから再度お試しください。\n"
+"・問題が解決しない場合、開発者までお問い合わせください。"
+msgstr ""
+"The specified user does not exist or connecion failed. Try the following:\n"
+"\n"
+"Please check again if the input content is correct.\n"
+"Check from your browser to see if you can access peing.net.\n"
+"Please try again after a while.\n"
+"If the problem is not resolved, please contact to the developer."
+
+#: views\main.py:387
+#, python-format
+msgid ""
+"不明なエラー%(code)dが発生しました。大変お手数ですが、本ソフトの実行ファイル"
+"のあるディレクトリに生成された%(log)sを添付し、作者までご連絡ください。"
+msgstr ""
+"An unknown error %(code)d occurred. Please contact the developer by "
+"attaching the information generated in the directory %(log)s the execution "
+"file of this software."
+
+#: views\progress.py:28
+msgid "中止"
+msgstr "abort"
+
+#: views\settingsDialog.py:32
+msgid "標準"
+msgstr "normal"
+
+#: views\settingsDialog.py:33
+msgid "ダーク"
+msgstr "Dark"
+
+#: views\settingsDialog.py:36
+msgid "画面幅で折り返し"
+msgstr "Wrap by screen width"
+
+#: views\settingsDialog.py:37
+msgid "折り返さない"
+msgstr "Don't wrap"
+
+#: views\settingsDialog.py:58
+msgid "カテゴリ選択"
+msgstr "Category selection"
+
+#: views\settingsDialog.py:61
+msgid "一般"
+msgstr "general"
+
+#: views\settingsDialog.py:62
+msgid "起動時に最新の情報を取得する"
+msgstr "Get the latest information at startup"
+
+#: views\settingsDialog.py:67
+msgid "表示/言語"
+msgstr "Display/Language"
+
+#: views\settingsDialog.py:68
+msgid "言語(&L)"
+msgstr "&Language"
+
+#: views\settingsDialog.py:69
+msgid "画面表示モード(&D)"
+msgstr "Screen &Display Mode"
+
+#: views\settingsDialog.py:70
+msgid "テキストの折り返し(&W)"
+msgstr "Text &Wrap"
+
+#: views\settingsDialog.py:73
+msgid "ネットワーク"
+msgstr "network"
+
+#: views\settingsDialog.py:74
+msgid "起動時に更新を確認(&U)"
+msgstr "Automatically Check for &Update"
+
+#: views\settingsDialog.py:75
+msgid "プロキシサーバーの情報を手動で設定する(&M)"
+msgstr "&Manually set up proxy server information"
+
+#: views\settingsDialog.py:76
+msgid "サーバーURL"
+msgstr "Server URL"
+
+#: views\settingsDialog.py:77
+msgid "ポート番号"
+msgstr "Port number"
+
+#: views\updateDialog.py:23
+#, python-format
+msgid "アップデート - %s"
+msgstr "update - %s"
+
+#: views\updateDialog.py:32
+#, python-format
+msgid "version %s にアップデートできます。"
+msgstr "Version %s is now available."
+
+#: views\updateDialog.py:33
+msgid "進行状況"
+msgstr "progress"
+
+#: views\updateDialog.py:35
+#, python-format
+msgid "version %s アップデート情報"
+msgstr "version %s update information"
+
+#: views\updateDialog.py:41
+msgid "緊急のお知らせがあります。"
+msgstr "There is an important information."
+
+#: views\updateDialog.py:44
+msgid "お知らせページへ"
+msgstr "Go to information page"
+
+#: views\updateDialog.py:59
+msgid "アップデートをダウンロード中..."
+msgstr "Downloading update..."
+
+#: views\updateDialog.py:66
+msgid ""
+"updater.exeが見つかりませんでした。誤って削除したかなどをご確認ください。"
+msgstr "Updater.exe could not be found."
+
+#: views\userDetailDialog.py:24
+msgid "表示名"
+msgstr "Display name"
+
+#: views\userDetailDialog.py:31
+msgid "回答状況"
+msgstr "answer status"
+
+#: views\userDetailDialog.py:33
+msgid "フォロイー"
+msgstr "following"
+
+#: views\userDetailDialog.py:36
+msgid "プロフィール"
+msgstr "Profile"
+
+#: views\versionDialog.py:21
+msgid "バージョン情報"
+msgstr "version info"
+
+#: views\versionDialog.py:30
+msgid "ソフトウェアバージョン"
+msgstr "software version"
+
+#: views\versionDialog.py:31
+msgid "アップデータバージョン"
+msgstr "updater version"
+
+#: views\versionDialog.py:33
+msgid "ライセンス"
+msgstr "license"
+
+#: views\versionDialog.py:34
+msgid "開発元"
+msgstr "developers"
+
+#: views\versionDialog.py:35
+msgid "ソフトウェア詳細情報"
+msgstr "software details"
+
+#: views\versionDialog.py:37
+msgid ""
+"ライセンス/著作権情報については、同梱の license.txt を参照してください。"
+msgstr "See the included license.txt for licensing / copyright information."
+
+#: views\versionDialog.py:49
+msgid "閉じる"
+msgstr "close"
+
+#~ msgid "ヘルプ"
+#~ msgstr "help"
