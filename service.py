@@ -105,7 +105,7 @@ class Service():
 			return errorCodes.OK
 		except Exception as e:
 			self.log.error(e)
-			return self.connection.rollback()
+			self.connection.rollback()
 			raise e
 
 	#有効なユーザIDの一覧を返す
@@ -124,7 +124,7 @@ class Service():
 		except Exception as e:
 			self.log.debug("update user info:"+user.account)
 			self.log.error(e)
-			return self.connection.rollback()
+			self.connection.rollback()
 			raise e
 
 	def getViewData(self,userId=-1):
@@ -134,7 +134,7 @@ class Service():
 			return data
 		except Exception as e:
 			self.log.error(e)
-			return errorCodes.UNKNOWN
+			raise e
 
 	#answerIdからanswerEntityを得る
 	def getAnswer(self,id):
