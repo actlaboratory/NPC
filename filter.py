@@ -36,11 +36,17 @@ class BatonFilter(FilterBase):
 
 #特定ユーザの質問のみを表示
 class UserFilter(FilterBase):
-	def __init__(self,user):
-		self.targetUserId = user.id
+	def __init__(self,user=None):
+		if user != None:
+			self.targetUserId = user.id
+		else:
+			self.targetUserId = -1
 
 	def test(self,**args):
-		return args["userId"]==self.targetUserId
+		if self.targetUserId > 0:
+			return args["userId"]==self.targetUserId
+		else:
+			return True
 
 
 def getFilterList():
