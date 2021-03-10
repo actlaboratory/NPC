@@ -220,7 +220,7 @@ class BaseMenu(object):
 		else:
 			if not title:
 				title=menuItemsDic.dic[ref_id]
-			return self._RegisterMenuCommand(menu_handle,ref_id,title,index)
+			return self._RegisterCheckMenuCommand(menu_handle,ref_id,title,index)
 
 	def _RegisterCheckMenuCommand(self,menu_handle,ref_id,title,index=-1):
 		"""チェックメニューアイテム生成補助関数"""
@@ -251,8 +251,8 @@ class BaseMenu(object):
 		s=label if shortcut is None else "%s\t%s" % (label,shortcut)
 		self.hMenuBar.SetLabel(menuItemsStore.getRef(ref_id), s)
 
-	def CheckMenu(ref_id,state=True):
-		return self.menu.Check(menuItemsStore.getRef(ref_id),state)
+	def CheckMenu(self,ref_id,state=True):
+		return self.hMenuBar.Check(menuItemsStore.getRef(ref_id),state)
 
 	def EnableMenu(self,ref_id,enable=True):
 		if type(ref_id)!=str and hasattr(ref_id,"__iter__"):
