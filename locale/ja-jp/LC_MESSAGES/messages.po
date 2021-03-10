@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NPC\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-09 22:37+0900\n"
+"POT-Creation-Date: 2021-03-10 13:46+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -437,6 +437,10 @@ msgstr ""
 
 #: views\main.py:181
 msgid "ユーザの追加"
+msgstr ""
+
+#: views\main.py:181
+msgid "peingページURLまたはTwitterユーザ名"
 msgstr ""
 
 #: views\main.py:189

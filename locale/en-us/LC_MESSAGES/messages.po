@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NPC\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-09 22:37+0900\n"
-"PO-Revision-Date: 2021-03-09 22:38+0900\n"
+"POT-Creation-Date: 2021-03-10 13:46+0900\n"
+"PO-Revision-Date: 2021-03-10 13:47+0900\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -453,6 +453,10 @@ msgstr "&Help"
 #: views\main.py:181
 msgid "ユーザの追加"
 msgstr "Add a user"
+
+#: views\main.py:181
+msgid "peingページURLまたはTwitterユーザ名"
+msgstr "peing page URL or twitter user name"
 
 #: views\main.py:189
 msgid "指定されたユーザは既に登録済みです。"
