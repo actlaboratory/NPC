@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NPC\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-09 18:32+0900\n"
+"POT-Creation-Date: 2021-03-09 22:37+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -435,6 +435,10 @@ msgstr ""
 msgid "ヘルプ(&H)"
 msgstr ""
 
+#: views\main.py:181
+msgid "ユーザの追加"
+msgstr ""
+
 #: views\main.py:189
 msgid "指定されたユーザは既に登録済みです。"
 msgstr ""
@@ -652,6 +656,10 @@ msgstr ""
 
 #: views\userDetailDialog.py:24
 msgid "表示名"
+msgstr ""
+
+#: views\userDetailDialog.py:26
+msgid "アカウント"
 msgstr ""
 
 #: views\userDetailDialog.py:31

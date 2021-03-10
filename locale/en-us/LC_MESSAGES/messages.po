@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NPC\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-09 18:32+0900\n"
-"PO-Revision-Date: 2021-03-09 19:08+0900\n"
+"POT-Creation-Date: 2021-03-09 22:37+0900\n"
+"PO-Revision-Date: 2021-03-09 22:38+0900\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -450,6 +450,10 @@ msgstr "&Options"
 msgid "ヘルプ(&H)"
 msgstr "&Help"
 
+#: views\main.py:181
+msgid "ユーザの追加"
+msgstr "Add a user"
+
 #: views\main.py:189
 msgid "指定されたユーザは既に登録済みです。"
 msgstr "The specified user is already registered."
@@ -696,6 +700,10 @@ msgstr "Updater.exe could not be found."
 #: views\userDetailDialog.py:24
 msgid "表示名"
 msgstr "Display name"
+
+#: views\userDetailDialog.py:26
+msgid "アカウント"
+msgstr "Account"
 
 #: views\userDetailDialog.py:31
 msgid "回答状況"
