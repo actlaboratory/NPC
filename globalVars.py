@@ -4,3 +4,4 @@
 
 app=None
 update = None
+mutex = None

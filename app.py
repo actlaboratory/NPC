@@ -16,12 +16,12 @@ import proxyUtil
 class Main(AppBase.MainBase):
 	def __init__(self):
 		super().__init__()
-		self.mutex = 0
 
 	def OnInit(self):
 		#多重起動防止
-		self.mutex = win32event.CreateMutex(None, 1, constants.APP_FULL_NAME)
+		globalVars.mutex = win32event.CreateMutex(None, 1, "NPCNPCNPC")
 		if win32api.GetLastError() == winerror.ERROR_ALREADY_EXISTS:
+			globalVars.mutex = None
 			return False
 		return True
 
@@ -66,10 +66,11 @@ class Main(AppBase.MainBase):
 		return 0
 
 	def _releaseMutex(self):
-		if self.mutex != 0:
-			try: win32event.ReleaseMutex(self.mutex)
-			except: pass
-			self.mutex = 0
+		if globalVars.mutex != None:
+			try: win32event.ReleaseMutex(globalVars.mutex)
+			except Exception as e:
+				return
+			globalVars.mutex = None
 			self.log.info("mutex object released.")
 
 	def __del__(self):
