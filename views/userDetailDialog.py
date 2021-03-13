@@ -10,9 +10,11 @@ class Dialog(BaseDialog):
 		super().__init__("userDetailDialog")
 		self.user = user
 
-	def Initialize(self):
+	def Initialize(self,parent=None):
 		self.log.debug("created")
-		super().Initialize(self.app.hMainView.hFrame,_("詳細情報"))
+		if parent == None:
+			parent = self.app.hMainView.hFrame
+		super().Initialize(parent,_("詳細情報"))
 		self.InstallControls()
 		return True
 

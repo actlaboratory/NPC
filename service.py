@@ -116,6 +116,13 @@ class Service():
 			result.append(self._createUserObj(user))
 		return result
 
+	def getUserList(self):
+		users = self.userDao.getAll()
+		result = []
+		for user in users:
+			result.append(self._createUserObj(user))
+		return result
+
 	def updateUserInfo(self,user):
 		try:
 			self.userDao.update(user.__dict__)

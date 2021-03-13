@@ -13,6 +13,7 @@ defaultKeymap["mainView"]={
 	"FILE_SHOW_USER_DETAIL":"shift+return",
 	"FILE_EXPORT":"ctrl+e",
 	"FILE_SHOW_USER_WEB":"ctrl+shift+return",
+	"FILE_USER_LIST":"F4",
 
 	"FILE_OPEN_CONTEXTMENU":"shift+F10",
 

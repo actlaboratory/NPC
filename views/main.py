@@ -30,6 +30,7 @@ from views import progress
 from views import settingsDialog
 from views import SimpleImputDialog
 from views import userDetailDialog
+from views import userListDialog
 from views import versionDialog
 
 
@@ -137,6 +138,7 @@ class Menu(BaseMenu):
 			"FILE_SHOW_USER_DETAIL",
 			"FILE_SHOW_USER_WEB",
 			"FILE_EXPORT",
+			"FILE_USER_LIST",
 			"FILE_EXIT",
 		])
 
@@ -253,6 +255,13 @@ class Events(BaseEvents):
 			r = self.parent.service.export(d.GetPath(),self.parent.lst)
 			if r != True:
 				errorDialog(r.getErrorMessage(),self.parent.hFrame)
+
+		if selected==menuItemsStore.getRef("FILE_USER_LIST"):
+			users = self.parent.service.getUserList()
+			d = userListDialog.Dialog(users,self.parent.service)
+			d.Initialize()
+			d.Show()
+			self.parent.refresh()
 
 		if selected==menuItemsStore.getRef("FILE_EXIT"):
 			self.parent.hFrame.Close()
