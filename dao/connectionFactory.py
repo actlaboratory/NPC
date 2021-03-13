@@ -1,3 +1,7 @@
+# sqlite3 connection factory
+# Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
+
+
 import sqlite3
 import constants
 import globalVars

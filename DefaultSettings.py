@@ -30,7 +30,6 @@ class DefaultSettings:
 			"usemanualsetting" : False,
 			"server" : "localhost",
 			"port" : 8080,
-
 		}
 
 		return config

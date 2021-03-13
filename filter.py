@@ -1,4 +1,5 @@
 # NPC list filter
+# Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
 
 import constants
 
@@ -29,10 +30,12 @@ class AutoQuestionFilter(FilterBase):
 	def test(self,**args):
 		return args["answerFlag"]&constants.FLG_ANSWER_AUTOQUESTION==0
 
+
 #バトン質問を非表示にする
 class BatonFilter(FilterBase):
 	def test(self,**args):
 		return args["answerFlag"]&constants.FLG_ANSWER_BATON_QUESTION==0
+
 
 #特定ユーザの質問のみを表示
 class UserFilter(FilterBase):

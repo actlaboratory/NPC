@@ -1,5 +1,7 @@
 ﻿# -*- coding: utf-8 -*-
 # ユーザ一覧ダイアログ
+# Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
+
 
 import wx
 

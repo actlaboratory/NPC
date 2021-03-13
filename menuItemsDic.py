@@ -1,3 +1,5 @@
+#menuItems dictionally
+#Copyright (C) 2019-2021 yamahubuki <itiro.ishino@gmail.com>
 
 import re
 
@@ -10,7 +12,7 @@ def getValueString(ref_id):
 
 dic={
 	"FILE_ADD_USER":_("ユーザの追加(&A)")+"...",
-	"FILE_POST_QUESTION":_("質問を投稿(&Q)"),
+	"FILE_POST_QUESTION":_("質問を投稿(&Q)")+"...",
 	"FILE_RELOAD":_("最新の情報に更新(&R)"),
 	"FILE_DELETE_USER":_("ユーザを削除(&D)"),
 	"FILE_OPEN_CONTEXTMENU":_("コンテキストメニューを開く"),

@@ -1,5 +1,9 @@
+# user Dao
+# Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
+
 
 import dao.baseDao
+
 
 class UserDao(dao.baseDao.BaseDao):
 	def __init__(self):

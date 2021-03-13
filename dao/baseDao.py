@@ -1,7 +1,11 @@
+# base Dao
+# Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
+
 
 import sqlite3
 
 import dao.connectionFactory
+
 
 class BaseDao():
 	def __init__(self, tableName,connection=None):

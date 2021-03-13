@@ -1,6 +1,7 @@
 ﻿# -*- coding: utf-8 -*-
 #constant values
-#Copyright (C) 20XX anonimous <anonimous@sample.com>
+# Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
+
 
 import wx
 
@@ -9,7 +10,7 @@ APP_FULL_NAME = "windows Native Peing Connector"#アプリケーションの完�
 APP_NAME="NPC"#アプリケーションの名前
 APP_ICON = None
 APP_VERSION="0.0.1"
-APP_LAST_RELEASE_DATE="20xx-xx-xx"
+APP_LAST_RELEASE_DATE="2021-03-14"
 APP_COPYRIGHT_YEAR="2021"
 APP_LICENSE="Apache License 2.0"
 APP_DEVELOPERS="yamahubuki, ACT Laboratory"
@@ -41,6 +42,7 @@ BASE_PACKAGE_URL = None
 PACKAGE_CONTAIN_ITEMS = ()#パッケージに含めたいファイルやfolderがあれば指定
 NEED_HOOKS = ()#pyinstallerのhookを追加したい場合は指定
 STARTUP_FILE = "npc.py"#起動用ファイルを指定
+
 # update情報
 UPDATE_URL = "https://actlab.org/api/checkUpdate"
 UPDATER_VERSION = "1.0.0"

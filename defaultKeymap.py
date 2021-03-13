@@ -1,6 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
 #default key map
-#Copyright (C) 2019 Yukio Nozawa <personal@nyanchangames.com>
+## Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
 
 defaultKeymap={}
 

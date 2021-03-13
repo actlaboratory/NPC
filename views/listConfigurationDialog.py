@@ -1,5 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
 # リスト表示設定
+# Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
 
 import json
 import wx

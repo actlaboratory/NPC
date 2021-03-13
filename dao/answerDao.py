@@ -1,7 +1,8 @@
-import dao.baseDao
+# answer Dao
+# Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
 
-import datetime
-import sqlite3
+
+import dao.baseDao
 
 
 class AnswerDao(dao.baseDao.BaseDao):

@@ -1,10 +1,10 @@
 ﻿# -*- coding: utf-8 -*-
 #Application Main
+#Copyright (C) 2019-2021 yamahubuki <itiro.ishino@gmail.com>
 
 import win32api
 import win32event
 import winerror
-import sys
 import wx
 
 import AppBase
@@ -19,14 +19,14 @@ class Main(AppBase.MainBase):
 
 	def OnInit(self):
 		#多重起動防止
-		globalVars.mutex = win32event.CreateMutex(None, 1, "NPCNPCNPC")
+		globalVars.mutex = win32event.CreateMutex(None, 1, constants.APP_NAME)
 		if win32api.GetLastError() == winerror.ERROR_ALREADY_EXISTS:
 			globalVars.mutex = None
 			return False
 		return True
 
 	def initialize(self):
-		self.setGlobalVars()
+		self.initUpdater()
 		# プロキシの設定を適用
 		if self.config.getboolean("network", "auto_proxy"):
 			self.proxyEnviron = proxyUtil.virtualProxyEnviron()
@@ -43,13 +43,12 @@ class Main(AppBase.MainBase):
 		if self.config.getboolean("general","auto_reload",True):
 			wx.CallAfter(self.autoReload)
 
-	
 	def autoReload(self):
 		self.log.info("start: auto_reload")
 		self.hMainView.events.reload()
 
 
-	def setGlobalVars(self):
+	def initUpdater(self):
 		globalVars.update = update.update()
 		return
 
