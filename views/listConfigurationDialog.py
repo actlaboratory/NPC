@@ -7,7 +7,6 @@ import wx
 import views.ViewCreator
 import simpleDialog
 
-from logging import getLogger
 from views.baseDialog import *
 
 
