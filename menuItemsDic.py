@@ -18,7 +18,7 @@ dic={
 	"FILE_SHOW_USER_DETAIL":_("ユーザ情報を表示(&U)")+"...",
 	"FILE_EXPORT":_("表示中のリスト内容をCSVファイルにエクスポート(&E)"),
 	"FILE_SHOW_USER_WEB":_("ブラウザでユーザのページを開く(&B)"),
-	"FILE_USER_LIST":_("登録済みユーザリスト")+"...",
+	"FILE_USER_LIST":_("登録済みユーザリスト(&L)")+"...",
 	"FILE_EXIT":_("終了(&X)"),
 
 	"FILTER_AUTO_QUESTION":_("運営からの質問を非表示(&M)"),
