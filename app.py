@@ -40,7 +40,8 @@ class Main(AppBase.MainBase):
 		from views import main
 		self.hMainView=main.MainView()
 		self.hMainView.Show()
-		wx.CallAfter(self.autoReload)
+		if self.config.getboolean("general","auto_reload",True):
+			wx.CallAfter(self.autoReload)
 
 	
 	def autoReload(self):
