@@ -30,7 +30,7 @@ class Dialog(BaseDialog):
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.VERTICAL,0,style=wx.EXPAND|wx.ALL,margin=20)
 		self.hListCtrl, self.hStatic = self.creator.listCtrl(_("登録済みユーザ"), None, wx.LC_REPORT | wx.LC_SINGLE_SEL | wx.BORDER_RAISED,sizerFlag=wx.EXPAND)
 		self.hListCtrl.AppendColumn(_("表示名"),width=450)
-		self.hListCtrl.AppendColumn(_("id"),width=450)
+		self.hListCtrl.AppendColumn(_("アカウント"),width=450)
 		self.hListCtrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.close)
 		self.hListCtrl.Bind(wx.EVT_LIST_ITEM_SELECTED, self.onItemSelected)
 		self.hListCtrl.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onItemSelected)
