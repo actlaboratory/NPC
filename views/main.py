@@ -49,7 +49,7 @@ class MainView(BaseView):
 		self.service=service.Service()
 		self.answerIdList=[]
 
-		self.lst,dummy = self.creator.virtualListCtrl("",style=wx.LC_SINGLE_SEL|wx.LC_REPORT,proportion=1,sizerFlag=wx.EXPAND)
+		self.lst,dummy = self.creator.virtualListCtrl("",style=wx.LC_SINGLE_SEL|wx.LC_REPORT,proportion=1,sizerFlag=wx.EXPAND,textLayout=None)
 		self.creator.GetPanel().Layout()
 
 		self.lst.AppendColumn("名前",width=200)
@@ -205,22 +205,11 @@ class Events(BaseEvents):
 		if selected==menuItemsStore.getRef("FILE_POST_QUESTION"):
 			index = self.parent.lst.GetFirstSelected()
 			target = self.parent.service.getAnswer(self.parent.answerIdList[index]).user
-			d = SimpleImputDialog.Dialog("質問を投稿",_("%sさんへの質問内容") % target.getViewString())
-			d.Initialize()
-			r = d.Show()
-			if r==wx.ID_CANCEL:
-				return
-			prm=d.GetValue()
-			self.log.debug("post question:%s,%s" % (target,prm))
-			ret = self.parent.service.postQuestion(target,prm)
-			if ret == errorCodes.OK:
-				dialog(_("投稿完了"),_("質問を投稿しました。"))
-				self.log.debug("post question success")
-			else:
-				self.showError(ret)
+			self.postQuestion(target)
+			return
 
 		if selected==menuItemsStore.getRef("FILE_RELOAD"):
-			self.reload()
+			return self.reload()
 
 		if selected==menuItemsStore.getRef("FILE_DELETE_USER"):
 			index = self.parent.lst.GetFirstSelected()
@@ -230,7 +219,7 @@ class Events(BaseEvents):
 				return
 			self.log.debug("deleteUser:%s" % user)
 			self.parent.service.deleteUser(user)
-			self.parent.refresh()
+			return self.parent.refresh()
 
 		if selected==menuItemsStore.getRef("FILE_SHOW_USER_WEB"):
 			index = self.parent.lst.GetFirstSelected()
@@ -392,6 +381,23 @@ class Events(BaseEvents):
 
 		self.parent.hFrame.Enable()
 		d.Destroy()
+
+
+	#targetで指定したユーザに対して質問を投稿する
+	def postQuestion(self,target,parent=None):
+		d = SimpleImputDialog.Dialog("質問を投稿",_("%sさんへの質問内容") % target.getViewString(), parent)
+		d.Initialize()
+		r = d.Show()
+		if r==wx.ID_CANCEL:
+			return
+		prm=d.GetValue()
+		self.log.debug("post question:%s,%s" % (target,prm))
+		ret = self.parent.service.postQuestion(target,prm)
+		if ret == errorCodes.OK:
+			dialog(_("投稿完了"),_("質問を投稿しました。"))
+			self.log.debug("post question success")
+		else:
+			self.showError(ret)
 
 	#エラーコードを受け取り、必要があればエラー表示
 	def showError(self,code,parent=None):
