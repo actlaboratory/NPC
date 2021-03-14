@@ -131,7 +131,7 @@ class Service():
 		try:
 			self.userDao.update(user.__dict__)
 			self.connection.commit()
-			return errorCodes.OK			
+			return errorCodes.OK
 		except Exception as e:
 			self.log.debug("update user info:"+user.account)
 			self.log.error(e)
