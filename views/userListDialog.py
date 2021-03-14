@@ -30,9 +30,9 @@ class Dialog(BaseDialog):
 	def InstallControls(self):
 		"""いろんなwidgetを設置する。"""
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.VERTICAL,0,style=wx.EXPAND|wx.ALL,margin=20)
-		self.hListCtrl, self.hStatic = self.creator.listCtrl(_("登録済みユーザ"), None, wx.LC_REPORT | wx.LC_SINGLE_SEL | wx.BORDER_RAISED,sizerFlag=wx.EXPAND)
-		self.hListCtrl.AppendColumn(_("表示名"),width=450)
-		self.hListCtrl.AppendColumn(_("アカウント"),width=450)
+		self.hListCtrl, self.hStatic = self.creator.listCtrl(_("登録済みユーザ"), None, wx.LC_REPORT | wx.LC_SINGLE_SEL | wx.BORDER_RAISED,size=(650,-1))
+		self.hListCtrl.AppendColumn(_("表示名"),width=350)
+		self.hListCtrl.AppendColumn(_("アカウント"),width=280)
 		self.hListCtrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.close)
 		self.hListCtrl.Bind(wx.EVT_LIST_ITEM_SELECTED, self.onItemSelected)
 		self.hListCtrl.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onItemSelected)
@@ -40,12 +40,16 @@ class Dialog(BaseDialog):
 		for user in self.lst:
 			self.hListCtrl.Append((user.name,user.account))
 
-		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,20,"",wx.EXPAND|wx.LEFT|wx.RIGHT,margin=20)
+		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.EXPAND|wx.LEFT|wx.RIGHT,margin=20)
 		self.detailButton = self.creator.button(_("詳細"), self.detail)
+		self.creator.AddSpace(-1)
 		self.filterButton = self.creator.button(_("フィルタ(&F)"), self.filter)
+		self.creator.AddSpace(-1)
 		self.removeButton = self.creator.button(_("削除"), self.remove)
 
-		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,20,"",wx.ALIGN_RIGHT|wx.ALL,margin=20)
+		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALL,margin=20)
+		self.postQuestionButton = self.creator.button(_("質問を投稿(&Q)"),self.postQuestion)
+		self.creator.AddSpace(-1)
 		self.bOk=self.creator.okbutton(_("閉じる(&C)"), self.close)
 
 		self.onItemSelected()
@@ -58,6 +62,7 @@ class Dialog(BaseDialog):
 		self.detailButton.Enable(selected >= 0)
 		self.filterButton.Enable(selected >= 0)
 		self.removeButton.Enable(selected >= 0)
+		self.postQuestionButton.Enable(selected >= 0)
 
 	def remove(self,event):
 		user = self.lst[self.hListCtrl.GetFocusedItem()]
@@ -79,3 +84,7 @@ class Dialog(BaseDialog):
 		filter.UserFilter().enable(False)			#重複設定防止
 		filter.UserFilter(target).enable(True)
 		self.wnd.EndModal(wx.ID_OK)
+
+	def postQuestion(self, event):
+		target = self.lst[self.hListCtrl.GetFocusedItem()]
+		self.app.hMainView.events.postQuestion(target,self.wnd)
