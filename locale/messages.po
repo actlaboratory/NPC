@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NPC\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-13 23:14+0900\n"
+"POT-Creation-Date: 2021-03-14 15:16+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -57,79 +57,79 @@ msgstr ""
 msgid "この組み合わせは別の用途で予約されているため、利用できません。"
 msgstr ""
 
-#: menuItemsDic.py:12
+#: menuItemsDic.py:14
 msgid "ユーザの追加(&A)"
 msgstr ""
 
-#: menuItemsDic.py:13
+#: menuItemsDic.py:15
 msgid "質問を投稿(&Q)"
 msgstr ""
 
-#: menuItemsDic.py:14
+#: menuItemsDic.py:16
 msgid "最新の情報に更新(&R)"
 msgstr ""
 
-#: menuItemsDic.py:15
+#: menuItemsDic.py:17
 msgid "ユーザを削除(&D)"
 msgstr ""
 
-#: menuItemsDic.py:16
+#: menuItemsDic.py:18
 msgid "コンテキストメニューを開く"
 msgstr ""
 
-#: menuItemsDic.py:17
+#: menuItemsDic.py:19
 msgid "詳細情報を表示(&V)"
 msgstr ""
 
-#: menuItemsDic.py:18
+#: menuItemsDic.py:20
 msgid "ユーザ情報を表示(&U)"
 msgstr ""
 
-#: menuItemsDic.py:19
+#: menuItemsDic.py:21
 msgid "表示中のリスト内容をCSVファイルにエクスポート(&E)"
 msgstr ""
 
-#: menuItemsDic.py:20
+#: menuItemsDic.py:22
 msgid "ブラウザでユーザのページを開く(&B)"
 msgstr ""
 
-#: menuItemsDic.py:21
+#: menuItemsDic.py:23
 msgid "登録済みユーザリスト(&L)"
 msgstr ""
 
-#: menuItemsDic.py:22
+#: menuItemsDic.py:24
 msgid "終了(&X)"
 msgstr ""
 
-#: menuItemsDic.py:24
+#: menuItemsDic.py:26
 msgid "運営からの質問を非表示(&M)"
 msgstr ""
 
-#: menuItemsDic.py:25
+#: menuItemsDic.py:27
 msgid "バトン質問を非表示(&B)"
 msgstr ""
 
-#: menuItemsDic.py:26
+#: menuItemsDic.py:28
 msgid "選択中ユーザのみ表示(&U)"
 msgstr ""
 
-#: menuItemsDic.py:28
+#: menuItemsDic.py:30
 msgid "設定(&S)"
 msgstr ""
 
-#: menuItemsDic.py:29
+#: menuItemsDic.py:31
 msgid "ショートカットキーの設定(&K)"
 msgstr ""
 
-#: menuItemsDic.py:30
+#: menuItemsDic.py:32
 msgid "リスト表示設定(&L)"
 msgstr ""
 
-#: menuItemsDic.py:32
+#: menuItemsDic.py:34
 msgid "最新バージョンを確認(&U)"
 msgstr ""
 
-#: menuItemsDic.py:33
+#: menuItemsDic.py:35
 msgid "バージョン情報(&V)"
 msgstr ""
 
@@ -201,24 +201,24 @@ msgstr ""
 msgid "エラー"
 msgstr ""
 
-#: views\detailDialog.py:17 views\userDetailDialog.py:17
+#: views\detailDialog.py:19 views\userDetailDialog.py:19
 msgid "詳細情報"
 msgstr ""
 
-#: views\detailDialog.py:33
+#: views\detailDialog.py:35
 msgid "回答者"
 msgstr ""
 
-#: views\detailDialog.py:35
+#: views\detailDialog.py:37
 msgid "回答日時"
 msgstr ""
 
-#: views\detailDialog.py:37
+#: views\detailDialog.py:39
 msgid "種別"
 msgstr ""
 
-#: views\detailDialog.py:40 views\userDetailDialog.py:42
-#: views\userListDialog.py:47
+#: views\detailDialog.py:42 views\userDetailDialog.py:44
+#: views\userListDialog.py:49
 msgid "閉じる(&C)"
 msgstr ""
 
@@ -284,7 +284,7 @@ msgstr ""
 msgid "ショートカット5"
 msgstr ""
 
-#: views\globalKeyConfig.py:75 views\settingsDialog.py:47
+#: views\globalKeyConfig.py:75 views\settingsDialog.py:49
 msgid "設定"
 msgstr ""
 
@@ -340,12 +340,12 @@ msgid "削除(&D)"
 msgstr ""
 
 #: views\KeyValueSettingDialogBase.py:80 views\KeyValueSettingDialogBase.py:258
-#: views\listConfigurationDialog.py:53 views\SimpleImputDialog.py:35
+#: views\listConfigurationDialog.py:54 views\SimpleImputDialog.py:35
 msgid "ＯＫ"
 msgstr ""
 
 #: views\KeyValueSettingDialogBase.py:81 views\KeyValueSettingDialogBase.py:259
-#: views\listConfigurationDialog.py:54 views\settingsDialog.py:82
+#: views\listConfigurationDialog.py:55 views\settingsDialog.py:84
 #: views\SimpleImputDialog.py:36 views\updateDialog.py:45
 msgid "キャンセル"
 msgstr ""
@@ -392,27 +392,27 @@ msgid ""
 "す。\n"
 msgstr ""
 
-#: views\listConfigurationDialog.py:22
+#: views\listConfigurationDialog.py:23
 msgid "リスト表示設定"
 msgstr ""
 
-#: views\listConfigurationDialog.py:33 views\listConfigurationDialog.py:34
+#: views\listConfigurationDialog.py:34 views\listConfigurationDialog.py:35
 msgid "カラム"
 msgstr ""
 
-#: views\listConfigurationDialog.py:47
+#: views\listConfigurationDialog.py:48
 msgid "表示(&D)"
 msgstr ""
 
-#: views\listConfigurationDialog.py:48
+#: views\listConfigurationDialog.py:49
 msgid "左へ(&L)"
 msgstr ""
 
-#: views\listConfigurationDialog.py:50
+#: views\listConfigurationDialog.py:51
 msgid "右へ(&R)"
 msgstr ""
 
-#: views\listConfigurationDialog.py:78
+#: views\listConfigurationDialog.py:79
 msgid "全ての列を非表示にすることはできません。"
 msgstr ""
 
@@ -492,11 +492,11 @@ msgstr ""
 msgid "質問を投稿しました。"
 msgstr ""
 
-#: views\main.py:225 views\userListDialog.py:62
+#: views\main.py:225 views\userListDialog.py:64
 msgid "ユーザの削除"
 msgstr ""
 
-#: views\main.py:225 views\userListDialog.py:62
+#: views\main.py:225 views\userListDialog.py:64
 #, python-format
 msgid ""
 "以下のユーザの登録と、過去の回答履歴を削除しますか？\n"
@@ -560,70 +560,70 @@ msgid ""
 msgstr ""
 
 #: views\progress.py:28
-msgid "中止"
+msgid "中止(&C)"
 msgstr ""
 
-#: views\settingsDialog.py:32
+#: views\settingsDialog.py:34
 msgid "標準"
 msgstr ""
 
-#: views\settingsDialog.py:33
+#: views\settingsDialog.py:35
 msgid "ダーク"
 msgstr ""
 
-#: views\settingsDialog.py:36
+#: views\settingsDialog.py:38
 msgid "画面幅で折り返し"
 msgstr ""
 
-#: views\settingsDialog.py:37
+#: views\settingsDialog.py:39
 msgid "折り返さない"
 msgstr ""
 
-#: views\settingsDialog.py:58
+#: views\settingsDialog.py:60
 msgid "カテゴリ選択"
 msgstr ""
 
-#: views\settingsDialog.py:61
+#: views\settingsDialog.py:63
 msgid "一般"
 msgstr ""
 
-#: views\settingsDialog.py:62
+#: views\settingsDialog.py:64
 msgid "起動時に最新の情報を取得する"
 msgstr ""
 
-#: views\settingsDialog.py:67
+#: views\settingsDialog.py:69
 msgid "表示/言語"
 msgstr ""
 
-#: views\settingsDialog.py:68
+#: views\settingsDialog.py:70
 msgid "言語(&L)"
 msgstr ""
 
-#: views\settingsDialog.py:69
+#: views\settingsDialog.py:71
 msgid "画面表示モード(&D)"
 msgstr ""
 
-#: views\settingsDialog.py:70
+#: views\settingsDialog.py:72
 msgid "テキストの折り返し(&W)"
 msgstr ""
 
-#: views\settingsDialog.py:73
+#: views\settingsDialog.py:75
 msgid "ネットワーク"
 msgstr ""
 
-#: views\settingsDialog.py:74
+#: views\settingsDialog.py:76
 msgid "起動時に更新を確認(&U)"
 msgstr ""
 
-#: views\settingsDialog.py:75
+#: views\settingsDialog.py:77
 msgid "プロキシサーバーの情報を手動で設定する(&M)"
 msgstr ""
 
-#: views\settingsDialog.py:76
+#: views\settingsDialog.py:78
 msgid "サーバーURL"
 msgstr ""
 
-#: views\settingsDialog.py:77
+#: views\settingsDialog.py:79
 msgid "ポート番号"
 msgstr ""
 
@@ -663,43 +663,43 @@ msgid ""
 "updater.exeが見つかりませんでした。誤って削除したかなどをご確認ください。"
 msgstr ""
 
-#: views\userDetailDialog.py:26 views\userListDialog.py:32
+#: views\userDetailDialog.py:28 views\userListDialog.py:34
 msgid "表示名"
 msgstr ""
 
-#: views\userDetailDialog.py:28 views\userListDialog.py:33
+#: views\userDetailDialog.py:30 views\userListDialog.py:35
 msgid "アカウント"
 msgstr ""
 
-#: views\userDetailDialog.py:33
+#: views\userDetailDialog.py:35
 msgid "回答状況"
 msgstr ""
 
-#: views\userDetailDialog.py:35
+#: views\userDetailDialog.py:37
 msgid "フォロイー"
 msgstr ""
 
-#: views\userDetailDialog.py:38
+#: views\userDetailDialog.py:40
 msgid "プロフィール"
 msgstr ""
 
-#: views\userListDialog.py:20
+#: views\userListDialog.py:22
 msgid "登録済みユーザ一覧"
 msgstr ""
 
-#: views\userListDialog.py:31
+#: views\userListDialog.py:33
 msgid "登録済みユーザ"
 msgstr ""
 
-#: views\userListDialog.py:42
+#: views\userListDialog.py:44
 msgid "詳細"
 msgstr ""
 
-#: views\userListDialog.py:43
+#: views\userListDialog.py:45
 msgid "フィルタ(&F)"
 msgstr ""
 
-#: views\userListDialog.py:44
+#: views\userListDialog.py:46
 msgid "削除"
 msgstr ""
 
