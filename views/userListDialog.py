@@ -47,7 +47,7 @@ class Dialog(BaseDialog):
 		self.creator.AddSpace(-1)
 		self.removeButton = self.creator.button(_("削除"), self.remove)
 
-		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALL,margin=20)
+		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALL|wx.RIGHT,margin=20)
 		self.postQuestionButton = self.creator.button(_("質問を投稿(&Q)"),self.postQuestion)
 		self.creator.AddSpace(-1)
 		self.bOk=self.creator.okbutton(_("閉じる(&C)"), self.close)
