@@ -366,7 +366,7 @@ class Events(BaseEvents):
 				self.log.warning("add exclude flag:"+user.account)
 				self.parent.service.updateUserInfo(user)
 				dialog(_("登録ユーザの更新除外について"),_("登録していた以下のユーザは、アカウント名が変更されたか、削除されました。その後、同一アカウント名を別のユーザが取得しているため、今後このアカウントの回答は更新から除外します。もし、再取得したアカウントが同一人物であるなど今後もこのアカウントの回答の更新を希望する場合には、再度ユーザ追加を行ってください。\n\n該当ユーザ：%s") % user.getViewString())
-				d.update(i,None,len(users))
+				d.update(i+1,None,len(users))
 				continue
 			else:
 				self.parent.service.updateUserInfo(info)
@@ -374,7 +374,7 @@ class Events(BaseEvents):
 			ret = self.parent.service.update(user)
 			if ret!=errorCodes.OK or (not d.isOk()):
 				break
-			d.update(i,None,len(users))
+			d.update(i+1,None,len(users))
 
 		self.showError(ret,d.wnd)
 		self.parent.refresh()
