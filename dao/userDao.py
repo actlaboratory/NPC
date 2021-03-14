@@ -48,7 +48,8 @@ class UserDao(dao.baseDao.BaseDao):
 			items = :items,
 			answers = :answers,
 			profile = :profile,
-			followees = :followees
+			followees = :followees,
+			flag = :flag
 			WHERE id = :id;""", values)
 
 	def delete(self,id):

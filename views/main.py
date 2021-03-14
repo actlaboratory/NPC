@@ -1,15 +1,11 @@
 ﻿# -*- coding: utf-8 -*-
 #main view
 #Copyright (C) 2019 Yukio Nozawa <personal@nyanchangames.com>
-#Copyright (C) 2019-2020 yamahubuki <itiro.ishino@gmail.com>
+#Copyright (C) 2019-2021 yamahubuki <itiro.ishino@gmail.com>
 
-import logging
-import os
-import sys
+
 import wx
 import re
-import ctypes
-import pywintypes
 import simpleDialog
 import webbrowser
 
@@ -187,19 +183,24 @@ class Events(BaseEvents):
 				return
 			prm = re.sub("https://peing.net/[^/]+/","", d.GetValue())
 
+			self.log.debug("add user: %s" % prm)
 			if self.parent.service.isUserRegistered(prm)==True:
 				errorDialog(_("指定されたユーザは既に登録済みです。"),self.parent.hFrame)
+				self.log.warning("user %s already registered." % prm)
 				return errorCodes.DUPLICATED
 			user = self.parent.service.getUserInfo(prm)
 			if user in (errorCodes.PEING_ERROR,errorCodes.NOT_FOUND):
 				self.showError(user)
 				return user
 			if yesNoDialog(_("ユーザ追加"),_("以下のユーザを追加しますか？\n\nID:%(id)d\n%(name)s(%(account)s)") % {"id":user.id,"name":user.name,"account":user.account},self.parent.hFrame)==wx.ID_NO:
+				self.log.debug("add user:canceled by user")
 				return
 			if self.parent.service.addUser(user)==errorCodes.OK:
 				dialog(_("登録完了"),_("ユーザの登録に成功しました。今回登録したユーザの回答を表示するには、ビューを再読み込みしてください。"),self.parent.hFrame)
+				self.log.info("user %s added!" % prm)
 			else:
 				errorDialog(_("ユーザの登録に失敗しました。"),self.parent.hFrame)
+				self.log.error("add user:failed.")
 
 		if selected==menuItemsStore.getRef("FILE_POST_QUESTION"):
 			index = self.parent.lst.GetFirstSelected()
@@ -210,9 +211,11 @@ class Events(BaseEvents):
 			if r==wx.ID_CANCEL:
 				return
 			prm=d.GetValue()
+			self.log.debug("post question:%s,%s" % (target,prm))
 			ret = self.parent.service.postQuestion(target,prm)
 			if ret == errorCodes.OK:
 				dialog(_("投稿完了"),_("質問を投稿しました。"))
+				self.log.debug("post question success")
 			else:
 				self.showError(ret)
 
@@ -225,6 +228,7 @@ class Events(BaseEvents):
 			ret = yesNoDialog(_("ユーザの削除"),_("以下のユーザの登録と、過去の回答履歴を削除しますか？\n\n%s")%user.getViewString())
 			if ret == wx.ID_NO:
 				return
+			self.log.debug("deleteUser:%s" % user)
 			self.parent.service.deleteUser(user)
 			self.parent.refresh()
 
@@ -232,8 +236,10 @@ class Events(BaseEvents):
 			index = self.parent.lst.GetFirstSelected()
 			user = self.parent.service.getAnswer(self.parent.answerIdList[index]).user
 			if user.flag&constants.FLG_USER_DISABLE==constants.FLG_USER_DISABLE:
+				self.log.warning("open web:failed. user has been deleted or account changed.")
 				errorDialog(_("このユーザは既に退会したか、peingIDを変更しているため開くことができません。"))
 				return
+			self.log.debug("open web:https://peing.net/"+user.account)
 			webbrowser.open_new("https://peing.net/"+user.account)
 			return
 
@@ -252,8 +258,10 @@ class Events(BaseEvents):
 			d = wx.FileDialog(None, _("出力先ファイルの指定"), style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT, wildcard=_("CSVファイル(*.csv) | *.csv; | すべてのファイル(*.*) | *.*"))
 			if d.ShowModal() == wx.ID_CANCEL:
 				return
+			self.log.debug("export:to=%s" % d.GetPath())
 			r = self.parent.service.export(d.GetPath(),self.parent.lst)
 			if r != True:
+				self.log.warning("export:failed. %s" % r.getErrorMessage())
 				errorDialog(r.getErrorMessage(),self.parent.hFrame)
 
 		if selected==menuItemsStore.getRef("FILE_USER_LIST"):
@@ -346,6 +354,7 @@ class Events(BaseEvents):
 		], enable)
 
 	def reload(self):
+		self.log.debug("reload:start")
 		d=progress.Dialog()
 		d.Initialize(_("準備中")+"...",_("回答データを取得しています")+"...")
 		d.Show(modal=False)
@@ -356,14 +365,17 @@ class Events(BaseEvents):
 		for i,user in enumerate(users):
 			d.update(None,user.getViewString())
 			info = self.parent.service.getUserInfo(user.account)
-			if info==None:
+			if info==errorCodes.NOT_FOUND:
 				d.update(i+1,None,len(users))
 				self.log.info("skip update because user not found:"+user.account)
 				continue
+			elif info==errorCodes.PEING_ERROR:
+				ret = info
+				break
 			elif info.id!=user.id:		#当該アカウント名が別ユーザの登録にかわっている
-				info.flag|=constants.FLG_USER_DISABLE
+				user.flag|=constants.FLG_USER_DISABLE
 				self.log.warning("add exclude flag:"+user.account)
-				self.parent.service.updateUserInfo(info)
+				self.parent.service.updateUserInfo(user)
 				dialog(_("登録ユーザの更新除外について"),_("登録していた以下のユーザは、アカウント名が変更されたか、削除されました。その後、同一アカウント名を別のユーザが取得しているため、今後このアカウントの回答は更新から除外します。もし、再取得したアカウントが同一人物であるなど今後もこのアカウントの回答の更新を希望する場合には、再度ユーザ追加を行ってください。\n\n該当ユーザ：%s") % user.getViewString())
 				d.update(i,None,len(users))
 				continue
@@ -388,6 +400,8 @@ class Events(BaseEvents):
 		if code==None:
 			code=errorCodes.UNKNOWN
 
+		if code!=errorCodes.OK:
+			self.log.warning("show error:%d" % code)
 		if code==errorCodes.OK:
 			return
 		elif code==errorCodes.PEING_ERROR or code==errorCodes.NOT_FOUND:
