@@ -6,7 +6,7 @@ import errorCodes
 from bs4 import BeautifulSoup
 
 def getUserInfo(userId):
-	page = requests.get("https://peing.net/%s/"% (userId))
+	page = requests.get("https://peing.net/%s/"% (userId),timeout=5)
 	soup = BeautifulSoup(page.content, "lxml")
 	entity = soup.find("div", {"id": "user-id"})
 	if entity==None:	#ユーザ不存在
@@ -16,7 +16,7 @@ def getUserInfo(userId):
 def getAnswers(userId, page):
 	assert page > 0
 	answers = []
-	page_content = requests.get("https://peing.net/api/v2/items/?type=answered&account=%s&page=%d" % (userId, page)).json()
+	page_content = requests.get("https://peing.net/api/v2/items/?type=answered&account=%s&page=%d" % (userId, page),timeout=5).json()
 	for item in page_content["items"]:
 		answers.append(item)
 	return answers
@@ -24,7 +24,7 @@ def getAnswers(userId, page):
 def postQuestion(userId, message):
 	with requests.Session() as s:
 		# CSRFトークンとクッキーの取得のために一度アクセスしておく。
-		page = s.get("http://peing.net/%s" % (userId))
+		page = s.get("http://peing.net/%s" % (userId),timeout=5)
 		# htmlを解析
 		soup = BeautifulSoup(page.content, "lxml")
 		tmp = soup.find("meta", {"name": "csrf-token"})
@@ -48,7 +48,7 @@ def postQuestion(userId, message):
 			"Accept": "application/json",
 			"X-CSRF-TOKEN": token
 		}
-		result = s.post("https://peing.net/ja/%s/message" % (userId), msg, headers=header)
+		result = s.post("https://peing.net/ja/%s/message" % (userId), msg, headers=header, timeout=5)
 		if result.status_code==201:
 			return errorCodes.OK
 		else:
