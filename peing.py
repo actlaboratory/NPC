@@ -24,7 +24,7 @@ def getAnswers(userId, page):
 def postQuestion(userId, message):
 	with requests.Session() as s:
 		# CSRFトークンとクッキーの取得のために一度アクセスしておく。
-		page = s.get("http://peing.net/%s" % (userId),timeout=5)
+		page = s.get("https://peing.net/%s" % (userId),timeout=5)
 		# htmlを解析
 		soup = BeautifulSoup(page.content, "lxml")
 		tmp = soup.find("meta", {"name": "csrf-token"})
