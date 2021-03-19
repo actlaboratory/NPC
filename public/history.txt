@@ -1,0 +1,4 @@
+windows Native Peing Connector(NPC) 更新履歴
+
+2021/XX/XX Version 1.X.X
+1. プロキシサーバーの設定が正しく反映されなかった問題を修正しました。
