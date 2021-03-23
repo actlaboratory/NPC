@@ -65,6 +65,9 @@ class Main(AppBase.MainBase):
 
 		self._releaseMutex()
 
+		# アップデート
+		globalVars.update.runUpdate()
+
 		#戻り値は無視される
 		return 0
 
