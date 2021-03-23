@@ -30,6 +30,14 @@ class Dialog(BaseDialog):
 	#	"NVDA": "NVDA",
 	#	"JAWS": "JAWS for Windows"
 	#}
+	logLevelSelection = {
+		"50":"CRITICAL",
+		"40":"ERROR",
+		"30":"WARNING",
+		"20":"INFO",
+		"10":"DEBUG",
+		"0":"NOTSET"
+	}
 	colorModeSelection = {
 		"white": _("標準"),
 		"dark": _("ダーク")
@@ -63,6 +71,7 @@ class Dialog(BaseDialog):
 		creator=views.ViewCreator.ViewCreator(self.viewMode,self.tab,None,views.ViewCreator.GridBagSizer,label=_("一般"),style=wx.ALL,margin=20)
 		self.autoreload = creator.checkbox(_("起動時に最新の情報を取得する"))
 		creator.GetSizer().SetItemSpan(self.autoreload.GetParent(),2)
+		self.logLevel,dummy = creator.combobox(_("ログ記録レベル"),list(self.logLevelSelection.values()))
 		#self.reader, static = creator.combobox(_("出力先(&O)"), list(self.readerSelection.values()))
 
 		# view
@@ -87,7 +96,7 @@ class Dialog(BaseDialog):
 		# general
 		self._setValue(self.autoreload,"general","auto_reload",configType.BOOL)
 		#self._setValue(self.reader,"speech","reader",configType.DIC,self.readerSelection)
-
+		self._setValue(self.logLevel,"general","log_level",configType.DIC,self.logLevelSelection)
 		# view
 		self._setValue(self.language,"general","language",configType.DIC,self.languageSelection)
 		self._setValue(self.colormode,"view","colormode",configType.DIC,self.colorModeSelection)

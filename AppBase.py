@@ -100,6 +100,7 @@ class MaiｎBase(wx.App):
 			#初回起動
 			self.config.read_dict(DefaultSettings.initialValues)
 			self.config.write()
+		self.hLogHandler.setLevel(self.config.getint("general","log_level",20,0,50))
 
 	def InitTranslation(self):
 		"""翻訳を初期化する。"""
@@ -132,3 +133,13 @@ class MaiｎBase(wx.App):
 		hours=bias//60
 		minutes=bias%60
 		self.timezone=datetime.timezone(datetime.timedelta(hours=hours,minutes=minutes))
+
+	def getAppPath(self):
+		"""アプリの絶対パスを返す
+		"""
+		if self.frozen:
+			# exeファイルで実行されている
+			return sys.executable
+		else:
+			# pyファイルで実行されている
+			return os.path.join(os.path.dirname(__file__), os.path.basename(sys.argv[0]))

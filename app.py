@@ -28,11 +28,8 @@ class Main(AppBase.MainBase):
 	def initialize(self):
 		self.initUpdater()
 		# プロキシの設定を適用
-		if self.config.getboolean("network", "auto_proxy"):
-			self.proxyEnviron = proxyUtil.virtualProxyEnviron()
-			self.proxyEnviron.set_environ()
-		else:
-			self.proxyEnviron = None
+		self.proxyEnviron = proxyUtil.virtualProxyEnviron()
+		self.setProxyEnviron()
 		# アップデートを実行
 		if self.config.getboolean("general", "update"):
 			globalVars.update.update(True)
@@ -42,6 +39,12 @@ class Main(AppBase.MainBase):
 		self.hMainView.Show()
 		if self.config.getboolean("general","auto_reload",True):
 			wx.CallAfter(self.autoReload)
+
+	def setProxyEnviron(self):
+		if self.config.getboolean("proxy", "usemanualsetting", False) == True:
+			self.proxyEnviron.set_environ(self.config["proxy"]["server"], self.config.getint("proxy", "port", 8080, 0, 65535))
+		else:
+			self.proxyEnviron.set_environ()
 
 	def autoReload(self):
 		self.log.info("start: auto_reload")
@@ -61,6 +64,9 @@ class Main(AppBase.MainBase):
 		self.log.info("DB connection closed.")
 
 		self._releaseMutex()
+
+		# アップデート
+		globalVars.update.runUpdate()
 
 		#戻り値は無視される
 		return 0

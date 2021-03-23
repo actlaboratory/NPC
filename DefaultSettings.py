@@ -13,6 +13,8 @@ class DefaultSettings:
 			"locale": "ja-JP",
 			"update" : True,
 			"auto_reload" : False,
+			"log_level":"20",
+
 		}
 		config["view"]={
 			"font": "bold 'ＭＳ ゴシック' 22 windows-932",
