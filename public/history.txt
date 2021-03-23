@@ -1,4 +1,5 @@
 windows Native Peing Connector(NPC) 更新履歴
 
-2021/XX/XX Version 1.X.X
+2021/03/24 Version 1.0.1
 1. プロキシサーバーの設定が正しく反映されなかった問題を修正しました。
+2. 特定の環境で、プログラムが起動できない問題を修正しました。
