@@ -27,6 +27,10 @@ dic={
 	"FILTER_BATON":_("バトン質問を非表示(&B)"),
 	"FILTER_USER":_("選択中ユーザのみ表示(&U)"),
 
+	"ACCOUNT_ANSWER":_("届いている質問に回答"),
+	"ACCOUNT_ADD_FOLLOWEES":_("アカウントのフォロイーから一括登録"),
+
+
 	"OPTION_OPTION":_("設定(&S)")+"...",
 	"OPTION_KEY_CONFIG":_("ショートカットキーの設定(&K)")+"...",
 	"OPTION_LIST_CONFIG":_("リスト表示設定(&L)")+"...",
