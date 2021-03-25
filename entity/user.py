@@ -18,3 +18,7 @@ class User:
 
 	def getViewString(self):
 		return self.name+"(@"+self.account+")"
+
+	# 未回答の質問の数を返す
+	def getQuestionCount(self):
+		return self.items - self.answers

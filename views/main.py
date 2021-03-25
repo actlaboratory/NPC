@@ -11,6 +11,7 @@ import webbrowser
 
 import ConfigManager
 import constants
+import entity.answer
 import errorCodes
 import filter
 import globalVars
@@ -19,6 +20,7 @@ import service
 
 from .base import *
 from simpleDialog import *
+from views import answerDialog
 from views import detailDialog
 from views import globalKeyConfig
 from views import listConfigurationDialog
@@ -77,7 +79,7 @@ class MainView(BaseView):
 		self.answerIdList=[]
 		self.lst.DeleteAllItems()
 		for i in data:
-			s=self.answerFlag2String(i[5])
+			s=entity.answer.getTypeString(i[5])
 			if not self.testFilter(i):
 				continue
 			self.lst.Append((i[1],i[2],i[3],i[4],s))
@@ -92,17 +94,6 @@ class MainView(BaseView):
 		self.lst.SetFocus()
 		self.log.debug("refresh finished.")
 		return 
-
-	def answerFlag2String(self,flag):
-		ret=[]
-		dic={
-			constants.FLG_ANSWER_AUTOQUESTION:_("運営"),
-			constants.FLG_ANSWER_BATON_QUESTION:_("バトン"),
-		}
-		for i,s in dic.items():
-			if flag&i==i:
-				ret.append(s)
-		return ",".join(ret)
 
 	#表示情報タプルiを基に、有効になっているフィルタにかけた結果、表示すべきか否かを判断して返す
 	def testFilter(self,i):
@@ -120,8 +111,9 @@ class Menu(BaseMenu):
 
 		#メニューの大項目を作る
 		self.hFileMenu=wx.Menu()
-		self.hOptionMenu=wx.Menu()
 		self.hFilterMenu=wx.Menu()
+		self.hAccountMenu=wx.Menu()
+		self.hOptionMenu=wx.Menu()
 		self.hHelpMenu=wx.Menu()
 
 		#ファイルメニュー
@@ -152,6 +144,12 @@ class Menu(BaseMenu):
 			"FILTER_USER",
 		])
 
+		#アカウントメニューの中身
+		self.RegisterMenuCommand(self.hAccountMenu,[
+			"ACCOUNT_ANSWER",
+			"ACCOUNT_ARCHIVED",
+		])
+
 		#ヘルプメニューの中身
 		self.RegisterMenuCommand(self.hHelpMenu,[
 				"HELP_UPDATE",
@@ -161,6 +159,7 @@ class Menu(BaseMenu):
 		#メニューバーの生成
 		self.hMenuBar.Append(self.hFileMenu,_("ファイル(&F)"))
 		self.hMenuBar.Append(self.hFilterMenu,_("フィルタ(&I)"))
+		self.hMenuBar.Append(self.hAccountMenu,_("アカウント(&A)"))
 		self.hMenuBar.Append(self.hOptionMenu,_("オプション(&O)"))
 		self.hMenuBar.Append(self.hHelpMenu,_("ヘルプ(&H)"))
 		target.SetMenuBar(self.hMenuBar)
@@ -226,7 +225,7 @@ class Events(BaseEvents):
 			user = self.parent.service.getAnswer(self.parent.answerIdList[index]).user
 			if user.flag&constants.FLG_USER_DISABLE==constants.FLG_USER_DISABLE:
 				self.log.warning("open web:failed. user has been deleted or account changed.")
-				errorDialog(_("このユーザは既に退会したか、peingIDを変更しているため開くことができません。"))
+				errorDialog(_("このユーザは既に退会したか、peingIDを変更しているため開くことができません。"),self.parent.hFrame)
 				return
 			self.log.debug("open web:https://peing.net/"+user.account)
 			webbrowser.open_new("https://peing.net/"+user.account)
@@ -292,6 +291,23 @@ class Events(BaseEvents):
 			self.parent.refresh()
 			event.Skip()
 
+		if selected == menuItemsStore.getRef("ACCOUNT_ANSWER"):
+			if not self.loginCheck():
+				return
+			d = answerDialog.Dialog(self.parent.service,constants.RECEIVED)
+			if d.Initialize()==errorCodes.OK:
+				d.Show()
+			else:
+				errorDialog(_("ログインまたは質問の取得に失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+
+		if selected == menuItemsStore.getRef("ACCOUNT_ARCHIVED"):
+			if not self.loginCheck():
+				return
+			d = answerDialog.Dialog(self.parent.service,type=constants.ARCHIVED)
+			if d.Initialize()==errorCodes.OK:
+				d.Show()
+			else:
+				errorDialog(_("ログインまたは質問の取得に失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
 
 		if selected == menuItemsStore.getRef("OPTION_OPTION"):
 			d = settingsDialog.Dialog()
@@ -461,3 +477,10 @@ class Events(BaseEvents):
 		newMap.write()
 		return True
 
+	#ログイン情報が設定されているか調べる
+	#値が入っているかどうかのみの確認であり、有効性の確認はしない
+	def loginCheck(self):
+		ret = self.parent.app.config.get("account","id")!="" and self.parent.app.config.get("account","password")!=""
+		if not ret:
+			errorDialog(_("この機能を利用するには、ログインが必要です。\n[オプション]→[設定]にて、アカウント情報を設定してください。詳細は、readme.txtをご確認ください。"))
+		return ret

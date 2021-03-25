@@ -68,10 +68,12 @@ class Dialog(BaseDialog):
 		self.tab = self.creator.tabCtrl(_("カテゴリ選択"))
 
 		# general
-		creator=views.ViewCreator.ViewCreator(self.viewMode,self.tab,None,views.ViewCreator.GridBagSizer,label=_("一般"),style=wx.ALL,margin=20)
+		creator=views.ViewCreator.ViewCreator(self.viewMode,self.tab,None,views.ViewCreator.GridBagSizer,label=_("一般"),style=wx.ALL|wx.EXPAND,proportion=1,margin=20)
 		self.autoreload = creator.checkbox(_("起動時に最新の情報を取得する"))
 		creator.GetSizer().SetItemSpan(self.autoreload.GetParent(),2)
-		self.logLevel,dummy = creator.combobox(_("ログ記録レベル"),list(self.logLevelSelection.values()))
+		self.id,dummy = creator.inputbox("peing &ID",sizerFlag=wx.EXPAND)
+		self.password,dummy = creator.inputbox(_("パスワード(&P)"),x=400,style=wx.TE_PASSWORD,sizerFlag=wx.EXPAND)
+		self.logLevel,dummy = creator.combobox(_("ログ記録レベル(&L)"),list(self.logLevelSelection.values()))
 		#self.reader, static = creator.combobox(_("出力先(&O)"), list(self.readerSelection.values()))
 
 		# view
@@ -96,6 +98,8 @@ class Dialog(BaseDialog):
 		# general
 		self._setValue(self.autoreload,"general","auto_reload",configType.BOOL)
 		#self._setValue(self.reader,"speech","reader",configType.DIC,self.readerSelection)
+		self._setValue(self.id,"account","id",configType.STRING,"")
+		self._setValue(self.password,"account","password",configType.STRING,"")
 		self._setValue(self.logLevel,"general","log_level",configType.DIC,self.logLevelSelection)
 		# view
 		self._setValue(self.language,"general","language",configType.DIC,self.languageSelection)

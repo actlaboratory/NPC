@@ -28,6 +28,8 @@ dic={
 	"FILTER_USER":_("選択中ユーザのみ表示(&U)"),
 
 	"ACCOUNT_ANSWER":_("届いている質問に回答"),
+	"ACCOUNT_ARCHIVED":_("アーカイブ済みの質問を表示"),
+
 	"ACCOUNT_ADD_FOLLOWEES":_("アカウントのフォロイーから一括登録"),
 
 
