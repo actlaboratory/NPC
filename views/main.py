@@ -480,7 +480,7 @@ class Events(BaseEvents):
 	#ログイン情報が設定されているか調べる
 	#値が入っているかどうかのみの確認であり、有効性の確認はしない
 	def loginCheck(self):
-		ret = self.parent.app.config.get("account","id")!="" and self.parent.app.config.get("account","password")!=""
+		ret = self.parent.app.config.getstring("account","id")!="" and self.parent.app.config.getstring("account","password")!=""
 		if not ret:
 			errorDialog(_("この機能を利用するには、ログインが必要です。\n[オプション]→[設定]にて、アカウント情報を設定してください。詳細は、readme.txtをご確認ください。"))
 		return ret
