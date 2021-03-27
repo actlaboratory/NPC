@@ -63,7 +63,7 @@ class Dialog(BaseDialog):
 		ret = self.service.login(self.app.config.getstring("account","id"),self.app.config.getstring("account","password"))
 		if ret != errorCodes.OK:
 			self.log.error("login failed")
-			return 
+			return ret
 		if self.type == constants.RECEIVED:
 			qList = self.service.getReceivedItemList()
 		elif self.type == constants.ARCHIVED:
