@@ -215,10 +215,16 @@ class Service():
 	#
 	#	質問投稿
 	#
-	def postQuestion(self,user,question):
-		self.log.debug("post question %s to %s" %(question, user.account))
+	def postQuestion(self,user,question,useSession=True):
+		self.log.debug("post question %s to %s use_session=%s" %(question, user.account,str(useSession)))
 		try:
-			return peing.postQuestion(user.account,question)
+			if useSession:
+				if self.session==None:
+					self.log.error("login required.")
+					return errorCodes.PEING_ERROR
+				return peing.postQuestion(user.account,question,self.session)
+			else:
+				return peing.postQuestion(user.account,question)
 		except Exception as e:
 			self.log.error(e)
 			return errorCodes.PEING_ERROR
@@ -227,8 +233,12 @@ class Service():
 	#
 	#	質問への応答
 	#
-	def login(self,id,pw):
+	def login(self,id,pw,force=False):
+		if not force and self.session:
+			self.log.debug("already logined")
+			return errorCodes.OK
 		try:
+			self.log.debug("try login")
 			session = peing.login(id,pw)
 			if session == errorCodes.PEING_ERROR:
 				return errorCodes.PEING_ERROR
@@ -238,6 +248,9 @@ class Service():
 		except Exception as e:
 			self.log.error(e)
 			return errorCodes.PEING_ERROR
+
+	def logout(self):
+		self.session = None
 
 	def getReceivedItemList(self):
 		try:

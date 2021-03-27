@@ -14,7 +14,6 @@ class DefaultSettings:
 			"update" : True,
 			"auto_reload" : False,
 			"log_level":"20",
-
 		}
 		config["view"]={
 			"font": "bold 'ＭＳ ゴシック' 22 windows-932",
@@ -33,7 +32,11 @@ class DefaultSettings:
 			"server" : "localhost",
 			"port" : 8080,
 		}
-
+		config["account"]={
+			"id" : "",
+			"password" : "",
+			"use_always" : "false"
+		}
 		return config
 
 initialValues={}

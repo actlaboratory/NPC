@@ -312,7 +312,9 @@ class Events(BaseEvents):
 		if selected == menuItemsStore.getRef("OPTION_OPTION"):
 			d = settingsDialog.Dialog()
 			d.Initialize()
-			d.Show()
+			if d.Show()==wx.ID_OK:
+				self.log.debug("setting dialog returned ID_OK. logout session.")
+				self.parent.service.logout()
 
 		if selected == menuItemsStore.getRef("OPTION_KEY_CONFIG"):
 			if self.setKeymap(self.parent.identifier,_("ショートカットキーの設定"),filter=keymap.KeyFilter().SetDefault(True,False)):
@@ -401,6 +403,14 @@ class Events(BaseEvents):
 
 	#targetで指定したユーザに対して質問を投稿する
 	def postQuestion(self,target,parent=None):
+		useSession = self.parent.app.config.getboolean("account","use_always",False)
+		if useSession:
+			ret = self.parent.service.login(self.parent.app.config.getstring("account","id"),self.parent.app.config.getstring("account","password"))
+			if ret != errorCodes.OK:
+				self.log.error("login failed")
+				errorDialog(_("ログインに失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+				return
+
 		d = SimpleImputDialog.Dialog("質問を投稿",_("%sさんへの質問内容") % target.getViewString(), parent)
 		d.Initialize()
 		r = d.Show()
@@ -408,7 +418,10 @@ class Events(BaseEvents):
 			return
 		prm=d.GetValue()
 		self.log.debug("post question:%s,%s" % (target,prm))
-		ret = self.parent.service.postQuestion(target,prm)
+		if useSession:
+			if not self.loginCheck():
+				return
+		ret = self.parent.service.postQuestion(target,prm,useSession)
 		if ret == errorCodes.OK:
 			dialog(_("投稿完了"),_("質問を投稿しました。"))
 			self.log.debug("post question success")

@@ -21,38 +21,40 @@ def getAnswers(userId, page):
 		answers.append(item)
 	return answers
 
-def postQuestion(userId, message):
-	with requests.Session() as s:
-		# CSRFトークンとクッキーの取得のために一度アクセスしておく。
-		page = s.get("https://peing.net/%s" % (userId),timeout=5)
-		# htmlを解析
-		soup = BeautifulSoup(page.content, "lxml")
-		tmp = soup.find("meta", {"name": "csrf-token"})
-		token = tmp["content"]
-		# リクエスト用のJSONを作る。
-		reqJson = {
-			"item":{
-				"body":message,
-				"hope_answer_type":"leave",
-				"item_card_color":"default"
-			},
-			"user":{
-			"account":userId
+def postQuestion(userId, message,session=None):
+	if not session:
+		session = requests.Session()
+
+	# CSRFトークンとクッキーの取得のために一度アクセスしておく。
+	page = session.get("https://peing.net/%s" % (userId),timeout=5)
+	# htmlを解析
+	soup = BeautifulSoup(page.content, "lxml")
+	tmp = soup.find("meta", {"name": "csrf-token"})
+	token = tmp["content"]
+	# リクエスト用のJSONを作る。
+	reqJson = {
+		"item":{
+			"body":message,
+			"hope_answer_type":"leave",
+			"item_card_color":"default"
 		},
-			"type":"question",
-			"event_theme_id":None
-		}
-		msg = json.dumps(reqJson)
-		header = {
-			"Content-Type": "application/json",
-			"Accept": "application/json",
-			"X-CSRF-TOKEN": token
-		}
-		result = s.post("https://peing.net/ja/%s/message" % (userId), msg, headers=header, timeout=5)
-		if result.status_code==201:
-			return errorCodes.OK
-		else:
-			return errorCodes.PEING_ERROR
+		"user":{
+		"account":userId
+	},
+		"type":"question",
+		"event_theme_id":None
+	}
+	msg = json.dumps(reqJson)
+	header = {
+		"Content-Type": "application/json",
+		"Accept": "application/json",
+		"X-CSRF-TOKEN": token
+	}
+	result = session.post("https://peing.net/ja/%s/message" % (userId), msg, headers=header, timeout=5)
+	if result.status_code==201:
+		return errorCodes.OK
+	else:
+		return errorCodes.PEING_ERROR
 
 #ログインページを開き、その後のPOSTリクエストで必要なトークンを得る
 def _getAuthenticityToken(session):

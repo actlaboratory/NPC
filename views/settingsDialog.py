@@ -73,6 +73,9 @@ class Dialog(BaseDialog):
 		creator.GetSizer().SetItemSpan(self.autoreload.GetParent(),2)
 		self.id,dummy = creator.inputbox("peing &ID",sizerFlag=wx.EXPAND)
 		self.password,dummy = creator.inputbox(_("パスワード(&P)"),x=400,style=wx.TE_PASSWORD,sizerFlag=wx.EXPAND)
+		self.loginAlways = creator.checkbox(_("ログインした状態で質問する"))
+		creator.GetSizer().SetItemSpan(self.loginAlways.GetParent(),2)
+
 		self.logLevel,dummy = creator.combobox(_("ログ記録レベル(&L)"),list(self.logLevelSelection.values()))
 		#self.reader, static = creator.combobox(_("出力先(&O)"), list(self.readerSelection.values()))
 
@@ -100,7 +103,9 @@ class Dialog(BaseDialog):
 		#self._setValue(self.reader,"speech","reader",configType.DIC,self.readerSelection)
 		self._setValue(self.id,"account","id",configType.STRING,"")
 		self._setValue(self.password,"account","password",configType.STRING,"")
+		self._setValue(self.loginAlways,"account","use_always",configType.BOOL,False)
 		self._setValue(self.logLevel,"general","log_level",configType.DIC,self.logLevelSelection)
+
 		# view
 		self._setValue(self.language,"general","language",configType.DIC,self.languageSelection)
 		self._setValue(self.colormode,"view","colormode",configType.DIC,self.colorModeSelection)
@@ -113,6 +118,14 @@ class Dialog(BaseDialog):
 		self._setValue(self.port, "proxy", "port", configType.STRING)
 
 	def onOkButton(self, event):
+		if self.id.GetLineText(0)!="" or self.password.GetLineText(0)!="":
+			if self.id.GetLineText(0)=="" or self.password.GetLineText(0)=="":
+				simpleDialog.errorDialog(_("IDとPWは両方を入力するか、両方を空欄としてください。"),self.wnd)
+				return
+		else:		#ログイン機能利用なし
+			if self.loginAlways.GetValue()==True:
+				simpleDialog.errorDialog(_("ログインした状態で質問をする場合には、IDとパスワードを入力してください。"),self.wnd)
+				return
 		result = self._save()
 		event.Skip()
 
