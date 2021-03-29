@@ -171,7 +171,14 @@ def recycle(session,hash):
 		"Accept": "application/json",
 		"X-CSRF-TOKEN": entity["content"],
 	}
-	result = session.put("https://peing.net/api/v1/questions/"+hash, body, headers=headers, timeout=5)
+	#result = session.put("https://peing.net/api/v1/questions/"+hash, body, headers=headers, timeout=5)
 	if result.status_code!=200:
 		return errorCodes.PEING_ERROR
 	return errorCodes.OK
+
+def getSentList(session,page=1):
+	assert type(session)==requests.sessions.Session
+	assert page>0
+
+	result = session.get("https://peing.net/api/v2/send_questions?page="+str(page))
+	return json.loads(result.text)["items"]
