@@ -72,13 +72,8 @@ class Dialog(BaseDialog):
 		self.autoreload = creator.checkbox(_("起動時に最新の情報を取得する"))
 		creator.GetSizer().SetItemSpan(self.autoreload.GetParent(),2)
 		self.id,dummy = creator.inputbox("peing &ID",sizerFlag=wx.EXPAND)
-		self.id.Hide()
-		dummy.Hide()
 		self.password,dummy = creator.inputbox(_("パスワード(&P)"),x=400,style=wx.TE_PASSWORD,sizerFlag=wx.EXPAND)
-		self.password.Hide()
-		dummy.Hide()
 		self.loginAlways = creator.checkbox(_("ログインした状態で質問する"))
-		self.loginAlways.GetParent().Hide()
 		creator.GetSizer().SetItemSpan(self.loginAlways.GetParent(),2)
 
 		self.logLevel,dummy = creator.combobox(_("ログ記録レベル(&L)"),list(self.logLevelSelection.values()))
