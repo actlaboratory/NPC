@@ -180,7 +180,8 @@ class Events(BaseEvents):
 			r = d.Show()
 			if r==wx.ID_CANCEL:
 				return
-			prm = re.sub("https://peing.net/[^/]+/","", d.GetValue())
+			# peingではユーザ名は小文字固定で大文字はエラーとなるため対策
+			prm = re.sub("https://peing.net/[^/]+/","", d.GetValue().lower())
 
 			self.log.debug("add user: %s" % prm)
 			if self.parent.service.isUserRegistered(prm)==True:
@@ -256,7 +257,9 @@ class Events(BaseEvents):
 			users = self.parent.service.getUserList()
 			d = userListDialog.Dialog(users,self.parent.service)
 			d.Initialize()
-			d.Show()
+			if d.Show()==constants.SET_FILTER:
+				self.log.debug("set userFilter from userListDialog")
+				self.parent.menu.CheckMenu("FILTER_USER",True)
 			self.parent.refresh()
 
 		if selected==menuItemsStore.getRef("FILE_EXIT"):
