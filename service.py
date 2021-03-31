@@ -28,6 +28,8 @@ class Service():
 		self.userDao=userDao.UserDao()
 		self.answerDao=answerDao.AnswerDao()
 		self.connection=dao.connectionFactory.getConnection()
+		self.selfId=""
+		self.session=None
 
 	#
 	#	ユーザ管理
@@ -194,15 +196,7 @@ class Service():
 					break
 				if lastAdd <= answered_at: # このループ中に追加の質問回答をした場合に発生する重複受信
 					continue
-				flag=0
-				if answer["question_type"]=="auto_question":
-					flag|=constants.FLG_ANSWER_AUTOQUESTION
-				elif answer["question_type"]=="baton_question":
-					flag|=constants.FLG_ANSWER_BATON_QUESTION
-				elif answer["question_type"] in ("normal_question"):
-					pass
-				else:
-					self.log.warning("unknown question type %s found." % answer["question_type"])
+				flag=self.makeAnswerFlag(answer["question_type"])
 				data = (answer["answer_id"],user.id, answer["body"], answer["answer_body"], answered_at.replace(tzinfo=None),flag)
 				try:
 					self.answerDao.insert(data)
@@ -221,14 +215,99 @@ class Service():
 	#
 	#	質問投稿
 	#
-	def postQuestion(self,user,question):
-		self.log.debug("post question %s to %s" %(question, user.account))
+	def postQuestion(self,user,question,useSession=True):
+		self.log.debug("post question %s to %s use_session=%s" %(question, user.account,str(useSession)))
 		try:
-			return peing.postQuestion(user.account,question)
+			if useSession:
+				if self.session==None:
+					self.log.error("login required.")
+					return errorCodes.PEING_ERROR
+				return peing.postQuestion(user.account,question,self.session)
+			else:
+				return peing.postQuestion(user.account,question)
 		except Exception as e:
 			self.log.error(e)
 			return errorCodes.PEING_ERROR
 
+
+	#
+	#	質問への応答
+	#
+	def login(self,id,pw,force=False):
+		if not force and self.session:
+			self.log.debug("already logined")
+			return errorCodes.OK
+		try:
+			self.log.debug("try login")
+			session = peing.login(id,pw)
+			if session == errorCodes.PEING_ERROR:
+				return errorCodes.PEING_ERROR
+			self.session = session
+			self.selfId = id
+			return errorCodes.OK
+		except Exception as e:
+			self.log.error(e)
+			return errorCodes.PEING_ERROR
+
+	def logout(self):
+		self.session = None
+
+	def getReceivedItemList(self):
+		try:
+			user = self.getUserInfo(self.selfId)
+			l = []
+			for i in range(-( (-(user.getQuestionCount()))//3 )):
+				ret = peing.getReceivedItemList(self.session,i+1)
+				if ret == errorCodes.PEING_ERROR or type(ret)!=list:
+					return ret
+				for q in ret:
+					l.append(entity.answer.Answer(q["id"],None,q["body"],None,q["relative_time"],self.makeAnswerFlag(q["question_type"]),q["uuid_hash"]))
+			return l
+		except Exception as e:
+			self.log.error(e)
+			return errorCodes.PEING_ERROR
+
+	def getArchivedItemList(self):
+		try:
+			l = []
+			i=0
+			while(True):
+				i+=1
+				ret = peing.getArchivedItemList(self.session,i)
+				if ret == errorCodes.PEING_ERROR or type(ret)!=list:
+					return ret
+				if len(ret)==0:
+					break
+				for q in ret:
+					l.append(entity.answer.Answer(q["id"],None,q["body"],None,q["relative_time"],self.makeAnswerFlag(q["question_type"]),q["uuid_hash"]))
+			return l
+		except Exception as e:
+			self.log.error(e)
+			return errorCodes.PEING_ERROR
+
+	def answer(self,hash,answer):
+		try:
+			ret = peing.postAnswer(self.session,hash,answer)
+			return ret
+		except Exception as e:
+			self.log.error(e)
+			return errorCodes.PEING_ERROR
+
+	def archive(self,hash):
+		try:
+			ret = peing.archive(self.session,hash)
+			return ret
+		except Exception as e:
+			self.log.error(e)
+			return errorCodes.PEING_ERROR
+
+	def recycle(self,hash):
+		try:
+			ret = peing.recycle(self.session,hash)
+			return ret
+		except Exception as e:
+			self.log.error(e)
+			return errorCodes.PEING_ERROR
 
 	#
 	#	ビュー補助
@@ -277,3 +356,15 @@ class Service():
 		except exception as e:
 			self.log.error(e)
 			raise e
+
+	def makeAnswerFlag(self,flagString):
+		flag=0
+		if flagString=="auto_question":
+			flag|=constants.FLG_ANSWER_AUTOQUESTION
+		elif flagString=="baton_question":
+			flag|=constants.FLG_ANSWER_BATON_QUESTION
+		elif flagString in ("normal_question"):
+			pass
+		else:
+			self.log.warning("unknown question type %s found." % answer["question_type"])
+		return flag

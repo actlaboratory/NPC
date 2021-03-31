@@ -68,10 +68,20 @@ class Dialog(BaseDialog):
 		self.tab = self.creator.tabCtrl(_("カテゴリ選択"))
 
 		# general
-		creator=views.ViewCreator.ViewCreator(self.viewMode,self.tab,None,views.ViewCreator.GridBagSizer,label=_("一般"),style=wx.ALL,margin=20)
+		creator=views.ViewCreator.ViewCreator(self.viewMode,self.tab,None,views.ViewCreator.GridBagSizer,label=_("一般"),style=wx.ALL|wx.EXPAND,proportion=1,margin=20)
 		self.autoreload = creator.checkbox(_("起動時に最新の情報を取得する"))
 		creator.GetSizer().SetItemSpan(self.autoreload.GetParent(),2)
-		self.logLevel,dummy = creator.combobox(_("ログ記録レベル"),list(self.logLevelSelection.values()))
+		self.id,dummy = creator.inputbox("peing &ID",sizerFlag=wx.EXPAND)
+		self.id.Hide()
+		dummy.Hide()
+		self.password,dummy = creator.inputbox(_("パスワード(&P)"),x=400,style=wx.TE_PASSWORD,sizerFlag=wx.EXPAND)
+		self.password.Hide()
+		dummy.Hide()
+		self.loginAlways = creator.checkbox(_("ログインした状態で質問する"))
+		self.loginAlways.GetParent().Hide()
+		creator.GetSizer().SetItemSpan(self.loginAlways.GetParent(),2)
+
+		self.logLevel,dummy = creator.combobox(_("ログ記録レベル(&L)"),list(self.logLevelSelection.values()))
 		#self.reader, static = creator.combobox(_("出力先(&O)"), list(self.readerSelection.values()))
 
 		# view
@@ -96,7 +106,11 @@ class Dialog(BaseDialog):
 		# general
 		self._setValue(self.autoreload,"general","auto_reload",configType.BOOL)
 		#self._setValue(self.reader,"speech","reader",configType.DIC,self.readerSelection)
+		self._setValue(self.id,"account","id",configType.STRING,"")
+		self._setValue(self.password,"account","password",configType.STRING,"")
+		self._setValue(self.loginAlways,"account","use_always",configType.BOOL,False)
 		self._setValue(self.logLevel,"general","log_level",configType.DIC,self.logLevelSelection)
+
 		# view
 		self._setValue(self.language,"general","language",configType.DIC,self.languageSelection)
 		self._setValue(self.colormode,"view","colormode",configType.DIC,self.colorModeSelection)
@@ -109,6 +123,14 @@ class Dialog(BaseDialog):
 		self._setValue(self.port, "proxy", "port", configType.STRING)
 
 	def onOkButton(self, event):
+		if self.id.GetLineText(0)!="" or self.password.GetLineText(0)!="":
+			if self.id.GetLineText(0)=="" or self.password.GetLineText(0)=="":
+				simpleDialog.errorDialog(_("IDとPWは両方を入力するか、両方を空欄としてください。"),self.wnd)
+				return
+		else:		#ログイン機能利用なし
+			if self.loginAlways.GetValue()==True:
+				simpleDialog.errorDialog(_("ログインした状態で質問をする場合には、IDとパスワードを入力してください。"),self.wnd)
+				return
 		result = self._save()
 		event.Skip()
 

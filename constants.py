@@ -9,8 +9,8 @@ import wx
 APP_FULL_NAME = "windows Native Peing Connector"#アプリケーションの完全な名前
 APP_NAME="NPC"#アプリケーションの名前
 APP_ICON = None
-APP_VERSION="1.0.1"
-APP_LAST_RELEASE_DATE="2021-03-24"
+APP_VERSION="1.0.2"
+APP_LAST_RELEASE_DATE="2021-03-31"
 APP_COPYRIGHT_YEAR="2021"
 APP_LICENSE="Apache License 2.0"
 APP_DEVELOPERS="yamahubuki, ACT Laboratory"
@@ -55,3 +55,10 @@ FLG_USER_DISABLE=1		#アカウント名が変更されている
 
 FLG_ANSWER_AUTOQUESTION=1		#運営からの自動質問
 FLG_ANSWER_BATON_QUESTION=4		#バトン質問
+
+#受信した質問の現況フラグ
+RECEIVED=0
+ARCHIVED=1
+
+#その他
+SET_FILTER = wx.ID_OK+2

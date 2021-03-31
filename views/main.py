@@ -11,6 +11,7 @@ import webbrowser
 
 import ConfigManager
 import constants
+import entity.answer
 import errorCodes
 import filter
 import globalVars
@@ -19,6 +20,7 @@ import service
 
 from .base import *
 from simpleDialog import *
+from views import answerDialog
 from views import detailDialog
 from views import globalKeyConfig
 from views import listConfigurationDialog
@@ -77,7 +79,7 @@ class MainView(BaseView):
 		self.answerIdList=[]
 		self.lst.DeleteAllItems()
 		for i in data:
-			s=self.answerFlag2String(i[5])
+			s=entity.answer.getTypeString(i[5])
 			if not self.testFilter(i):
 				continue
 			self.lst.Append((i[1],i[2],i[3],i[4],s))
@@ -92,17 +94,6 @@ class MainView(BaseView):
 		self.lst.SetFocus()
 		self.log.debug("refresh finished.")
 		return 
-
-	def answerFlag2String(self,flag):
-		ret=[]
-		dic={
-			constants.FLG_ANSWER_AUTOQUESTION:_("運営"),
-			constants.FLG_ANSWER_BATON_QUESTION:_("バトン"),
-		}
-		for i,s in dic.items():
-			if flag&i==i:
-				ret.append(s)
-		return ",".join(ret)
 
 	#表示情報タプルiを基に、有効になっているフィルタにかけた結果、表示すべきか否かを判断して返す
 	def testFilter(self,i):
@@ -120,8 +111,9 @@ class Menu(BaseMenu):
 
 		#メニューの大項目を作る
 		self.hFileMenu=wx.Menu()
-		self.hOptionMenu=wx.Menu()
 		self.hFilterMenu=wx.Menu()
+		self.hAccountMenu=wx.Menu()
+		self.hOptionMenu=wx.Menu()
 		self.hHelpMenu=wx.Menu()
 
 		#ファイルメニュー
@@ -152,6 +144,12 @@ class Menu(BaseMenu):
 			"FILTER_USER",
 		])
 
+		#アカウントメニューの中身
+		self.RegisterMenuCommand(self.hAccountMenu,[
+			"ACCOUNT_ANSWER",
+			"ACCOUNT_ARCHIVED",
+		])
+
 		#ヘルプメニューの中身
 		self.RegisterMenuCommand(self.hHelpMenu,[
 				"HELP_UPDATE",
@@ -161,6 +159,7 @@ class Menu(BaseMenu):
 		#メニューバーの生成
 		self.hMenuBar.Append(self.hFileMenu,_("ファイル(&F)"))
 		self.hMenuBar.Append(self.hFilterMenu,_("フィルタ(&I)"))
+		#self.hMenuBar.Append(self.hAccountMenu,_("アカウント(&A)"))
 		self.hMenuBar.Append(self.hOptionMenu,_("オプション(&O)"))
 		self.hMenuBar.Append(self.hHelpMenu,_("ヘルプ(&H)"))
 		target.SetMenuBar(self.hMenuBar)
@@ -181,7 +180,8 @@ class Events(BaseEvents):
 			r = d.Show()
 			if r==wx.ID_CANCEL:
 				return
-			prm = re.sub("https://peing.net/[^/]+/","", d.GetValue())
+			# peingではユーザ名は小文字固定で大文字はエラーとなるため対策
+			prm = re.sub("https://peing.net/[^/]+/","", d.GetValue().lower())
 
 			self.log.debug("add user: %s" % prm)
 			if self.parent.service.isUserRegistered(prm)==True:
@@ -226,7 +226,7 @@ class Events(BaseEvents):
 			user = self.parent.service.getAnswer(self.parent.answerIdList[index]).user
 			if user.flag&constants.FLG_USER_DISABLE==constants.FLG_USER_DISABLE:
 				self.log.warning("open web:failed. user has been deleted or account changed.")
-				errorDialog(_("このユーザは既に退会したか、peingIDを変更しているため開くことができません。"))
+				errorDialog(_("このユーザは既に退会したか、peingIDを変更しているため開くことができません。"),self.parent.hFrame)
 				return
 			self.log.debug("open web:https://peing.net/"+user.account)
 			webbrowser.open_new("https://peing.net/"+user.account)
@@ -257,7 +257,9 @@ class Events(BaseEvents):
 			users = self.parent.service.getUserList()
 			d = userListDialog.Dialog(users,self.parent.service)
 			d.Initialize()
-			d.Show()
+			if d.Show()==constants.SET_FILTER:
+				self.log.debug("set userFilter from userListDialog")
+				self.parent.menu.CheckMenu("FILTER_USER",True)
 			self.parent.refresh()
 
 		if selected==menuItemsStore.getRef("FILE_EXIT"):
@@ -292,11 +294,30 @@ class Events(BaseEvents):
 			self.parent.refresh()
 			event.Skip()
 
+		if selected == menuItemsStore.getRef("ACCOUNT_ANSWER"):
+			if not self.loginCheck():
+				return
+			d = answerDialog.Dialog(self.parent.service,constants.RECEIVED)
+			if d.Initialize()==errorCodes.OK:
+				d.Show()
+			else:
+				errorDialog(_("ログインまたは質問の取得に失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+
+		if selected == menuItemsStore.getRef("ACCOUNT_ARCHIVED"):
+			if not self.loginCheck():
+				return
+			d = answerDialog.Dialog(self.parent.service,type=constants.ARCHIVED)
+			if d.Initialize()==errorCodes.OK:
+				d.Show()
+			else:
+				errorDialog(_("ログインまたは質問の取得に失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
 
 		if selected == menuItemsStore.getRef("OPTION_OPTION"):
 			d = settingsDialog.Dialog()
 			d.Initialize()
-			d.Show()
+			if d.Show()==wx.ID_OK:
+				self.log.debug("setting dialog returned ID_OK. logout session.")
+				self.parent.service.logout()
 
 		if selected == menuItemsStore.getRef("OPTION_KEY_CONFIG"):
 			if self.setKeymap(self.parent.identifier,_("ショートカットキーの設定"),filter=keymap.KeyFilter().SetDefault(True,False)):
@@ -385,6 +406,14 @@ class Events(BaseEvents):
 
 	#targetで指定したユーザに対して質問を投稿する
 	def postQuestion(self,target,parent=None):
+		useSession = self.parent.app.config.getboolean("account","use_always",False)
+		if useSession:
+			ret = self.parent.service.login(self.parent.app.config.getstring("account","id"),self.parent.app.config.getstring("account","password"))
+			if ret != errorCodes.OK:
+				self.log.error("login failed")
+				errorDialog(_("ログインに失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+				return
+
 		d = SimpleImputDialog.Dialog("質問を投稿",_("%sさんへの質問内容") % target.getViewString(), parent)
 		d.Initialize()
 		r = d.Show()
@@ -392,7 +421,10 @@ class Events(BaseEvents):
 			return
 		prm=d.GetValue()
 		self.log.debug("post question:%s,%s" % (target,prm))
-		ret = self.parent.service.postQuestion(target,prm)
+		if useSession:
+			if not self.loginCheck():
+				return
+		ret = self.parent.service.postQuestion(target,prm,useSession)
 		if ret == errorCodes.OK:
 			dialog(_("投稿完了"),_("質問を投稿しました。"))
 			self.log.debug("post question success")
@@ -461,3 +493,10 @@ class Events(BaseEvents):
 		newMap.write()
 		return True
 
+	#ログイン情報が設定されているか調べる
+	#値が入っているかどうかのみの確認であり、有効性の確認はしない
+	def loginCheck(self):
+		ret = self.parent.app.config.getstring("account","id")!="" and self.parent.app.config.getstring("account","password")!=""
+		if not ret:
+			errorDialog(_("この機能を利用するには、ログインが必要です。\n[オプション]→[設定]にて、アカウント情報を設定してください。詳細は、readme.txtをご確認ください。"))
+		return ret
