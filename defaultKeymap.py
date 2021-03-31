@@ -21,8 +21,9 @@ defaultKeymap["mainView"]={
 	"FILTER_BATON":"",
 	"FILTER_USER":"",
 
-	"ACCOUNT_ANSWER":"",
-	"ACCOUNT_ARCHIVED":"",
+	#"ACCOUNT_ANSWER":"",
+	#"ACCOUNT_ARCHIVED":"",
+
 	"OPTION_OPTION":"",
 	"OPTION_KEY_CONFIG":"",
 	"OPTION_LIST_CONFIG":"",
