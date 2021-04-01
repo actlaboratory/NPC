@@ -25,6 +25,7 @@ from views import detailDialog
 from views import globalKeyConfig
 from views import listConfigurationDialog
 from views import progress
+from views import sentQuestionDialog
 from views import settingsDialog
 from views import SimpleImputDialog
 from views import userDetailDialog
@@ -148,6 +149,7 @@ class Menu(BaseMenu):
 		self.RegisterMenuCommand(self.hAccountMenu,[
 			"ACCOUNT_ANSWER",
 			"ACCOUNT_ARCHIVED",
+			"ACCOUNT_SENT_LIST",
 		])
 
 		#ヘルプメニューの中身
@@ -303,10 +305,10 @@ class Events(BaseEvents):
 			else:
 				errorDialog(_("ログインまたは質問の取得に失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
 
-		if selected == menuItemsStore.getRef("ACCOUNT_ARCHIVED"):
+		if selected == menuItemsStore.getRef("ACCOUNT_SENT_LIST"):
 			if not self.loginCheck():
 				return
-			d = answerDialog.Dialog(self.parent.service,type=constants.ARCHIVED)
+			d = sentQuestionDialog.Dialog(self.parent.service)
 			if d.Initialize()==errorCodes.OK:
 				d.Show()
 			else:
@@ -414,7 +416,7 @@ class Events(BaseEvents):
 				errorDialog(_("ログインに失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
 				return
 
-		d = SimpleImputDialog.Dialog("質問を投稿",_("%sさんへの質問内容") % target.getViewString(), parent)
+		d = SimpleImputDialog.Dialog(_("質問を投稿"),_("%sさんへの質問内容") % target.getViewString(), parent)
 		d.Initialize()
 		r = d.Show()
 		if r==wx.ID_CANCEL:
