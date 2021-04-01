@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NPC\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-14 15:16+0900\n"
+"POT-Creation-Date: 2021-04-01 21:36+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,37 +23,37 @@ msgid ""
 "確認してください。"
 msgstr ""
 
-#: keymapHandlerBase.py:690 keymapHandlerBase.py:720
+#: keymapHandlerBase.py:696 keymapHandlerBase.py:726
 #, python-format
 msgid "%s は存在しないキーです。"
 msgstr ""
 
-#: keymapHandlerBase.py:761
+#: keymapHandlerBase.py:767
 #, python-format
 msgid "%s は使用できないキーです。"
 msgstr ""
 
-#: keymapHandlerBase.py:770
+#: keymapHandlerBase.py:776
 msgid "修飾キーのみのパターンは設定できません。"
 msgstr ""
 
-#: keymapHandlerBase.py:772
+#: keymapHandlerBase.py:778
 msgid "このキーは修飾キーと合わせて指定する必要があります。"
 msgstr ""
 
-#: keymapHandlerBase.py:777
+#: keymapHandlerBase.py:783
 msgid "修飾キーでないキーを複数指定することはできません。"
 msgstr ""
 
-#: keymapHandlerBase.py:780 keymapHandlerBase.py:788
+#: keymapHandlerBase.py:786 keymapHandlerBase.py:794
 msgid "このキーは、SHIFTキー以外の修飾キーと合わせて指定する必要があります。"
 msgstr ""
 
-#: keymapHandlerBase.py:783
+#: keymapHandlerBase.py:789
 msgid "修飾キーのみの組み合わせは指定できません。"
 msgstr ""
 
-#: keymapHandlerBase.py:792
+#: keymapHandlerBase.py:798
 msgid "この組み合わせは別の用途で予約されているため、利用できません。"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr ""
 msgid "ユーザの追加(&A)"
 msgstr ""
 
-#: menuItemsDic.py:15
+#: menuItemsDic.py:15 views\userListDialog.py:52
 msgid "質問を投稿(&Q)"
 msgstr ""
 
@@ -114,22 +114,34 @@ msgid "選択中ユーザのみ表示(&U)"
 msgstr ""
 
 #: menuItemsDic.py:30
-msgid "設定(&S)"
+msgid "届いている質問に回答"
 msgstr ""
 
 #: menuItemsDic.py:31
+msgid "アーカイブ済みの質問を表示"
+msgstr ""
+
+#: menuItemsDic.py:33
+msgid "アカウントのフォロイーから一括登録"
+msgstr ""
+
+#: menuItemsDic.py:36
+msgid "設定(&S)"
+msgstr ""
+
+#: menuItemsDic.py:37
 msgid "ショートカットキーの設定(&K)"
 msgstr ""
 
-#: menuItemsDic.py:32
+#: menuItemsDic.py:38
 msgid "リスト表示設定(&L)"
 msgstr ""
 
-#: menuItemsDic.py:34
+#: menuItemsDic.py:40
 msgid "最新バージョンを確認(&U)"
 msgstr ""
 
-#: menuItemsDic.py:35
+#: menuItemsDic.py:41
 msgid "バージョン情報(&V)"
 msgstr ""
 
@@ -183,6 +195,99 @@ msgid ""
 "ソフトウェア終了時に、自動でアップデートされます。"
 msgstr ""
 
+#: entity\answer.py:25
+msgid "運営"
+msgstr ""
+
+#: entity\answer.py:26
+msgid "バトン"
+msgstr ""
+
+#: views\answerDialog.py:24
+msgid "質問に回答"
+msgstr ""
+
+#: views\answerDialog.py:35
+msgid "未回答の質問"
+msgstr ""
+
+#: views\answerDialog.py:36
+msgid "質問"
+msgstr ""
+
+#: views\answerDialog.py:37
+msgid "日時"
+msgstr ""
+
+#: views\answerDialog.py:38 views\detailDialog.py:39
+msgid "種別"
+msgstr ""
+
+#: views\answerDialog.py:44
+msgid "回答する(&A)"
+msgstr ""
+
+#: views\answerDialog.py:46
+msgid "アーカイブ(&D)"
+msgstr ""
+
+#: views\answerDialog.py:48
+msgid "元に戻す"
+msgstr ""
+
+#: views\answerDialog.py:50 views\detailDialog.py:42
+#: views\userDetailDialog.py:44 views\userListDialog.py:54
+msgid "閉じる(&C)"
+msgstr ""
+
+#: views\answerDialog.py:82
+msgid "回答の入力"
+msgstr ""
+
+#: views\answerDialog.py:88
+msgid "回答完了"
+msgstr ""
+
+#: views\answerDialog.py:88
+msgid "回答が送信されました。"
+msgstr ""
+
+#: views\answerDialog.py:91
+msgid ""
+"指定された質問が存在しないか、通信に失敗しました。以下の対処をお試しくださ"
+"い。\n"
+"\n"
+"・入力した内容が長すぎるなどの理由で、拒否されている可能性があります。\n"
+"・質問一覧を開きなおしてみてください。\n"
+"・peing.netにアクセスできるか、ブラウザから確認してください。\n"
+"・しばらくたってから再度お試しください。\n"
+"・問題が解決しない場合、開発者までお問い合わせください。"
+msgstr ""
+
+#: views\answerDialog.py:95
+msgid "質問をアーカイブ"
+msgstr ""
+
+#: views\answerDialog.py:95
+#, python-format
+msgid ""
+"以下の質問をアーカイブしますか？\n"
+"\n"
+"%s"
+msgstr ""
+
+#: views\answerDialog.py:103
+msgid "質問を元に戻す"
+msgstr ""
+
+#: views\answerDialog.py:103
+#, python-format
+msgid ""
+"以下の質問を元に戻しますか？\n"
+"\n"
+"%s"
+msgstr ""
+
 #: views\base.py:67
 msgid "現在メニューは操作できません"
 msgstr ""
@@ -213,15 +318,6 @@ msgstr ""
 msgid "回答日時"
 msgstr ""
 
-#: views\detailDialog.py:39
-msgid "種別"
-msgstr ""
-
-#: views\detailDialog.py:42 views\userDetailDialog.py:44
-#: views\userListDialog.py:49
-msgid "閉じる(&C)"
-msgstr ""
-
 #: views\fontManager.py:25
 msgid ""
 "設定されているフォント情報が不正です。デフォルトのフォントを適用します。"
@@ -243,7 +339,7 @@ msgstr ""
 msgid "識別子"
 msgstr ""
 
-#: views\globalKeyConfig.py:31 views\main.py:305
+#: views\globalKeyConfig.py:31 views\main.py:325
 msgid "ショートカットキーの設定"
 msgstr ""
 
@@ -252,7 +348,7 @@ msgstr ""
 #: views\globalKeyConfig.py:120 views\globalKeyConfig.py:128
 #: views\globalKeyConfig.py:138 views\globalKeyConfig.py:143
 #: views\keyConfig.py:57 views\KeyValueSettingDialogBase.py:315
-#: views\main.py:424 views\main.py:437
+#: views\main.py:478 views\main.py:491
 msgid "なし"
 msgstr ""
 
@@ -284,7 +380,7 @@ msgstr ""
 msgid "ショートカット5"
 msgstr ""
 
-#: views\globalKeyConfig.py:75 views\settingsDialog.py:49
+#: views\globalKeyConfig.py:75 views\settingsDialog.py:57
 msgid "設定"
 msgstr ""
 
@@ -345,7 +441,7 @@ msgid "ＯＫ"
 msgstr ""
 
 #: views\KeyValueSettingDialogBase.py:81 views\KeyValueSettingDialogBase.py:259
-#: views\listConfigurationDialog.py:55 views\settingsDialog.py:84
+#: views\listConfigurationDialog.py:55 views\settingsDialog.py:98
 #: views\SimpleImputDialog.py:36 views\updateDialog.py:45
 msgid "キャンセル"
 msgstr ""
@@ -416,39 +512,35 @@ msgstr ""
 msgid "全ての列を非表示にすることはできません。"
 msgstr ""
 
-#: views\main.py:103
-msgid "運営"
-msgstr ""
-
-#: views\main.py:104
-msgid "バトン"
-msgstr ""
-
-#: views\main.py:166
+#: views\main.py:162
 msgid "ファイル(&F)"
 msgstr ""
 
-#: views\main.py:167
+#: views\main.py:163
 msgid "フィルタ(&I)"
 msgstr ""
 
-#: views\main.py:168
+#: views\main.py:164
+msgid "アカウント(&A)"
+msgstr ""
+
+#: views\main.py:165
 msgid "オプション(&O)"
 msgstr ""
 
-#: views\main.py:169
+#: views\main.py:166
 msgid "ヘルプ(&H)"
 msgstr ""
 
-#: views\main.py:183
+#: views\main.py:180
 msgid "ユーザの追加"
 msgstr ""
 
-#: views\main.py:183
+#: views\main.py:180
 msgid "peingページURLまたはTwitterユーザ名"
 msgstr ""
 
-#: views\main.py:191
+#: views\main.py:190
 msgid "指定されたユーザは既に登録済みです。"
 msgstr ""
 
@@ -465,38 +557,25 @@ msgid ""
 "%(name)s(%(account)s)"
 msgstr ""
 
-#: views\main.py:200
+#: views\main.py:201
 msgid "登録完了"
 msgstr ""
 
-#: views\main.py:200
+#: views\main.py:201
 msgid ""
 "ユーザの登録に成功しました。今回登録したユーザの回答を表示するには、ビューを"
 "再読み込みしてください。"
 msgstr ""
 
-#: views\main.py:202
+#: views\main.py:204
 msgid "ユーザの登録に失敗しました。"
 msgstr ""
 
-#: views\main.py:207
-#, python-format
-msgid "%sさんへの質問内容"
-msgstr ""
-
-#: views\main.py:215
-msgid "投稿完了"
-msgstr ""
-
-#: views\main.py:215
-msgid "質問を投稿しました。"
-msgstr ""
-
-#: views\main.py:225 views\userListDialog.py:64
+#: views\main.py:219 views\userListDialog.py:70
 msgid "ユーザの削除"
 msgstr ""
 
-#: views\main.py:225 views\userListDialog.py:64
+#: views\main.py:219 views\userListDialog.py:70
 #, python-format
 msgid ""
 "以下のユーザの登録と、過去の回答履歴を削除しますか？\n"
@@ -504,32 +583,43 @@ msgid ""
 "%s"
 msgstr ""
 
-#: views\main.py:235
+#: views\main.py:231
 msgid ""
 "このユーザは既に退会したか、peingIDを変更しているため開くことができません。"
 msgstr ""
 
-#: views\main.py:252
+#: views\main.py:249
 msgid "出力先ファイルの指定"
 msgstr ""
 
-#: views\main.py:252
+#: views\main.py:249
 msgid "CSVファイル(*.csv) | *.csv; | すべてのファイル(*.*) | *.*"
 msgstr ""
 
-#: views\main.py:350
+#: views\main.py:306 views\main.py:315
+msgid ""
+"ログインまたは質問の取得に失敗しました。以下の対処をお試しください。\n"
+"\n"
+"・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認くださ"
+"い。\n"
+"・peing.netにアクセスできるか、ブラウザから確認してください。\n"
+"・しばらくたってから再度お試しください。\n"
+"・問題が解決しない場合、開発者までお問い合わせください。"
+msgstr ""
+
+#: views\main.py:371
 msgid "準備中"
 msgstr ""
 
-#: views\main.py:350
+#: views\main.py:371
 msgid "回答データを取得しています"
 msgstr ""
 
-#: views\main.py:367
+#: views\main.py:391
 msgid "登録ユーザの更新除外について"
 msgstr ""
 
-#: views\main.py:367
+#: views\main.py:391
 #, python-format
 msgid ""
 "登録していた以下のユーザは、アカウント名が変更されたか、削除されました。その"
@@ -541,7 +631,35 @@ msgid ""
 "該当ユーザ：%s"
 msgstr ""
 
-#: views\main.py:394
+#: views\main.py:416
+msgid ""
+"ログインに失敗しました。以下の対処をお試しください。\n"
+"\n"
+"・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認くださ"
+"い。\n"
+"・peing.netにアクセスできるか、ブラウザから確認してください。\n"
+"・しばらくたってから再度お試しください。\n"
+"・問題が解決しない場合、開発者までお問い合わせください。"
+msgstr ""
+
+#: views\main.py:419
+msgid "質問を投稿"
+msgstr ""
+
+#: views\main.py:419
+#, python-format
+msgid "%sさんへの質問内容"
+msgstr ""
+
+#: views\main.py:431
+msgid "投稿完了"
+msgstr ""
+
+#: views\main.py:431
+msgid "質問を投稿しました。"
+msgstr ""
+
+#: views\main.py:448
 msgid ""
 "指定されたユーザが存在しないか、通信に失敗しました。以下の対処をお試しくださ"
 "い。\n"
@@ -552,79 +670,107 @@ msgid ""
 "・問題が解決しない場合、開発者までお問い合わせください。"
 msgstr ""
 
-#: views\main.py:396
+#: views\main.py:450
 #, python-format
 msgid ""
 "不明なエラー%(code)dが発生しました。大変お手数ですが、本ソフトの実行ファイル"
 "のあるディレクトリに生成された%(log)sを添付し、作者までご連絡ください。"
 msgstr ""
 
+#: views\main.py:503
+msgid ""
+"この機能を利用するには、ログインが必要です。\n"
+"[オプション]→[設定]にて、アカウント情報を設定してください。詳細は、readme.txt"
+"をご確認ください。"
+msgstr ""
+
 #: views\progress.py:28
 msgid "中止(&C)"
 msgstr ""
 
-#: views\settingsDialog.py:34
+#: views\settingsDialog.py:42
 msgid "標準"
 msgstr ""
 
-#: views\settingsDialog.py:35
+#: views\settingsDialog.py:43
 msgid "ダーク"
 msgstr ""
 
-#: views\settingsDialog.py:38
+#: views\settingsDialog.py:46
 msgid "画面幅で折り返し"
 msgstr ""
 
-#: views\settingsDialog.py:39
+#: views\settingsDialog.py:47
 msgid "折り返さない"
 msgstr ""
 
-#: views\settingsDialog.py:60
+#: views\settingsDialog.py:68
 msgid "カテゴリ選択"
 msgstr ""
 
-#: views\settingsDialog.py:63
+#: views\settingsDialog.py:71
 msgid "一般"
 msgstr ""
 
-#: views\settingsDialog.py:64
+#: views\settingsDialog.py:72
 msgid "起動時に最新の情報を取得する"
 msgstr ""
 
-#: views\settingsDialog.py:69
-msgid "表示/言語"
-msgstr ""
-
-#: views\settingsDialog.py:70
-msgid "言語(&L)"
-msgstr ""
-
-#: views\settingsDialog.py:71
-msgid "画面表示モード(&D)"
-msgstr ""
-
-#: views\settingsDialog.py:72
-msgid "テキストの折り返し(&W)"
-msgstr ""
-
 #: views\settingsDialog.py:75
-msgid "ネットワーク"
+msgid "パスワード(&P)"
 msgstr ""
 
 #: views\settingsDialog.py:76
-msgid "起動時に更新を確認(&U)"
-msgstr ""
-
-#: views\settingsDialog.py:77
-msgid "プロキシサーバーの情報を手動で設定する(&M)"
-msgstr ""
-
-#: views\settingsDialog.py:78
-msgid "サーバーURL"
+msgid "ログインした状態で質問する"
 msgstr ""
 
 #: views\settingsDialog.py:79
+msgid "ログ記録レベル(&L)"
+msgstr ""
+
+#: views\settingsDialog.py:83
+msgid "表示/言語"
+msgstr ""
+
+#: views\settingsDialog.py:84
+msgid "言語(&L)"
+msgstr ""
+
+#: views\settingsDialog.py:85
+msgid "画面表示モード(&D)"
+msgstr ""
+
+#: views\settingsDialog.py:86
+msgid "テキストの折り返し(&W)"
+msgstr ""
+
+#: views\settingsDialog.py:89
+msgid "ネットワーク"
+msgstr ""
+
+#: views\settingsDialog.py:90
+msgid "起動時に更新を確認(&U)"
+msgstr ""
+
+#: views\settingsDialog.py:91
+msgid "プロキシサーバーの情報を手動で設定する(&M)"
+msgstr ""
+
+#: views\settingsDialog.py:92
+msgid "サーバーURL"
+msgstr ""
+
+#: views\settingsDialog.py:93
 msgid "ポート番号"
+msgstr ""
+
+#: views\settingsDialog.py:123
+msgid "IDとPWは両方を入力するか、両方を空欄としてください。"
+msgstr ""
+
+#: views\settingsDialog.py:127
+msgid ""
+"ログインした状態で質問をする場合には、IDとパスワードを入力してください。"
 msgstr ""
 
 #: views\updateDialog.py:23
@@ -663,11 +809,11 @@ msgid ""
 "updater.exeが見つかりませんでした。誤って削除したかなどをご確認ください。"
 msgstr ""
 
-#: views\userDetailDialog.py:28 views\userListDialog.py:34
+#: views\userDetailDialog.py:28 views\userListDialog.py:35
 msgid "表示名"
 msgstr ""
 
-#: views\userDetailDialog.py:30 views\userListDialog.py:35
+#: views\userDetailDialog.py:30 views\userListDialog.py:36
 msgid "アカウント"
 msgstr ""
 
@@ -683,23 +829,23 @@ msgstr ""
 msgid "プロフィール"
 msgstr ""
 
-#: views\userListDialog.py:22
+#: views\userListDialog.py:23
 msgid "登録済みユーザ一覧"
 msgstr ""
 
-#: views\userListDialog.py:33
+#: views\userListDialog.py:34
 msgid "登録済みユーザ"
 msgstr ""
 
-#: views\userListDialog.py:44
+#: views\userListDialog.py:45
 msgid "詳細"
 msgstr ""
 
-#: views\userListDialog.py:45
+#: views\userListDialog.py:47
 msgid "フィルタ(&F)"
 msgstr ""
 
-#: views\userListDialog.py:46
+#: views\userListDialog.py:49
 msgid "削除"
 msgstr ""
 
