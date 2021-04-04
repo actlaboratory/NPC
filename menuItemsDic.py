@@ -29,6 +29,7 @@ dic={
 
 	"ACCOUNT_ANSWER":_("届いている質問に回答"),
 	"ACCOUNT_ARCHIVED":_("アーカイブ済みの質問を表示"),
+	"ACCOUNT_SENT_LIST":_("送信した質問を表示"),
 
 	"ACCOUNT_ADD_FOLLOWEES":_("アカウントのフォロイーから一括登録"),
 

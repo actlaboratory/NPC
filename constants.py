@@ -50,8 +50,9 @@ UPDATE_URL = "https://actlab.org/api/checkUpdate"
 UPDATER_VERSION = "1.0.0"
 UPDATER_WAKE_WORD = "hello"
 
-
-FLG_USER_DISABLE=1		#アカウント名が変更されている
+#ユーザテーブルのフラグ
+FLG_USER_DISABLE=1			#アカウント名が変更されている
+FLG_USER_NOT_REGISTERED=2	#登録されていない。送信済み質問リストのためだけにこのテーブルに追加されている
 
 FLG_ANSWER_AUTOQUESTION=1		#運営からの自動質問
 FLG_ANSWER_BATON_QUESTION=4		#バトン質問

@@ -25,6 +25,7 @@ class UserDao(dao.baseDao.BaseDao):
 
 	#指定したフラグが立っていないユーザの一覧を得る
 	def getAllWithoutFlag(self,disableFlag):
+		assert type(disableFlag)==int
 		return self.select("select * from users WHERE flag&?==0;",(disableFlag,))
 
 
@@ -32,13 +33,26 @@ class UserDao(dao.baseDao.BaseDao):
 		assert type(id)==int
 		return self.select("SELECT * FROM users WHERE id = ?;",(id,))
 
-	def getFromUserName(self, userName):
-		assert type(userName)==str
-		return self.select("SELECT * FROM users WHERE account = ?;", (userName,))
+	#指定したフラグが立っていないユーザの一覧を得る
+	def getWithoutFlag(self,id,disableFlag):
+		assert type(id)==int
+		return self.select("SELECT * FROM users WHERE id = ? AND flag&?==0;",(id,disableFlag))
+
+
+	def getFromUserAccount(self, account):
+		assert type(account)==str
+		return self.select("SELECT * FROM users WHERE account = ?;", (account,))
+
+	def getFromUserAccountWithoutFlag(self,account,disableFlag):
+		assert type(account)==str
+		assert type(disableFlag)==int
+		return self.select("SELECT * FROM users WHERE account=? AND flag&?==0;",(account,disableFlag))
+
+
 
 	def insert(self, values):
-		return self.connection.execute("""INSERT INTO users (id, account, name, items, answers, profile, followees) VALUES(
-			:id, :account, :name, :items, :answers, :profile, :followees
+		return self.connection.execute("""INSERT INTO users (id, account, name, items, answers, profile, followees, flag) VALUES(
+			:id, :account, :name, :items, :answers, :profile, :followees, :flag
 			);""", values)
 
 	def update(self,values):
