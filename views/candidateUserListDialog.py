@@ -15,7 +15,7 @@ from views.baseDialog import *
 class Dialog(BaseDialog):
 	def __init__(self,lst):
 		super().__init__("candidateUserListDialog")
-		self.lst = lst
+		self.lst=sorted(lst,key=lambda t:t.account)
 
 	def Initialize(self,title=_("登録候補ユーザの確認"),parent=None):
 		if parent == None:
@@ -42,7 +42,7 @@ class Dialog(BaseDialog):
 		self.detailButton = self.creator.button(_("詳細"), self.detail)
 		self.removeButton = self.creator.button(_("削除"), self.remove)
 
-		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALL|wx.RIGHT,margin=20)
+		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALL|wx.ALIGN_RIGHT,margin=20)
 		self.bOk=self.creator.okbutton(_("登録(&R)"), self.close)
 		self.bCancel=self.creator.cancelbutton(_("キャンセル(&C)"))
 
