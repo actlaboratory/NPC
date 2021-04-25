@@ -21,6 +21,7 @@ dic={
 	"FILE_EXPORT":_("表示中のリスト内容をCSVファイルにエクスポート(&E)"),
 	"FILE_SHOW_USER_WEB":_("ブラウザでユーザのページを開く(&B)"),
 	"FILE_USER_LIST":_("登録済みユーザリスト(&L)")+"...",
+	"FILE_ADD_USER_FROM_TWITTER_FOLLOW_LIST":_("Twitterのフォローリストから一括登録"),
 	"FILE_EXIT":_("終了(&X)"),
 
 	"FILTER_AUTO_QUESTION":_("運営からの質問を非表示(&M)"),
@@ -30,8 +31,7 @@ dic={
 	"ACCOUNT_ANSWER":_("届いている質問に回答"),
 	"ACCOUNT_ARCHIVED":_("アーカイブ済みの質問を表示"),
 	"ACCOUNT_SENT_LIST":_("送信した質問を表示"),
-
-	"ACCOUNT_ADD_FOLLOWEES":_("アカウントのフォロイーから一括登録"),
+	#"ACCOUNT_ADD_FOLLOWEES":_("アカウントのフォロイーから一括登録"),
 
 
 	"OPTION_OPTION":_("設定(&S)")+"...",

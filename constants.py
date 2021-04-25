@@ -50,10 +50,17 @@ UPDATE_URL = "https://actlab.org/api/checkUpdate"
 UPDATER_VERSION = "1.0.0"
 UPDATER_WAKE_WORD = "hello"
 
+
+#Twitter認証情報
+TWITTER_CONSUMER_KEY = "JEhuJyFSovxDa8bqeXElqHKsT"
+TWITTER_CONSUMER_SECRET = "kIe1Ne9gR1h3mbvOBFVcFA3FWYysDKdqwdq9atRE1RaQWdTvbl"
+LOCAL_SERVER_PORT = 9401
+
 #ユーザテーブルのフラグ
 FLG_USER_DISABLE=1			#アカウント名が変更されている
 FLG_USER_NOT_REGISTERED=2	#登録されていない。送信済み質問リストのためだけにこのテーブルに追加されている
 
+#質問種別フラグ
 FLG_ANSWER_AUTOQUESTION=1		#運営からの自動質問
 FLG_ANSWER_BATON_QUESTION=4		#バトン質問
 

@@ -14,6 +14,7 @@ defaultKeymap["mainView"]={
 	"FILE_EXPORT":"ctrl+e",
 	"FILE_SHOW_USER_WEB":"ctrl+shift+return",
 	"FILE_USER_LIST":"F4",
+	"FILE_ADD_USER_FROM_TWITTER_FOLLOW_LIST":"",
 
 	"FILE_OPEN_CONTEXTMENU":"shift+F10",
 

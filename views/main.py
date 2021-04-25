@@ -17,10 +17,12 @@ import filter
 import globalVars
 import menuItemsStore
 import service
+import twitterService
 
 from .base import *
 from simpleDialog import *
 from views import answerDialog
+from views import candidateUserListDialog
 from views import detailDialog
 from views import globalKeyConfig
 from views import listConfigurationDialog
@@ -128,6 +130,7 @@ class Menu(BaseMenu):
 			"FILE_SHOW_USER_WEB",
 			"FILE_EXPORT",
 			"FILE_USER_LIST",
+			"FILE_ADD_USER_FROM_TWITTER_FOLLOW_LIST",
 			"FILE_EXIT",
 		])
 
@@ -216,7 +219,8 @@ class Events(BaseEvents):
 		if selected==menuItemsStore.getRef("FILE_DELETE_USER"):
 			index = self.parent.lst.GetFirstSelected()
 			user = self.parent.service.getAnswer(self.parent.answerIdList[index]).user
-			ret = yesNoDialog(_("ユーザの削除"),_("以下のユーザの登録と、過去の回答履歴を削除しますか？\n\n%s")%user.getViewString())
+			ret = yesNoDialog(_("ユーザの削除"),_("以下のユーザの登録と、過去の回答履歴を削除しますか？\n\n%s")%user.getViewString(),self.parent.hFrame)
+
 			if ret == wx.ID_NO:
 				return
 			self.log.debug("deleteUser:%s" % user)
@@ -264,6 +268,94 @@ class Events(BaseEvents):
 				self.parent.menu.CheckMenu("FILTER_USER",True)
 			self.parent.refresh()
 
+		if selected==menuItemsStore.getRef("FILE_ADD_USER_FROM_TWITTER_FOLLOW_LIST"):
+			self.log.debug("addListFromTwitterUser:start")
+			d=progress.Dialog(progress.MODE_NO_GAUGE)
+			d.Initialize(_("Twitterアカウントの認証のため、ブラウザの操作を待っています。")+"...",_("Twitterのフォローリストから一括登録"))
+			d.Show(modal=False)
+			self.parent.hFrame.Disable()
+
+			token = twitterService.authorize(d.isOk)
+			if token == None:
+				errorDialog(_("Twitterの認証に失敗しました。ブラウザ上で認証を拒否した、時間がかかりすぎた、またはインターネット接続に問題がある可能性があります。"),d.wnd)
+			if token == None or token == errorCodes.CANCELED:
+				self.parent.hFrame.Enable()
+				d.Destroy()
+				return
+
+			d2 = SimpleImputDialog.Dialog(_("対象ユーザの指定"),_("フォロワーを取得するアカウントの@からはじまるアカウント名を入力してください。\n後悔アカウント、認証に用いたアカウント、\nまたは認証に用いたアカウントがフォローしている非公開アカウントを指定できます。"),d.wnd,"^(@?[a-zA-Z0-9_]*)$")
+			d2.Initialize()
+			r = d2.Show()
+			if r==wx.ID_CANCEL:
+				self.parent.hFrame.Enable()
+				d.Destroy()
+				return
+			#先頭の@はいらないので対策。入力時はあってもなくても良い
+			target = re.sub("@?(.*)","\\1", d2.GetValue())
+			self.log.debug("target=%s" % target)
+
+			d.update(label=_("フォローリストを取得しています。")+"...")
+			followList = twitterService.getFollowList(token,target)
+			if type(followList)==int:
+				if followList == errorCodes.TWITTER_ERROR:
+					errorDialog(_("Twitterからフォローリストを取得できませんでした。指定したユーザが存在しないか、フォローしていない非公開アカウントである可能性があります。"),d.wnd)
+				else:
+					errorDialog(_("Twitterからフォローリストを取得できませんでした。しばらくたってから再度お試しください。状況が改善しない場合には、開発者までお問い合わせください。"),d.wnd)
+				self.parent.hFrame.Enable()
+				d.Destroy()
+				return
+			if len(followList)==0:
+				errorDialog(_("Twitterからフォローリストを取得できませんでした。まだ誰もフォローしていないアカウントであるか、通信回数の上限に達しています。後者の場合には、15分以上待ってから再度お試しください。"),d.wnd)
+			follows=set(followList)
+
+			d.update(label=_("登録済みユーザのリストを取得しています。")+"...")
+			userList = self.parent.service.getEnableUserList()
+			users = set()
+			if type(users)==int:
+				self.showError(users,d.wnd)
+				self.parent.hFrame.Enable()
+				d.Destroy()
+				return
+			for user in userList:
+				users.add(user.account.lower())
+			target = follows - users
+
+			d.update(label=_("Peingへの登録状況を調べています。")+"...")
+			result = []
+			for account in target:
+				wx.YieldIfNeeded()
+				info = self.parent.service.getUserInfo(account)
+				if info == errorCodes.NOT_FOUND:
+					continue
+				if info == errorCodes.PEING_ERROR:
+					dialog(_("通信エラー"),_("Peingとの通信でエラーが発生しました。インターネット接続を確認し、しばらくたってから再度お試しください。状況が改善しない場合は、Twitterでのフォロー数が多すぎる可能性があります。\n\nこのメッセージを閉じた後、もしもこのエラー発生時までに取得できたアカウントがあれば一覧が表示されます。"),self.parent.hFrame)
+					break
+				result.append(info)
+
+			if len(result)==0:
+				dialog(_("処理終了"),_("一括登録を試みましたが、登録の候補となるユーザが見つかりませんでした。"),d.wnd)
+				self.parent.hFrame.Enable()
+				d.Destroy()
+				return
+
+			d2 = candidateUserListDialog.Dialog(result)
+			d2.Initialize(parent=d.wnd)
+			r = d2.Show()
+			if r==wx.ID_CANCEL:
+				self.parent.hFrame.Enable()
+				d.Destroy()
+				return
+
+			#登録
+			if len(d2.GetValue())>0:
+				for user in d2.GetValue():
+					self.parent.service.addUser(user)
+				dialog(_("登録完了"),_("ユーザの一括登録に成功しました。今回登録したユーザの回答を表示するには、ビューを再読み込みしてください。"),d.wnd)
+
+			self.parent.hFrame.Enable()
+			d.Destroy()
+
+
 		if selected==menuItemsStore.getRef("FILE_EXIT"):
 			self.parent.hFrame.Close()
 
@@ -300,6 +392,15 @@ class Events(BaseEvents):
 			if not self.loginCheck():
 				return
 			d = answerDialog.Dialog(self.parent.service,constants.RECEIVED)
+			if d.Initialize()==errorCodes.OK:
+				d.Show()
+			else:
+				errorDialog(_("ログインまたは質問の取得に失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+
+		if selected == menuItemsStore.getRef("ACCOUNT_ARCHIVED"):
+			if not self.loginCheck():
+				return
+			d = answerDialog.Dialog(self.parent.service,constants.ARCHIVED)
 			if d.Initialize()==errorCodes.OK:
 				d.Show()
 			else:
@@ -446,6 +547,8 @@ class Events(BaseEvents):
 			return
 		elif code==errorCodes.PEING_ERROR or code==errorCodes.NOT_FOUND:
 			errorDialog(_("指定されたユーザが存在しないか、通信に失敗しました。以下の対処をお試しください。\n\n・入力内容が正しいか、再度お確かめください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),parent)
+		elif code==errorCodes.TWITTER_ERROR:
+			errorDialog(_("Twitterとの通信でエラーが発生しました。指定したユーザ名が間違っているか、インターネット接続に問題が発生した可能性があります。"),parent)
 		else:
 			errorDialog(_("不明なエラー%(code)dが発生しました。大変お手数ですが、本ソフトの実行ファイルのあるディレクトリに生成された%(log)sを添付し、作者までご連絡ください。") %{"code":code,"log":constants.LOG_FILE_NAME},parent)
 		return
