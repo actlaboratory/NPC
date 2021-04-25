@@ -23,6 +23,18 @@ def authorize(pollingFunction=None):
 	try:
 		log.debug("start authorization")
 		manager = twitterAuthorization.TwitterAuthorization(constants.TWITTER_CONSUMER_KEY,constants.TWITTER_CONSUMER_SECRET,constants.LOCAL_SERVER_PORT)
+		l="ja"
+		try:
+			l=globalVars.app.config["general"]["language"].split("_")[0].lower()
+		except:
+			pass#end うまく読めなかったら ja を採用
+		#end except
+		manager.setMessage(
+			lang=l,
+			success=_("認証に成功しました。このウィンドウを閉じて、アプリケーションに戻ってください。"),
+			failed=_("認証に失敗しました。もう一度お試しください。"),
+			transfer=_("しばらくしても画面が切り替わらない場合は、別のブラウザでお試しください。")
+		)
 		url = manager.getUrl()
 		log.debug("url = %s" % url)
 		webbrowser.open(url, new=1, autoraise=True)
