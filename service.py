@@ -117,9 +117,9 @@ class Service():
 	def deleteUser(self, user):
 		self.log.debug("delete user target="+user.getViewString())
 		try:
-			data=self.userDao.get(user.id)
-			data["flag"]|=constants.FLG_USER_NOT_REGISTERED
-			self.userDao.update(data)
+			data=self._createUserObj(self.userDao.get(user.id)[0])
+			data.flag|=constants.FLG_USER_NOT_REGISTERED
+			self.userDao.update(data.__dict__)
 			self.answerDao.deleteFromUser(user.id)
 			self.connection.commit()
 			self.log.debug("user has been deleted.")
