@@ -16,6 +16,10 @@ Copyright (c)2021 yamahubuki,ACT laboratory All rights reserved.
 
 ・MITライセンスに基づく以下のライブラリ
 	AccessibleOutput2　(https://pypi.org/project/accessible-output2/)
+　　　　Copyright (c) 2019 Christopher Toth
+　　tweepy　(https://www.tweepy.org/)
+　　　　Copyright (c) 2009-2021 Joshua Roesslein
+
 
 ・MS-PL
 	DotNetZip
