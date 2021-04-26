@@ -44,7 +44,7 @@ class Dialog(BaseDialog):
 
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALL|wx.ALIGN_RIGHT,margin=20)
 		self.bOk=self.creator.okbutton(_("登録(&R)"), self.close)
-		self.bCancel=self.creator.cancelbutton(_("キャンセル(&C)"))
+		self.bCancel=self.creator.cancelbutton(_("キャンセル"))
 
 		self.onItemSelected()
 

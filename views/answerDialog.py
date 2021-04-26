@@ -43,7 +43,7 @@ class Dialog(BaseDialog):
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT,margin=20)
 		self.answerButton = self.creator.button(_("回答する(&A)"), self.answer)
 		if self.type == constants.RECEIVED:
-			self.archiveButton = self.creator.button(_("アーカイブ(&D)"), self.archive)
+			self.archiveButton = self.creator.button(_("アーカイブ"), self.archive)
 		elif self.type == constants.ARCHIVED:
 			self.archiveButton = self.creator.button(_("元に戻す"), self.recycle)
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALL|wx.ALIGN_RIGHT|wx.RIGHT,margin=20)
