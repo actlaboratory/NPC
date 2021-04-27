@@ -32,7 +32,7 @@ class Dialog(BaseDialog):
 	def InstallControls(self):
 		"""いろんなwidgetを設置する。"""
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.VERTICAL,0,style=wx.EXPAND|wx.ALL,margin=20)
-		self.hListCtrl, self.hStatic = self.creator.listCtrl(_("未回答の質問"), None, wx.LC_REPORT | wx.LC_SINGLE_SEL | wx.BORDER_RAISED,size=(650,-1))
+		self.hListCtrl, self.hStatic = self.creator.listCtrl(_("送信した質問"), None, wx.LC_REPORT | wx.LC_SINGLE_SEL | wx.BORDER_RAISED,size=(650,-1))
 
 		self.hListCtrl.AppendColumn(_("宛先"),width=300)
 		self.hListCtrl.AppendColumn(_("質問"),width=300)
