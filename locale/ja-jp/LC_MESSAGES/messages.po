@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NPC\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-26 11:43+0900\n"
+"POT-Creation-Date: 2021-04-28 14:57+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -222,14 +222,6 @@ msgstr ""
 msgid "バトン"
 msgstr ""
 
-#: views\answerDialog.py:24
-msgid "質問に回答"
-msgstr ""
-
-#: views\answerDialog.py:35 views\sentQuestionDialog.py:35
-msgid "未回答の質問"
-msgstr ""
-
 #: views\answerDialog.py:36 views\sentQuestionDialog.py:38
 msgid "質問"
 msgstr ""
@@ -261,19 +253,27 @@ msgstr ""
 msgid "閉じる(&C)"
 msgstr ""
 
-#: views\answerDialog.py:82
-msgid "回答の入力"
+#: views\answerDialog.py:57
+msgid "未回答の質問"
 msgstr ""
 
-#: views\answerDialog.py:88
-msgid "回答完了"
-msgstr ""
-
-#: views\answerDialog.py:88
-msgid "回答が送信されました。"
+#: views\answerDialog.py:59
+msgid "アーカイブ済みの質問"
 msgstr ""
 
 #: views\answerDialog.py:91
+msgid "回答の入力"
+msgstr ""
+
+#: views\answerDialog.py:97
+msgid "回答完了"
+msgstr ""
+
+#: views\answerDialog.py:97
+msgid "回答が送信されました。"
+msgstr ""
+
+#: views\answerDialog.py:100
 msgid ""
 "指定された質問が存在しないか、通信に失敗しました。以下の対処をお試しくださ"
 "い。\n"
@@ -285,11 +285,11 @@ msgid ""
 "・問題が解決しない場合、開発者までお問い合わせください。"
 msgstr ""
 
-#: views\answerDialog.py:95
+#: views\answerDialog.py:104
 msgid "質問をアーカイブ"
 msgstr ""
 
-#: views\answerDialog.py:95
+#: views\answerDialog.py:104
 #, python-format
 msgid ""
 "以下の質問をアーカイブしますか？\n"
@@ -297,11 +297,11 @@ msgid ""
 "%s"
 msgstr ""
 
-#: views\answerDialog.py:103
+#: views\answerDialog.py:112
 msgid "質問を元に戻す"
 msgstr ""
 
-#: views\answerDialog.py:103
+#: views\answerDialog.py:112
 #, python-format
 msgid ""
 "以下の質問を元に戻しますか？\n"
@@ -846,7 +846,7 @@ msgstr ""
 msgid "中止(&C)"
 msgstr ""
 
-#: views\sentQuestionDialog.py:28
+#: views\sentQuestionDialog.py:28 views\sentQuestionDialog.py:35
 msgid "送信した質問"
 msgstr ""
 

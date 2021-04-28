@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NPC\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-26 11:43+0900\n"
-"PO-Revision-Date: 2021-04-26 11:55+0900\n"
+"POT-Creation-Date: 2021-04-28 14:57+0900\n"
+"PO-Revision-Date: 2021-04-28 15:01+0900\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 2.4.3\n"
 
 #: AppBase.py:45
 msgid ""
@@ -232,14 +232,6 @@ msgstr "Management"
 msgid "バトン"
 msgstr "Baton"
 
-#: views\answerDialog.py:24
-msgid "質問に回答"
-msgstr "Answer questions"
-
-#: views\answerDialog.py:35 views\sentQuestionDialog.py:35
-msgid "未回答の質問"
-msgstr "Unanswered questions"
-
 #: views\answerDialog.py:36 views\sentQuestionDialog.py:38
 msgid "質問"
 msgstr "question"
@@ -271,19 +263,27 @@ msgstr "Undo"
 msgid "閉じる(&C)"
 msgstr "&Close"
 
-#: views\answerDialog.py:82
+#: views\answerDialog.py:57
+msgid "未回答の質問"
+msgstr "Unanswered questions"
+
+#: views\answerDialog.py:59
+msgid "アーカイブ済みの質問"
+msgstr "Archived Questions"
+
+#: views\answerDialog.py:91
 msgid "回答の入力"
 msgstr "Enter answers"
 
-#: views\answerDialog.py:88
+#: views\answerDialog.py:97
 msgid "回答完了"
 msgstr "Answer complete"
 
-#: views\answerDialog.py:88
+#: views\answerDialog.py:97
 msgid "回答が送信されました。"
 msgstr "An answer has been sent."
 
-#: views\answerDialog.py:91
+#: views\answerDialog.py:100
 msgid ""
 "指定された質問が存在しないか、通信に失敗しました。以下の対処をお試しくださ"
 "い。\n"
@@ -303,11 +303,11 @@ msgstr ""
 "Try again after a while.\n"
 "If this issue could not be resolved, contact to the developers."
 
-#: views\answerDialog.py:95
+#: views\answerDialog.py:104
 msgid "質問をアーカイブ"
 msgstr "Archive questions"
 
-#: views\answerDialog.py:95
+#: views\answerDialog.py:104
 #, python-format
 msgid ""
 "以下の質問をアーカイブしますか？\n"
@@ -318,11 +318,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: views\answerDialog.py:103
+#: views\answerDialog.py:112
 msgid "質問を元に戻す"
 msgstr "Undo a question"
 
-#: views\answerDialog.py:103
+#: views\answerDialog.py:112
 #, python-format
 msgid ""
 "以下の質問を元に戻しますか？\n"
@@ -952,7 +952,7 @@ msgstr ""
 msgid "中止(&C)"
 msgstr "&Cancel"
 
-#: views\sentQuestionDialog.py:28
+#: views\sentQuestionDialog.py:28 views\sentQuestionDialog.py:35
 msgid "送信した質問"
 msgstr "Sent Questions"
 
@@ -1145,6 +1145,9 @@ msgstr "See the included license.txt for licensing / copyright information."
 #: views\versionDialog.py:49
 msgid "閉じる"
 msgstr "close"
+
+#~ msgid "質問に回答"
+#~ msgstr "Answer questions"
 
 #~ msgid "キャンセル(&C)"
 #~ msgstr "cancel"
