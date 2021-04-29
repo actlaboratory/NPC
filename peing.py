@@ -182,3 +182,5 @@ def getSentList(session,page=1):
 
 	result = session.get("https://peing.net/api/v2/send_questions?page="+str(page))
 	return json.loads(result.text)["items"]
+
+#GET /api/v2/me/friends?page=1

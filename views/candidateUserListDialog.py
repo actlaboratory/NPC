@@ -1,12 +1,11 @@
 ﻿# -*- coding: utf-8 -*-
-# ユーザ一覧ダイアログ
+# 登録候補ユーザ一覧ダイアログ
 # Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
 
 
 import wx
 
 import constants
-import filter
 import menuItemsStore
 import simpleDialog
 import views.ViewCreator
@@ -14,14 +13,12 @@ import views.ViewCreator
 from views.baseDialog import *
 
 
-
 class Dialog(BaseDialog):
-	def __init__(self,lst,service):
-		super().__init__("userListDialog")
-		self.lst = lst
-		self.service = service
+	def __init__(self,lst):
+		super().__init__("candidateUserListDialog")
+		self.lst=sorted(lst,key=lambda t:t.account)
 
-	def Initialize(self,title=_("登録済みユーザ一覧"),parent=None):
+	def Initialize(self,title=_("登録候補ユーザの確認"),parent=None):
 		if parent == None:
 			parent = self.app.hMainView.hFrame
 		self.log.debug("created")
@@ -32,7 +29,7 @@ class Dialog(BaseDialog):
 	def InstallControls(self):
 		"""いろんなwidgetを設置する。"""
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.VERTICAL,0,style=wx.EXPAND|wx.ALL,margin=20)
-		self.hListCtrl, self.hStatic = self.creator.listCtrl(_("登録済みユーザ"), None, wx.LC_REPORT | wx.LC_SINGLE_SEL | wx.BORDER_RAISED,size=(650,-1))
+		self.hListCtrl, self.hStatic = self.creator.listCtrl(_("登録候補ユーザ"), None, wx.LC_REPORT | wx.LC_SINGLE_SEL | wx.BORDER_RAISED,size=(650,-1))
 		self.hListCtrl.AppendColumn(_("表示名"),width=350)
 		self.hListCtrl.AppendColumn(_("アカウント"),width=280)
 		self.hListCtrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.close)
@@ -42,42 +39,30 @@ class Dialog(BaseDialog):
 		for user in self.lst:
 			self.hListCtrl.Append((user.name,user.account))
 
-		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.EXPAND|wx.LEFT|wx.RIGHT,margin=20)
+		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.LEFT|wx.RIGHT|wx.ALIGN_RIGHT,margin=20)
 		self.detailButton = self.creator.button(_("詳細"), self.detail)
-		self.creator.AddSpace(-1)
-		self.filterButton = self.creator.button(_("フィルタ(&F)"), self.filter)
-		self.creator.AddSpace(-1)
 		self.removeButton = self.creator.button(_("削除"), self.remove)
 
-		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALL|wx.RIGHT,margin=20)
-		self.postQuestionButton = self.creator.button(_("質問を投稿(&Q)"),self.postQuestion)
-		self.creator.AddSpace(-1)
-		self.bOk=self.creator.okbutton(_("閉じる(&C)"), self.close)
+		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALL|wx.ALIGN_RIGHT,margin=20)
+		self.bOk=self.creator.okbutton(_("登録(&R)"), self.close)
+		self.bCancel=self.creator.cancelbutton(_("キャンセル"))
 
 		self.onItemSelected()
-
 
 		# delキーを使えるようにする
 		keymap = self.app.hMainView.menu.keymap
 		keymap.Set(self.identifier,self.wnd,self.onKey)
 
-
-	def close(self,event):
-		self.wnd.EndModal(wx.ID_OK)
-
 	def onItemSelected(self, event=None):
 		selected = self.hListCtrl.GetFocusedItem()
 		self.detailButton.Enable(selected >= 0)
-		self.filterButton.Enable(selected >= 0)
 		self.removeButton.Enable(selected >= 0)
-		self.postQuestionButton.Enable(selected >= 0)
 
 	def remove(self,event):
 		user = self.lst[self.hListCtrl.GetFocusedItem()]
-		ret = simpleDialog.yesNoDialog(_("ユーザの削除"),_("以下のユーザの登録と、過去の回答履歴を削除しますか？\n\n%s")%user.getViewString())
+		ret = simpleDialog.yesNoDialog(_("ユーザの削除"),_("以下のユーザを登録候補の一覧から削除しますか？\n\n%s")%user.getViewString(),self.wnd)
 		if ret == wx.ID_NO:
 			return
-		self.service.deleteUser(user)
 		self.lst.remove(user)
 		self.hListCtrl.DeleteItem(self.hListCtrl.GetFocusedItem())
 
@@ -86,16 +71,14 @@ class Dialog(BaseDialog):
 		d.Initialize(self.wnd)
 		d.Show()
 
-	def filter(self,event):
-		target = self.lst[self.hListCtrl.GetFocusedItem()]
-		self.log.debug("set userFilter = "+str(target.account))
-		filter.UserFilter().enable(False)			#重複設定防止
-		filter.UserFilter(target).enable(True)
-		self.wnd.EndModal(constants.SET_FILTER)
+	def close(self,event):
+		ret = simpleDialog.yesNoDialog(_("一括登録の確認"),_("表示している%d件のアカウントを登録しますか？") % len(self.lst),self.wnd)
+		if ret == wx.ID_NO:
+			return
+		event.Skip()
 
-	def postQuestion(self, event):
-		target = self.lst[self.hListCtrl.GetFocusedItem()]
-		self.app.hMainView.events.postQuestion(target,self.wnd)
+	def GetData(self):
+		return self.lst
 
 	def onKey(self,event):
 		selected=event.GetId()#メニュー識別しの数値が出る
@@ -103,3 +86,4 @@ class Dialog(BaseDialog):
 			self.remove(None)
 		else:
 			event.Skip()
+

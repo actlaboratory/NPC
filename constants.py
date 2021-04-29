@@ -9,8 +9,8 @@ import wx
 APP_FULL_NAME = "windows Native Peing Connector"#アプリケーションの完全な名前
 APP_NAME="NPC"#アプリケーションの名前
 APP_ICON = None
-APP_VERSION="1.0.2"
-APP_LAST_RELEASE_DATE="2021-03-31"
+APP_VERSION="1.1.0"
+APP_LAST_RELEASE_DATE="2021-04-29"
 APP_COPYRIGHT_YEAR="2021"
 APP_LICENSE="Apache License 2.0"
 APP_DEVELOPERS="yamahubuki, ACT Laboratory"
@@ -51,8 +51,16 @@ UPDATER_VERSION = "1.0.0"
 UPDATER_WAKE_WORD = "hello"
 
 
-FLG_USER_DISABLE=1		#アカウント名が変更されている
+#Twitter認証情報
+TWITTER_CONSUMER_KEY = "JEhuJyFSovxDa8bqeXElqHKsT"
+TWITTER_CONSUMER_SECRET = "kIe1Ne9gR1h3mbvOBFVcFA3FWYysDKdqwdq9atRE1RaQWdTvbl"
+LOCAL_SERVER_PORT = 9401
 
+#ユーザテーブルのフラグ
+FLG_USER_DISABLE=1			#アカウント名が変更されている
+FLG_USER_NOT_REGISTERED=2	#登録されていない。送信済み質問リストのためだけにこのテーブルに追加されている
+
+#質問種別フラグ
 FLG_ANSWER_AUTOQUESTION=1		#運営からの自動質問
 FLG_ANSWER_BATON_QUESTION=4		#バトン質問
 

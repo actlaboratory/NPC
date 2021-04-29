@@ -21,18 +21,18 @@ class Dialog(BaseDialog):
 		self.type=type
 		self.lst=[]
 
-	def Initialize(self,title=_("質問に回答"),parent=None):
+	def Initialize(self,parent=None):
 		if parent == None:
 			parent = self.app.hMainView.hFrame
 		self.log.debug("created")
-		super().Initialize(parent,title)
+		super().Initialize(parent,self.getListTitle())
 		self.InstallControls()
 		return self.load()
 
 	def InstallControls(self):
 		"""いろんなwidgetを設置する。"""
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.VERTICAL,0,style=wx.EXPAND|wx.ALL,margin=20)
-		self.hListCtrl, self.hStatic = self.creator.listCtrl(_("未回答の質問"), None, wx.LC_REPORT | wx.LC_SINGLE_SEL | wx.BORDER_RAISED,size=(650,-1))
+		self.hListCtrl, self.hStatic = self.creator.listCtrl(self.getListTitle(), None, wx.LC_REPORT | wx.LC_SINGLE_SEL | wx.BORDER_RAISED,size=(650,-1))
 		self.hListCtrl.AppendColumn(_("質問"),width=400)
 		self.hListCtrl.AppendColumn(_("日時"),width=100)
 		self.hListCtrl.AppendColumn(_("種別"),width=150)
@@ -43,13 +43,22 @@ class Dialog(BaseDialog):
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT,margin=20)
 		self.answerButton = self.creator.button(_("回答する(&A)"), self.answer)
 		if self.type == constants.RECEIVED:
-			self.archiveButton = self.creator.button(_("アーカイブ(&D)"), self.archive)
+			self.archiveButton = self.creator.button(_("アーカイブ"), self.archive)
 		elif self.type == constants.ARCHIVED:
 			self.archiveButton = self.creator.button(_("元に戻す"), self.recycle)
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALL|wx.ALIGN_RIGHT|wx.RIGHT,margin=20)
 		self.bOk=self.creator.okbutton(_("閉じる(&C)"), self.close)
 
 		self.onItemSelected()
+
+	# self.typeに応じて適切なリストビューのタイトルを返す
+	def getListTitle(self):
+		if self.type == constants.RECEIVED:
+			return _("未回答の質問")
+		elif self.type == constants.ARCHIVED:
+			return _("アーカイブ済みの質問")
+		else:
+			raise ValueError
 
 	def close(self,event):
 		self.wnd.EndModal(wx.ID_OK)

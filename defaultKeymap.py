@@ -14,6 +14,7 @@ defaultKeymap["mainView"]={
 	"FILE_EXPORT":"ctrl+e",
 	"FILE_SHOW_USER_WEB":"ctrl+shift+return",
 	"FILE_USER_LIST":"F4",
+	"FILE_ADD_USER_FROM_TWITTER_FOLLOW_LIST":"",
 
 	"FILE_OPEN_CONTEXTMENU":"shift+F10",
 
@@ -21,8 +22,9 @@ defaultKeymap["mainView"]={
 	"FILTER_BATON":"",
 	"FILTER_USER":"",
 
-	#"ACCOUNT_ANSWER":"",
-	#"ACCOUNT_ARCHIVED":"",
+	"ACCOUNT_ANSWER":"",
+	"ACCOUNT_ARCHIVED":"",
+	"ACCOUNT_SENT_LIST":"",
 
 	"OPTION_OPTION":"",
 	"OPTION_KEY_CONFIG":"",
@@ -30,4 +32,12 @@ defaultKeymap["mainView"]={
 
 	"HELP_UPDATE":"",
 	"HELP_VERSIONINFO":"",
+}
+
+defaultKeymap["USERLISTDIALOG"]={
+	"DELETE" : "delete",
+}
+
+defaultKeymap["CANDIDATEUSERLISTDIALOG"]={
+	"DELETE" : "delete",
 }

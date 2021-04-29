@@ -16,7 +16,7 @@ import wx
 
 from logging import getLogger
 
-from dao import userDao, answerDao
+from dao import userDao, answerDao,sentQuestionDao
 
 
 JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
@@ -27,6 +27,7 @@ class Service():
 		self.log=getLogger("%s.service" % (constants.LOG_PREFIX))
 		self.userDao=userDao.UserDao()
 		self.answerDao=answerDao.AnswerDao()
+		self.sentQuestionDao=sentQuestionDao.sentQuestionDao()
 		self.connection=dao.connectionFactory.getConnection()
 		self.selfId=""
 		self.session=None
@@ -35,21 +36,21 @@ class Service():
 	#	ユーザ管理
 	#
 
-	#指定のユーザが登録済みならTrue
+	# 指定のユーザが回答の閲覧対象として登録済みならTrue
 	def isUserRegistered(self,info):
-		if type(info) in (int,entity.user.User):			#idで紹介
+		if type(info) in (int,entity.user.User):		#idで照会
 			if type(info)==entity.user.User:
 				info=info.id
 			try:
-				if self.userDao.get(info) != []:
+				if self.userDao.getWithoutFlag(info,constants.FLG_USER_NOT_REGISTERED|constants.FLG_USER_NOT_REGISTERED) != []:
 					return True
 				return False
 			except Exception as e:
 				self.log.error(e)
 				raise e
-		elif type(info)==str:	#accountで紹介
+		elif type(info)==str:	#accountで照会
 			try:
-				if self.userDao.getFromUserName(info) != []:
+				if self.userDao.getFromUserAccountWithoutFlag(info,constants.FLG_USER_NOT_REGISTERED|constants.FLG_USER_NOT_REGISTERED) != []:
 					return True
 				return False
 			except Exception as e:
@@ -72,6 +73,14 @@ class Service():
 			self.log.error(e)
 			return errorCodes.PEING_ERROR
 
+	# ユーザアカウントからユーザエンティティを得る
+	# DBにあればそのまま返し、なければ取得してから返す
+	def getUser(self,account):
+		data = self.userDao.getFromUserAccount(account)
+		if len(data)>0:
+			return self._createUserObj(data[0])
+		else:
+			return self.getUserInfo(account)
 
 	def addUser(self, user):
 		self.log.debug("add user:"+user.getViewString())
@@ -91,9 +100,13 @@ class Service():
 			"answers": user.answers,
 			"profile": user.profile,
 			"followees": user.followees,
+			"flag": user.flag,
 		}
 		try:
-			self.userDao.insert(data)
+			if len(self.userDao.get(user.id))==0:
+				self.userDao.insert(data)
+			else:
+				self.userDao.update(data)
 			self.connection.commit()
 			return errorCodes.OK
 		except Exception as e:
@@ -104,7 +117,9 @@ class Service():
 	def deleteUser(self, user):
 		self.log.debug("delete user target="+user.getViewString())
 		try:
-			self.userDao.delete(user.id)
+			data=self._createUserObj(self.userDao.get(user.id)[0])
+			data.flag|=constants.FLG_USER_NOT_REGISTERED
+			self.userDao.update(data.__dict__)
 			self.answerDao.deleteFromUser(user.id)
 			self.connection.commit()
 			self.log.debug("user has been deleted.")
@@ -114,16 +129,17 @@ class Service():
 			self.connection.rollback()
 			raise e
 
-	#有効なユーザIDの一覧を返す
+	#有効なユーザのリストを返す
 	def getEnableUserList(self):
-		users = self.userDao.getAllWithoutFlag(constants.FLG_USER_DISABLE)
+		users = self.userDao.getAllWithoutFlag(constants.FLG_USER_DISABLE|constants.FLG_USER_NOT_REGISTERED)
 		result = []
 		for user in users:
 			result.append(self._createUserObj(user))
 		return result
 
+	#登録済みユーザのリストを返す
 	def getUserList(self):
-		users = self.userDao.getAll()
+		users = self.userDao.getAllWithoutFlag(constants.FLG_USER_NOT_REGISTERED)
 		result = []
 		for user in users:
 			result.append(self._createUserObj(user))
@@ -151,6 +167,17 @@ class Service():
 
 	#answerIdからanswerEntityを得る
 	def getAnswer(self,id):
+		assert type(id)==int
+		try:
+			data = self.answerDao.get(id)[0]
+			user = self.userDao.get(data["user_id"])[0]
+			return self._createAnswerObj(data,user)
+		except Exception as e:
+			self.log.error(e)
+			raise e
+
+	# 送信済み質問のanswerIdからanswerEntityを得る
+	def getSentAnswer(self,id):
 		assert type(id)==int
 		try:
 			data = self.answerDao.get(id)[0]
@@ -285,6 +312,61 @@ class Service():
 			self.log.error(e)
 			return errorCodes.PEING_ERROR
 
+	def getSentList(self):
+		#まずは最新情報を更新
+		try:
+			last = self.sentQuestionDao.getLast()
+		except Exception as e:
+			self.log.debug("last answer check failed.")
+			self.log.error(e)
+			raise e
+		if last == []:
+			last = datetime.datetime.fromtimestamp(0).replace(tzinfo=JST)
+		else:
+			last = last[0]["answered_at"].replace(tzinfo=JST)
+
+		try:
+			i=0
+			while(True):
+				i+=1
+				ret = peing.getSentList(self.session,i)
+				if ret == errorCodes.PEING_ERROR or type(ret)!=list:
+					self.connection.rollback()
+					return ret
+				if len(ret)==0:
+					break
+				for q in ret:
+					if datetime.datetime.fromisoformat(q["answer_created_at"]).replace(tzinfo=JST)<=last:
+						break
+					user = self.getUserInfo(q["answered_user_account"])
+					self.sentQuestionDao.insert(entity.answer.Answer(
+						q["answer_id"],
+						user.id,
+						q["body"],
+						q["answer_body"],
+						datetime.datetime.fromisoformat(q["answer_created_at"]).replace(tzinfo=None),
+						self.makeAnswerFlag(q["question_type"]),
+						q["uuid_hash"]
+						).__dict__)
+					if len(self.userDao.get(user.id))==0:		#新規
+						user.flag|=FLG_USER_NOT_REGISTERED
+						self.userDao.insert(user.__dict__)
+					else:
+						self.userDao.update(user.__dict__)
+				wx.YieldIfNeeded()
+			self.connection.commit()
+		except Exception as e:
+			self.log.error(e)
+			self.connection.rollback()
+			raise e
+			return errorCodes.PEING_ERROR
+
+		#リストを返却
+		l = self.sentQuestionDao.getAll()
+		ret = []
+		for q in l:
+			return self.sentQuestionDao.getViewData()
+
 	def answer(self,hash,answer):
 		try:
 			ret = peing.postAnswer(self.session,hash,answer)
@@ -338,7 +420,7 @@ class Service():
 	def _createUserObj(self,user):
 		try:
 			return entity.user.User(user["id"],user["name"],user["account"],user["items"],user["answers"],user["profile"],user["followees"],user["flag"])
-		except exception as e:
+		except Exception as e:
 			self.log.error(e)
 			raise e
 
@@ -353,7 +435,7 @@ class Service():
 				data["answered_at"],
 				data["flag"]
 			)
-		except exception as e:
+		except Exception as e:
 			self.log.error(e)
 			raise e
 
@@ -366,5 +448,5 @@ class Service():
 		elif flagString in ("normal_question"):
 			pass
 		else:
-			self.log.warning("unknown question type %s found." % answer["question_type"])
+			self.log.warning("unknown question type %s found." % flagString)
 		return flag
