@@ -42,7 +42,7 @@ class sentQuestionDao(dao.baseDao.BaseDao):
 			return self.select("select sentQuestions.id,users.name,question,answer,answered_at,sentQuestions.flag,users.id from sentQuestions INNER JOIN users ON users.id=sentQuestions.user_id ORDER BY answered_at DESC WHERE user_id = ?;", (userId,))
 
 	# insert
-	# values‚É‚ÍanswerEntity‚ğw’è
+	# valuesã«ã¯answerEntityã‚’æŒ‡å®š
 	def insert(self,values):
 		return self.connection.execute("""INSERT INTO sentQuestions(
 			id,user_id, question, answer, answered_at,flag)
