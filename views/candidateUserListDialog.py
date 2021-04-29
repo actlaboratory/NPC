@@ -6,6 +6,7 @@
 import wx
 
 import constants
+import menuItemsStore
 import simpleDialog
 import views.ViewCreator
 
@@ -48,6 +49,10 @@ class Dialog(BaseDialog):
 
 		self.onItemSelected()
 
+		# delキーを使えるようにする
+		keymap = self.app.hMainView.menu.keymap
+		keymap.Set(self.identifier,self.wnd,self.onKey)
+
 	def onItemSelected(self, event=None):
 		selected = self.hListCtrl.GetFocusedItem()
 		self.detailButton.Enable(selected >= 0)
@@ -74,3 +79,11 @@ class Dialog(BaseDialog):
 
 	def GetData(self):
 		return self.lst
+
+	def onKey(self,event):
+		selected=event.GetId()#メニュー識別しの数値が出る
+		if self.hListCtrl.GetFocusedItem()>=0 and selected==menuItemsStore.getRef("DELETE"):
+			self.remove(None)
+		else:
+			event.Skip()
+

@@ -7,6 +7,7 @@ import wx
 
 import constants
 import filter
+import menuItemsStore
 import simpleDialog
 import views.ViewCreator
 
@@ -55,6 +56,12 @@ class Dialog(BaseDialog):
 
 		self.onItemSelected()
 
+
+		# delキーを使えるようにする
+		keymap = self.app.hMainView.menu.keymap
+		keymap.Set(self.identifier,self.wnd,self.onKey)
+
+
 	def close(self,event):
 		self.wnd.EndModal(wx.ID_OK)
 
@@ -89,3 +96,10 @@ class Dialog(BaseDialog):
 	def postQuestion(self, event):
 		target = self.lst[self.hListCtrl.GetFocusedItem()]
 		self.app.hMainView.events.postQuestion(target,self.wnd)
+
+	def onKey(self,event):
+		selected=event.GetId()#メニュー識別しの数値が出る
+		if self.hListCtrl.GetFocusedItem()>=0 and selected==menuItemsStore.getRef("DELETE"):
+			self.remove(None)
+		else:
+			event.Skip()

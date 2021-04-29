@@ -33,3 +33,11 @@ defaultKeymap["mainView"]={
 	"HELP_UPDATE":"",
 	"HELP_VERSIONINFO":"",
 }
+
+defaultKeymap["USERLISTDIALOG"]={
+	"DELETE" : "delete",
+}
+
+defaultKeymap["CANDIDATEUSERLISTDIALOG"]={
+	"DELETE" : "delete",
+}
