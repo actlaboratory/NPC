@@ -423,7 +423,7 @@ class Events(BaseEvents):
 				self.parent.service.logout()
 
 		if selected == menuItemsStore.getRef("OPTION_KEY_CONFIG"):
-			if self.setKeymap(self.parent.identifier,_("ショートカットキーの設定"),filter=keymap.KeyFilter().SetDefault(True,False)):
+			if self.setKeymap(self.parent.identifier,_("ショートカットキーの設定"),filter=keymap.KeyFilter().SetDefault(False,False)):
 				#ショートカットキーの変更適用とメニューバーの再描画
 				self.parent.menu.InitShortcut()
 				self.parent.menu.ApplyShortcut(self.parent.hFrame)

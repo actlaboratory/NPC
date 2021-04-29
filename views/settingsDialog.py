@@ -72,7 +72,9 @@ class Dialog(BaseDialog):
 		self.autoreload = creator.checkbox(_("起動時に最新の情報を取得する"))
 		creator.GetSizer().SetItemSpan(self.autoreload.GetParent(),2)
 		self.id,dummy = creator.inputbox("peing &ID",sizerFlag=wx.EXPAND)
+		self.id.hideScrollBar(wx.HORIZONTAL)
 		self.password,dummy = creator.inputbox(_("パスワード(&P)"),x=400,style=wx.TE_PASSWORD,sizerFlag=wx.EXPAND)
+		self.password.hideScrollBar(wx.HORIZONTAL)
 		self.loginAlways = creator.checkbox(_("ログインした状態で質問する"))
 		creator.GetSizer().SetItemSpan(self.loginAlways.GetParent(),2)
 
@@ -90,6 +92,7 @@ class Dialog(BaseDialog):
 		self.update = creator.checkbox(_("起動時に更新を確認(&U)"))
 		self.usemanualsetting = creator.checkbox(_("プロキシサーバーの情報を手動で設定する(&M)"), self.checkBoxStatusChanged)
 		self.server, static = creator.inputbox(_("サーバーURL"))
+		self.server.hideScrollBar(wx.HORIZONTAL)
 		self.port, static = creator.spinCtrl(_("ポート番号"), 0, 65535, defaultValue=8080)
 
 		# buttons
