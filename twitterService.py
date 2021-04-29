@@ -20,6 +20,7 @@ log = getLogger("%s.twitterService" % (constants.LOG_PREFIX))
 # 途中、Bool値を返すpollingFunctionを呼び続け、Falseが返却された場合は強制的に終了する
 # 成功時はトークン(dic)、失敗時はNoneを返す
 def authorize(pollingFunction=None):
+	manager = None
 	try:
 		log.debug("start authorization")
 		manager = twitterAuthorization.TwitterAuthorization(constants.TWITTER_CONSUMER_KEY,constants.TWITTER_CONSUMER_SECRET,constants.LOCAL_SERVER_PORT)
@@ -61,7 +62,8 @@ def authorize(pollingFunction=None):
 		return token
 	except Exception as e:
 		log.error(e)
-		manager.shutdown()
+		if manager:
+			manager.shutdown()
 		return None
 
 def getFollowList(token,target):
