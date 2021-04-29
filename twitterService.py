@@ -1,6 +1,7 @@
 # npc service
 # Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
 
+import os
 import time
 import tweepy
 import twitterAuthorization
@@ -69,7 +70,10 @@ def authorize(pollingFunction=None):
 def getFollowList(token,target):
 	auth = tweepy.OAuthHandler(constants.TWITTER_CONSUMER_KEY, constants.TWITTER_CONSUMER_SECRET)
 	auth.set_access_token(*token)
-	twitterApi = tweepy.API(auth)
+	try:
+		twitterApi = tweepy.API(auth,proxy=os.environ['HTTPS_PROXY'])
+	except KeyError:
+		twitterApi = tweepy.API(auth)
 
 	ret = []
 	try:
