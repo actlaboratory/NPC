@@ -1,5 +1,8 @@
 windows Native Peing Connector(NPC) 更新履歴
 
+20XX/XX/XX Version 
+1. ユーザ追加のダイアログにおいて、Twitterのユーザ名の先頭に@を付けて入力しても認識するように修正しました。
+
 2021/04/29 Version 1.1.0
 1. 受信した質問への回答機能を追加しました。
 2. Twitterアカウントのフォロー一覧を基に一括でNPCに登録する機能を追加しました。
