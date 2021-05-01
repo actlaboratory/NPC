@@ -7,10 +7,7 @@ import wx
 
 import entity
 import errorCodes
-import filter
-import simpleDialog
 import views.ViewCreator
-import views.SimpleImputDialog
 
 from views.baseDialog import *
 from views import detailDialog

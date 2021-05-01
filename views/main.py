@@ -29,7 +29,7 @@ from views import listConfigurationDialog
 from views import progress
 from views import sentQuestionDialog
 from views import settingsDialog
-from views import SimpleImputDialog
+from views import SimpleInputDialog
 from views import userDetailDialog
 from views import userListDialog
 from views import versionDialog
@@ -180,7 +180,7 @@ class Events(BaseEvents):
 		selected=event.GetId()#メニュー識別しの数値が出る
 
 		if selected==menuItemsStore.getRef("FILE_ADD_USER"):
-			d = SimpleImputDialog.Dialog(_("ユーザの追加"),_("peingページURLまたはTwitterユーザ名"))
+			d = SimpleInputDialog.Dialog(_("ユーザの追加"),_("peingページURLまたはTwitterユーザ名"))
 			d.Initialize()
 			r = d.Show()
 			if r==wx.ID_CANCEL:
@@ -283,7 +283,7 @@ class Events(BaseEvents):
 				d.Destroy()
 				return
 
-			d2 = SimpleImputDialog.Dialog(_("対象ユーザの指定"),_("フォロー中のユーザを取得するアカウントの@からはじまるアカウント名を入力してください。\n後悔アカウント、認証に用いたアカウント、\nまたは認証に用いたアカウントがフォローしている非公開アカウントを指定できます。"),d.wnd,"^(@?[a-zA-Z0-9_]*)$")
+			d2 = SimpleInputDialog.Dialog(_("対象ユーザの指定"),_("フォロー中のユーザを取得するアカウントの@からはじまるアカウント名を入力してください。\n後悔アカウント、認証に用いたアカウント、\nまたは認証に用いたアカウントがフォローしている非公開アカウントを指定できます。"),d.wnd,"^(@?[a-zA-Z0-9_]*)$")
 			d2.Initialize()
 			r = d2.Show()
 			if r==wx.ID_CANCEL:
@@ -517,7 +517,7 @@ class Events(BaseEvents):
 				errorDialog(_("ログインに失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
 				return
 
-		d = SimpleImputDialog.Dialog(_("質問を投稿"),_("%sさんへの質問内容") % target.getViewString(), parent)
+		d = SimpleInputDialog.Dialog(_("質問を投稿"),_("%sさんへの質問内容") % target.getViewString(), parent)
 		d.Initialize()
 		r = d.Show()
 		if r==wx.ID_CANCEL:

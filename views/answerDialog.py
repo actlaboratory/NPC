@@ -9,7 +9,7 @@ import errorCodes
 import filter
 import simpleDialog
 import views.ViewCreator
-import views.SimpleImputDialog
+import views.SimpleInputDialog
 
 from views.baseDialog import *
 
@@ -88,7 +88,7 @@ class Dialog(BaseDialog):
 
 	def answer(self,event):
 		q = self.lst[self.hListCtrl.GetFocusedItem()].question
-		d = views.SimpleImputDialog.Dialog(_("回答の入力"),q,self.wnd)
+		d = views.SimpleInputDialog.Dialog(_("回答の入力"),q,self.wnd)
 		d.Initialize()
 		if d.Show()==wx.ID_CANCEL:
 			return
