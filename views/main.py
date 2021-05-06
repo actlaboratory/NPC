@@ -353,6 +353,7 @@ class Events(BaseEvents):
 			if len(d2.GetValue())>0:
 				for user in d2.GetValue():
 					self.parent.service.addUser(user)
+					wx.YieldIfNeeded()
 				dialog(_("登録完了"),_("ユーザの一括登録に成功しました。今回登録したユーザの回答を表示するには、ビューを再読み込みしてください。"),d.wnd)
 
 			self.parent.hFrame.Enable()
