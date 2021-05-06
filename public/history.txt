@@ -1,6 +1,7 @@
 windows Native Peing Connector(NPC) 更新履歴
 
-20XX/XX/XX Version 
+20XX/XX/XX Version 1.2.0
+1. [Twitterのフォローリストから一括登録]において、件数が多い場合に登録候補ダイアログを閉じた後フリーズしてしまう場合があったため対策しました。
 1. ユーザ追加のダイアログにおいて、Twitterのユーザ名の先頭に@を付けて入力しても認識するように修正しました。
 
 2021/04/29 Version 1.1.0
