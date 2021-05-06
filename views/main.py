@@ -488,7 +488,7 @@ class Events(BaseEvents):
 
 		users = self.parent.service.getEnableUserList()
 		for i,user in enumerate(users):
-			d.update(None,user.getViewString())
+			d.update(None,"%d / %d " % (i+1,len(users)) + user.getViewString())
 			info = self.parent.service.getUserInfo(user.account)
 			if info==errorCodes.NOT_FOUND:
 				d.update(i+1,None,len(users))
