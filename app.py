@@ -9,9 +9,10 @@ import wx
 
 import AppBase
 import constants
-import update
+import filter
 import globalVars
 import proxyUtil
+import update
 
 class Main(AppBase.MainBase):
 	def __init__(self):
@@ -33,6 +34,11 @@ class Main(AppBase.MainBase):
 		# アップデートを実行
 		if self.config.getboolean("general", "update"):
 			globalVars.update.update(True)
+		# 設定されている場合には起動時にフィルタを適用
+		if self.config.getboolean("general","keep_filter",False):
+			self.log.debug("keepFilter:run")
+			filter.loadStatus()
+
 		# メインビューを表示
 		from views import main
 		self.hMainView=main.MainView()
@@ -58,6 +64,11 @@ class Main(AppBase.MainBase):
 	def OnExit(self):
 		#設定の保存やリソースの開放など、終了前に行いたい処理があれば記述できる
 		#ビューへのアクセスや終了の抑制はできないので注意。
+
+		# フィルタの適用状態を保存
+		if self.config.getboolean("general","keep_filter",False):
+			self.log.debug("keepFilter:save")
+			filter.saveStatus()
 
 		import dao
 		dao.connectionFactory.getConnection().close()

@@ -5,7 +5,6 @@
 
 import wx
 
-import constants
 import filter
 import menuItemsStore
 import simpleDialog
@@ -91,7 +90,7 @@ class Dialog(BaseDialog):
 		self.log.debug("set userFilter = "+str(target.account))
 		filter.UserFilter().enable(False)			#重複設定防止
 		filter.UserFilter(target).enable(True)
-		self.wnd.EndModal(constants.SET_FILTER)
+		self.wnd.EndModal(wx.ID_OK)
 
 	def postQuestion(self, event):
 		target = self.lst[self.hListCtrl.GetFocusedItem()]

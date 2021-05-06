@@ -69,6 +69,9 @@ class MainView(BaseView):
 		self.lst.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.events.listSelectEvent)
 		self.events.listSelectEvent()		#最初に１度実行し、未選択状態をメニューに反映
 
+		self.hFrame.Bind(wx.EVT_MENU_OPEN, self.events.OnMenuOpen)
+
+
 		self.refresh()
 
 	#DBの内容でビューを更新する
@@ -266,9 +269,7 @@ class Events(BaseEvents):
 			users = self.parent.service.getUserList()
 			d = userListDialog.Dialog(users,self.parent.service)
 			d.Initialize()
-			if d.Show()==constants.SET_FILTER:
-				self.log.debug("set userFilter from userListDialog")
-				self.parent.menu.CheckMenu("FILTER_USER",True)
+			d.Show()
 			self.parent.refresh()
 
 		if selected==menuItemsStore.getRef("FILE_ADD_USER_FROM_TWITTER_FOLLOW_LIST"):
@@ -469,6 +470,13 @@ class Events(BaseEvents):
 			"FILE_SHOW_USER_WEB",
 			"FILTER_USER",
 		], enable)
+
+	def OnMenuOpen(self,event):
+		menuObject = event.GetEventObject()
+		if event.GetMenu()==self.parent.menu.hFilterMenu:
+			menuObject.Check(menuItemsStore.getRef("FILTER_AUTO_QUESTION"),filter.AutoQuestionFilter().isEnable())
+			menuObject.Check(menuItemsStore.getRef("FILTER_BATON"),filter.BatonFilter().isEnable())
+			menuObject.Check(menuItemsStore.getRef("FILTER_USER"),filter.UserFilter().isEnable())
 
 	def reload(self):
 		self.log.debug("reload:start")

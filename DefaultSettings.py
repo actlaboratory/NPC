@@ -14,6 +14,7 @@ class DefaultSettings:
 			"update" : True,
 			"auto_reload" : False,
 			"log_level":"20",
+			"keep_filter":"False",
 		}
 		config["view"]={
 			"font": "bold 'ＭＳ ゴシック' 22 windows-932",
@@ -36,6 +37,10 @@ class DefaultSettings:
 			"id" : "",
 			"password" : "",
 			"use_always" : "false"
+		}
+		config["filter_status"]={
+			"auto_question" : "False",
+			"baton" : "False",
 		}
 		return config
 

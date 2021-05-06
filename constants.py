@@ -67,6 +67,3 @@ FLG_ANSWER_BATON_QUESTION=4		#バトン質問
 #受信した質問の現況フラグ
 RECEIVED=0
 ARCHIVED=1
-
-#その他
-SET_FILTER = wx.ID_OK+2
