@@ -32,7 +32,7 @@ class Dialog(BaseDialog):
 		else:
 			self.static=self.creator.staticText(self.label)
 			self.creator.AddSpace()
-		self.button = self.creator.button(_("中止(&C)"), self.cancelEvent,sizerFlag=wx.ALIGN_CENTER)
+		self.button = self.creator.cancelbutton(_("中止(&C)"), self.cancelEvent,sizerFlag=wx.ALIGN_CENTER)
 
 	# プログレス更新（現在値, ラベル, 最大値）
 	def update(self, pos=None, label=None, max=None):
