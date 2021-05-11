@@ -7,6 +7,7 @@ import wx
 
 import views.ViewCreator
 import simpleDialog
+import views.viewObjectBase.virtualListCtrlBase
 
 from views.baseDialog import *
 
@@ -50,6 +51,10 @@ class Dialog(BaseDialog):
 		self.creator.AddSpace(-1)
 		self.moveRightButton = self.creator.button(_("右へ(&R)"), self.move)
 
+		if self.isVirtual():
+			self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,20,"",wx.EXPAND|wx.LEFT|wx.RIGHT,margin=20)
+			self.hideHeaderSetting = self.creator.checkbox(_("ヘッダを画面上で非表示にする(&H)"), None, not self.target.isPrintColumn())
+
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,20,"",wx.ALIGN_RIGHT|wx.ALL,margin=20)
 		self.bOk=self.creator.okbutton(_("ＯＫ"), self.onOkBtn)
 		self.bCancel=self.creator.cancelbutton(_("キャンセル"),None)
@@ -72,6 +77,8 @@ class Dialog(BaseDialog):
 			key = self.getIndexFromText(text)
 			if self.displayStatus[key]:
 				ret.append(key)
+		if self.isVirtual():
+			self.target.setPrintColumn(not self.hideHeaderSetting.GetValue())
 		self.target.SetColumnsOrder(ret)
 
 	def onOkBtn(self, event):
@@ -79,7 +86,7 @@ class Dialog(BaseDialog):
 			simpleDialog.errorDialog(_("全ての列を非表示にすることはできません。"))
 			return
 		self.save()
-		self.Destroy()
+		event.Skip()
 
 	def move(self, event):
 		button = event.GetEventObject()
@@ -105,3 +112,7 @@ class Dialog(BaseDialog):
 	def onCheckBoxStatusChanged(self, event):
 		selected = self.hListCtrl.GetFocusedItem()
 		self.displayStatus[self.getIndexFromText(self.hListCtrl.GetItemText(selected))] = self.hCheckBox.GetValue()
+
+	def isVirtual(self):
+		return isinstance(self.target,views.viewObjectBase.virtualListCtrlBase.virtualListCtrl)
+
