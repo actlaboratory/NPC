@@ -442,7 +442,7 @@ class virtualListCtrl(listCtrlBase.listCtrl):
                 col = self.getCol(i)
                 if not col.display:
                     continue
-                wxCol = self.GetColumn(col.wx_col)
+                wxCol = self.GetColumn(i)
                 if self.isPrintColumn():
                     wxCol.SetText(col.heading)
                 else:
