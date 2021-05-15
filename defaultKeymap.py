@@ -25,6 +25,7 @@ defaultKeymap["mainView"]={
 	"ACCOUNT_ANSWER":"",
 	"ACCOUNT_ARCHIVED":"",
 	"ACCOUNT_SENT_LIST":"",
+	"ACCOUNT_SETTINGS":"",
 
 	"OPTION_OPTION":"",
 	"OPTION_KEY_CONFIG":"",

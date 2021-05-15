@@ -183,4 +183,46 @@ def getSentList(session,page=1):
 	result = session.get("https://peing.net/api/v2/send_questions?page="+str(page))
 	return json.loads(result.text)["items"]
 
+def getProfile(session):
+	assert type(session)==requests.sessions.Session
+
+	page = session.get("https://peing.net/ja/stg", timeout=5)
+	soup = BeautifulSoup(page.content, "lxml")
+	entity = soup.find("div", {"data-vue-component":"profile-form"})
+	if entity==None:
+		return errorCodes.PEING_ERROR
+	return json.loads(entity.get("data-user"))
+
+def setProfile(session,*,name="",profile=""):
+	assert type(session)==requests.sessions.Session
+	assert type(profile)==str
+
+	#CSRF対策会費のためのリクエスト
+	page = session.get("https://peing.net/ja/stg", timeout=5)
+	soup = BeautifulSoup(page.content, "lxml")
+	tmp = soup.find("meta", {"name": "csrf-token"})
+	token = tmp["content"]
+
+	headers={
+		"Accept": "application/json",
+		"Host": "peing.net",
+		"Origin": "https://peing.net",
+		"Referer": "https://peing.net/ja/stg",
+		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0",
+		"X-CSRF-TOKEN": token,
+	}
+	data={}
+	if name!="":
+		data["user[name]"]=name
+	if profile!="":
+		data["user[profile]"]=profile
+	#user[is_send_email]
+	#user[is_auto_recruit]
+	#user[is_receive_baton]
+	#user_status[is_auto_message_recruit]
+
+	ret = session.put("https://peing.net/api/v1/user/profiles", headers=headers, data=data, timeout=5)
+	return errorCodes.OK
+
+
 #GET /api/v2/me/friends?page=1

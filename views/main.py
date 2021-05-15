@@ -21,6 +21,7 @@ import twitterService
 
 from .base import *
 from simpleDialog import *
+from views import accountSettingsDialog
 from views import answerDialog
 from views import candidateUserListDialog
 from views import detailDialog
@@ -156,6 +157,7 @@ class Menu(BaseMenu):
 			"ACCOUNT_ANSWER",
 			"ACCOUNT_ARCHIVED",
 			"ACCOUNT_SENT_LIST",
+			"ACCOUNT_SETTINGS",
 		])
 
 		#ヘルプメニューの中身
@@ -419,6 +421,22 @@ class Events(BaseEvents):
 				d.Show()
 			else:
 				errorDialog(_("ログインまたは質問の取得に失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+
+		if selected == menuItemsStore.getRef("ACCOUNT_SETTINGS"):
+			if not self.loginCheck():
+				return
+			d = accountSettingsDialog.Dialog(self.parent.service)
+			if d.Initialize()==errorCodes.OK:
+				if d.Show()==wx.ID_CANCEL:
+					return
+			else:
+				errorDialog(_("ログインまたはアカウント設定の取得に失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+				return
+			ret = self.parent.service.setProfile(d.GetValue())
+			if ret == errorCodes.OK:
+				dialog(_("設定完了"),_("設定しました。"))
+			else:
+				self.showError(ret)
 
 		if selected == menuItemsStore.getRef("OPTION_OPTION"):
 			d = settingsDialog.Dialog()

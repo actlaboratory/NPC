@@ -385,8 +385,24 @@ class Service():
 
 	def recycle(self,hash):
 		try:
-			ret = peing.recycle(self.session,hash)
-			return ret
+			return peing.recycle(self.session,hash)
+		except Exception as e:
+			self.log.error(e)
+			return errorCodes.PEING_ERROR
+
+	#
+	#	プロフィール
+	#
+	def getProfile(self):
+		try:
+			return peing.getProfile(self.session)
+		except Exception as e:
+			self.log.error(e)
+			return errorCodes.PEING_ERROR
+
+	def setProfile(self,v):
+		try:
+			return peing.setProfile(self.session,**v)
 		except Exception as e:
 			self.log.error(e)
 			return errorCodes.PEING_ERROR
@@ -394,7 +410,6 @@ class Service():
 	#
 	#	ビュー補助
 	#
-
 	def makeContextMenu(self):
 		helper=views.main.Menu("mainView")
 		menu=wx.Menu()

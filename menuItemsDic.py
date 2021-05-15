@@ -32,7 +32,7 @@ dic={
 	"ACCOUNT_ARCHIVED":_("アーカイブ済みの質問を表示"),
 	"ACCOUNT_SENT_LIST":_("送信した質問を表示"),
 	#"ACCOUNT_ADD_FOLLOWEES":_("アカウントのフォロイーから一括登録"),
-
+	"ACCOUNT_SETTINGS":_("アカウント設定"),
 
 	"OPTION_OPTION":_("設定(&S)")+"...",
 	"OPTION_KEY_CONFIG":_("ショートカットキーの設定(&K)")+"...",
