@@ -384,9 +384,9 @@ class Events(BaseEvents):
 			event.Skip()
 
 		if selected==menuItemsStore.getRef("FILTER_USER"):
-			index = self.parent.lst.GetFirstSelected()
-			target = self.parent.service.getAnswer(self.parent.answerIdList[index]).user
 			if event.IsChecked():
+				index = self.parent.lst.GetFirstSelected()
+				target = self.parent.service.getAnswer(self.parent.answerIdList[index]).user
 				self.log.debug("set userFilter = "+str(target.id))
 				filter.UserFilter(target).enable(event.IsChecked())
 			else:
