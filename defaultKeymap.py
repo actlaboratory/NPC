@@ -21,6 +21,7 @@ defaultKeymap["mainView"]={
 	"FILTER_AUTO_QUESTION":"",
 	"FILTER_BATON":"",
 	"FILTER_USER":"",
+	"FILTER_SEARCH":"ctrl+f/F3",
 
 	"ACCOUNT_ANSWER":"",
 	"ACCOUNT_ARCHIVED":"",

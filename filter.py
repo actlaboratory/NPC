@@ -1,6 +1,8 @@
 # NPC list filter
 # Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
 
+import re
+
 import constants
 import globalVars
 
@@ -57,6 +59,32 @@ class UserFilter(FilterBase):
 			return args["userId"]==self.targetUserId
 		else:
 			return True
+
+#検索条件に一致する回答のみを表示
+class SearchFilter(FilterBase):
+	def __init__(self,keyword="",type=0,isRe=False):
+		self.keyword = keyword
+		self.type = type
+		self.isRe = isRe
+		if isRe:
+			self.ptn = re.compile(keyword)
+
+	def test(self,**args):
+		if self.isRe:
+			if self.type == 0 and not self.ptn.search(args["q"]):
+				return False
+			elif self.type == 1 and not self.ptn.search(args["a"]):
+				return False
+			elif self.type == 2 and not (self.ptn.search(args["a"])!=None or self.ptn.search(args["q"])!=None):
+				return False
+		else:
+			if self.type == 0 and not self.keyword in args["q"]:
+				return False
+			elif self.type == 1 and not self.keyword in args["a"]:
+				return False
+			elif self.type == 2 and not (self.keyword in args["q"] or self.keyword in args["a"]):
+				return False
+		return True
 
 
 def getFilterList():

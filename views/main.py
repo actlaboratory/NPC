@@ -28,6 +28,7 @@ from views import detailDialog
 from views import globalKeyConfig
 from views import listConfigurationDialog
 from views import progress
+from views import searchConditionDialog
 from views import sentQuestionDialog
 from views import settingsDialog
 from views import SimpleInputDialog
@@ -105,7 +106,7 @@ class MainView(BaseView):
 	#表示情報タプルiを基に、有効になっているフィルタにかけた結果、表示すべきか否かを判断して返す
 	def testFilter(self,i):
 		for f in filter.getFilterList():
-			if not f.test(userId=i[6],answerFlag=i[5]):
+			if not f.test(userId=i[6],answerFlag=i[5],q=i[2],a=i[3]):
 				return False
 		return True
 
@@ -138,7 +139,7 @@ class Menu(BaseMenu):
 			"FILE_EXIT",
 		])
 
-		self.RegisterCheckMenuCommand(self.hOptionMenu,[
+		self.RegisterMenuCommand(self.hOptionMenu,[
 			"OPTION_OPTION",
 			"OPTION_LIST_CONFIG",
 			"OPTION_KEY_CONFIG",
@@ -150,6 +151,7 @@ class Menu(BaseMenu):
 			"FILTER_AUTO_QUESTION",
 			"FILTER_BATON",
 			"FILTER_USER",
+			"FILTER_SEARCH",
 		])
 
 		#アカウントメニューの中身
@@ -390,8 +392,22 @@ class Events(BaseEvents):
 				self.log.debug("set userFilter = "+str(target.id))
 				filter.UserFilter(target).enable(event.IsChecked())
 			else:
-				self.log.debug("set battonFilter = "+str(event.IsChecked()))
+				self.log.debug("set userFilter = "+str(event.IsChecked()))
 				filter.UserFilter().enable(event.IsChecked())
+			self.parent.refresh()
+			event.Skip()
+
+		if selected==menuItemsStore.getRef("FILTER_SEARCH"):
+			if event.IsChecked():
+				d = views.searchConditionDialog.Dialog()
+				d.Initialize()
+				if d.Show() == wx.ID_CANCEL:
+					return
+				self.log.debug("set searchFilter = "+str(d.GetValue()))
+				filter.SearchFilter(*d.GetValue()).enable(event.IsChecked())
+			else:
+				self.log.debug("set searchFilter = "+str(event.IsChecked()))
+				filter.SearchFilter().enable(event.IsChecked())
 			self.parent.refresh()
 			event.Skip()
 
@@ -495,6 +511,8 @@ class Events(BaseEvents):
 			menuObject.Check(menuItemsStore.getRef("FILTER_AUTO_QUESTION"),filter.AutoQuestionFilter().isEnable())
 			menuObject.Check(menuItemsStore.getRef("FILTER_BATON"),filter.BatonFilter().isEnable())
 			menuObject.Check(menuItemsStore.getRef("FILTER_USER"),filter.UserFilter().isEnable())
+			menuObject.Check(menuItemsStore.getRef("FILTER_SEARCH"),filter.SearchFilter().isEnable())
+
 
 	def reload(self):
 		self.log.debug("reload:start")
