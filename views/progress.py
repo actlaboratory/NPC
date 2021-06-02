@@ -27,11 +27,11 @@ class Dialog(BaseDialog):
 	def InstallControls(self):
 		"""いろんなwidgetを設置する。"""
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.VERTICAL,style=wx.ALL,space=20)
-		if self.mode&MODE_NO_GAUGE==0:
-			self.gauge,self.static=self.creator.gauge(self.label,x=500)
-		else:
+		if self.mode&MODE_NO_GAUGE==MODE_NO_GAUGE:
 			self.static=self.creator.staticText(self.label)
 			self.creator.AddSpace()
+		else:
+			self.gauge,self.static=self.creator.gauge(self.label,x=500,sizerFlag=wx.EXPAND)
 		self.button = self.creator.cancelbutton(_("中止(&C)"), self.cancelEvent,sizerFlag=wx.ALIGN_CENTER)
 
 	# プログレス更新（現在値, ラベル, 最大値）

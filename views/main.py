@@ -196,7 +196,6 @@ class Events(BaseEvents):
 			prm = re.sub("https://peing.net/[^/]+/","", d.GetValue().lower())
 			#先頭の@はいらないので対策。入力時はあってもなくても良い
 			prm = re.sub("@?(.*)","\\1", prm)
-			self.log.debug("target=%s" % prm)
 
 			self.log.debug("add user: %s" % prm)
 			if self.parent.service.isUserRegistered(prm)==True:
@@ -278,8 +277,9 @@ class Events(BaseEvents):
 
 		if selected==menuItemsStore.getRef("FILE_ADD_USER_FROM_TWITTER_FOLLOW_LIST"):
 			self.log.debug("addListFromTwitterUser:start")
-			d=progress.Dialog(progress.MODE_NO_GAUGE)
+			d=progress.Dialog()
 			d.Initialize(_("Twitterアカウントの認証のため、ブラウザの操作を待っています。")+"...",_("Twitterのフォローリストから一括登録"))
+			d.gauge.Hide()
 			d.Show(modal=False)
 			self.parent.hFrame.Disable()
 
@@ -328,14 +328,20 @@ class Events(BaseEvents):
 				users.add(user.account.lower())
 			target = follows - users
 
-			d.update(label=_("Peingへの登録状況を調べています。")+"...")
+			d.update(label=_("Peingへの登録状況を調べています。")+"...",max=len(target))
+			d.gauge.Show()
+			d.panel.Layout()
+			d.sizer.Fit(d.wnd)
 			result = []
-			for account in target:
+			for i,account in enumerate(target):
+				d.update(i)
 				wx.YieldIfNeeded()
 				info = self.parent.service.getUserInfo(account)
-				if info == errorCodes.NOT_FOUND:
+				if not d.isOk():
+					break
+				elif info == errorCodes.NOT_FOUND:
 					continue
-				if info == errorCodes.PEING_ERROR:
+				elif info == errorCodes.PEING_ERROR:
 					dialog(_("通信エラー"),_("Peingとの通信でエラーが発生しました。インターネット接続を確認し、しばらくたってから再度お試しください。状況が改善しない場合は、Twitterでのフォロー数が多すぎる可能性があります。\n\nこのメッセージを閉じた後、もしもこのエラー発生時までに取得できたアカウントがあれば一覧が表示されます。"),self.parent.hFrame)
 					break
 				result.append(info)
@@ -356,8 +362,10 @@ class Events(BaseEvents):
 
 			#登録
 			if len(d2.GetValue())>0:
-				for user in d2.GetValue():
+				d.update(0,_("指定されたユーザを登録しています。"),len(d2.GetValue()))
+				for i,user in enumerate(d2.GetValue()):
 					self.parent.service.addUser(user)
+					d.update(i)
 					wx.YieldIfNeeded()
 				dialog(_("登録完了"),_("ユーザの一括登録に成功しました。今回登録したユーザの回答を表示するには、ビューを再読み込みしてください。"),d.wnd)
 
