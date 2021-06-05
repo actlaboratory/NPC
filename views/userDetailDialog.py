@@ -41,7 +41,7 @@ class Dialog(BaseDialog):
 		profile.hideScrollBar(wx.VERTICAL)
 		profile.Bind(wx.EVT_TEXT_ENTER,self.processEnter)
 
-		self.closeButton=self.creator.okbutton(_("閉じる(&C)"))
+		self.closeButton=self.creator.closebutton(_("閉じる(&C)"))
 
 	def processEnter(self,event):
 		self.wnd.Close()

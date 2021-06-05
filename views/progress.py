@@ -45,9 +45,12 @@ class Dialog(BaseDialog):
 		wx.YieldIfNeeded()
 
 	def cancelEvent(self, evt):
+		self.log.info("recieved cancel request")
 		self._status = wx.ID_CANCEL
 
 	#キャンセルされていなければTrue
 	def isOk(self):
+		if self._status!=None:
+			self.log.info("teled status=False")
 		return self._status==None
 

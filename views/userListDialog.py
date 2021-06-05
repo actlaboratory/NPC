@@ -56,7 +56,7 @@ class Dialog(BaseDialog):
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALL|wx.RIGHT,margin=20)
 		self.postQuestionButton = self.creator.button(_("質問を投稿(&Q)"),self.postQuestion)
 		self.creator.AddSpace(-1)
-		self.bOk=self.creator.okbutton(_("閉じる(&C)"), self.close)
+		self.bOk=self.creator.closebutton(_("閉じる(&C)"), self.close)
 
 		self.onItemSelected()
 
@@ -129,9 +129,7 @@ class Dialog(BaseDialog):
 				if kwd in u.account or kwd in u.name:
 					self.lst.append(u)
 
-		self.hListCtrl.ClearAll()
-		self.hListCtrl.AppendColumn(_("表示名"),width=350)
-		self.hListCtrl.AppendColumn(_("アカウント"),width=280)
+		self.hListCtrl.DeleteAllItems()
 		for user in self.lst:
 			self.hListCtrl.Append((user.name,user.account))
 

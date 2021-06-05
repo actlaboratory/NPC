@@ -43,7 +43,7 @@ class Dialog(BaseDialog):
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT,margin=20)
 		self.detailButton = self.creator.button(_("詳細を表示(&D)"), self.detail)
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALL|wx.ALIGN_RIGHT|wx.RIGHT,margin=20)
-		self.bOk=self.creator.okbutton(_("閉じる(&C)"), self.close)
+		self.bOk=self.creator.closebutton(_("閉じる(&C)"), self.close)
 
 		self.onItemSelected()
 
