@@ -14,7 +14,6 @@ import views.ViewCreator
 from views.baseDialog import *
 
 
-
 class Dialog(BaseDialog):
 	def __init__(self,lst,service):
 		super().__init__("userListDialog")
@@ -42,6 +41,7 @@ class Dialog(BaseDialog):
 		self.hListCtrl.Bind(wx.EVT_LIST_ITEM_SELECTED, self.onItemSelected)
 		self.hListCtrl.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onItemSelected)
 		self.hListCtrl.SetFocus()
+		self.hListCtrl.loadColumnInfo(self.identifier, "lst")
 
 		for user in self.lst:
 			self.hListCtrl.Append((user.name,user.account))
@@ -56,18 +56,13 @@ class Dialog(BaseDialog):
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALL|wx.RIGHT,margin=20)
 		self.postQuestionButton = self.creator.button(_("質問を投稿(&Q)"),self.postQuestion)
 		self.creator.AddSpace(-1)
-		self.bOk=self.creator.closebutton(_("閉じる(&C)"), self.close)
+		self.bOk=self.creator.closebutton(_("閉じる(&C)"))
 
 		self.onItemSelected()
-
 
 		# delキーを使えるようにする
 		keymap = self.app.hMainView.menu.keymap
 		keymap.Set(self.identifier,self.wnd,self.onKey)
-
-
-	def close(self,event):
-		self.wnd.EndModal(wx.ID_OK)
 
 	def onItemSelected(self, event=None):
 		selected = self.hListCtrl.GetFocusedItem()
@@ -138,3 +133,11 @@ class Dialog(BaseDialog):
 			self.hListCtrl.Focus(self.lst.index(focusedUser))
 			self.hListCtrl.Select(self.lst.index(focusedUser))
 		self.onItemSelected()
+
+	def close(self, event):
+		self.wnd.Close()
+
+	def OnClose(self,event):
+		print("come")
+		self.hListCtrl.saveColumnInfo()
+		super().OnClose(event)
