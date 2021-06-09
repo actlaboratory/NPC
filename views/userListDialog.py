@@ -9,6 +9,7 @@ import wx
 import filter
 import menuItemsStore
 import simpleDialog
+import views.main
 import views.ViewCreator
 
 from views.baseDialog import *
@@ -40,6 +41,8 @@ class Dialog(BaseDialog):
 		self.hListCtrl.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.close)
 		self.hListCtrl.Bind(wx.EVT_LIST_ITEM_SELECTED, self.onItemSelected)
 		self.hListCtrl.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.onItemSelected)
+		self.hListCtrl.Bind(wx.EVT_CONTEXT_MENU, self.contextMenu)
+
 		self.hListCtrl.SetFocus()
 		self.hListCtrl.loadColumnInfo(self.identifier, "lst")
 
@@ -99,8 +102,13 @@ class Dialog(BaseDialog):
 
 	def onKey(self,event):
 		selected=event.GetId()#メニュー識別しの数値が出る
-		if self.hListCtrl.GetFocusedItem()>=0 and selected==menuItemsStore.getRef("DELETE"):
-			self.remove(None)
+		if self.hListCtrl.GetFocusedItem()>=0:
+			if selected==menuItemsStore.getRef("DELETE"):
+				self.remove(None)
+			elif selected==menuItemsStore.getRef("POPUP"):
+				self.contextMenu()
+			elif selected==menuItemsStore.getRef("REORDER"):
+				self.reorder()
 		else:
 			event.Skip()
 
@@ -141,3 +149,18 @@ class Dialog(BaseDialog):
 		print("come")
 		self.hListCtrl.saveColumnInfo()
 		super().OnClose(event)
+
+	def contextMenu(self,event=None):
+		if self.hListCtrl.GetFocusedItem()==0:
+			return
+		helper=views.main.Menu("mainView")
+		menu=wx.Menu()
+		helper.RegisterMenuCommand(menu,[
+			"DELETE",
+			"REORDER",
+		])
+		self.hListCtrl.PopupMenu(menu,self.hListCtrl.getPopupMenuPosition())
+
+	def reorder(self,event=None):
+		self.hListCtrl.SetColumnsOrder(list(reversed(self.hListCtrl.GetColumnsOrder())))
+		self.hListCtrl.Refresh()

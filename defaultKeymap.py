@@ -38,6 +38,7 @@ defaultKeymap["mainView"]={
 
 defaultKeymap["USERLISTDIALOG"]={
 	"DELETE" : "delete",
+	"POPUP" : "Shift+F10",
 }
 
 defaultKeymap["CANDIDATEUSERLISTDIALOG"]={
