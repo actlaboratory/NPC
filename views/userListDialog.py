@@ -74,7 +74,7 @@ class Dialog(BaseDialog):
 		self.removeButton.Enable(selected >= 0)
 		self.postQuestionButton.Enable(selected >= 0)
 
-	def remove(self,event):
+	def remove(self,event=None):
 		user = self.lst[self.hListCtrl.GetFocusedItem()]
 		ret = simpleDialog.yesNoDialog(_("ユーザの削除"),_("以下のユーザの登録と、過去の回答履歴を削除しますか？\n\n%s")%user.getViewString())
 		if ret == wx.ID_NO:
@@ -84,27 +84,33 @@ class Dialog(BaseDialog):
 		self.data.remove(user)
 		self.hListCtrl.DeleteItem(self.hListCtrl.GetFocusedItem())
 
-	def detail(self,event):
+	def detail(self,event=None):
 		d = views.userDetailDialog.Dialog(self.lst[self.hListCtrl.GetFocusedItem()])
 		d.Initialize(self.wnd)
 		d.Show()
 
-	def filter(self,event):
+	def filter(self,event=None):
 		target = self.lst[self.hListCtrl.GetFocusedItem()]
 		self.log.debug("set userFilter = "+str(target.account))
 		filter.UserFilter().enable(False)			#重複設定防止
 		filter.UserFilter(target).enable(True)
 		self.wnd.EndModal(wx.ID_OK)
 
-	def postQuestion(self, event):
+	def postQuestion(self, event=None):
 		target = self.lst[self.hListCtrl.GetFocusedItem()]
 		self.app.hMainView.events.postQuestion(target,self.wnd)
 
 	def onKey(self,event):
 		selected=event.GetId()#メニュー識別しの数値が出る
 		if self.hListCtrl.GetFocusedItem()>=0:
-			if selected==menuItemsStore.getRef("DELETE"):
+			if selected==menuItemsStore.getRef("DETAIL"):
+				self.detail()
+			elif selected==menuItemsStore.getRef("FILTER"):
+				self.filter()
+			elif selected==menuItemsStore.getRef("DELETE"):
 				self.remove(None)
+			elif selected==menuItemsStore.getRef("ASK"):
+				self.postQuestion()
 			elif selected==menuItemsStore.getRef("POPUP"):
 				self.contextMenu()
 			elif selected==menuItemsStore.getRef("REORDER"):
@@ -146,20 +152,25 @@ class Dialog(BaseDialog):
 		self.wnd.Close()
 
 	def OnClose(self,event):
-		print("come")
 		self.hListCtrl.saveColumnInfo()
 		super().OnClose(event)
 
 	def contextMenu(self,event=None):
-		if self.hListCtrl.GetFocusedItem()==0:
-			return
 		helper=views.main.Menu("mainView")
 		menu=wx.Menu()
 		helper.RegisterMenuCommand(menu,[
+			"DETAIL",
+			"FILTER",
 			"DELETE",
+			"ASK",
 			"REORDER",
 		])
-		self.hListCtrl.PopupMenu(menu,self.hListCtrl.getPopupMenuPosition())
+		if self.hListCtrl.GetFocusedItem()==-1:
+			menu.Enable(menuItemsStore.getRef("DETAIL"),False)
+			menu.Enable(menuItemsStore.getRef("FILTER"),False)
+			menu.Enable(menuItemsStore.getRef("DELETE"),False)
+			menu.Enable(menuItemsStore.getRef("ASK"),False)
+		self.hListCtrl.PopupMenu(menu,event)
 
 	def reorder(self,event=None):
 		self.hListCtrl.SetColumnsOrder(list(reversed(self.hListCtrl.GetColumnsOrder())))
