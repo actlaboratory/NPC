@@ -52,7 +52,7 @@ class Dialog(BaseDialog):
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.EXPAND|wx.LEFT|wx.RIGHT,margin=20)
 		self.detailButton = self.creator.button(_("詳細"), self.detail)
 		self.creator.AddSpace(-1)
-		self.filterButton = self.creator.button(_("フィルタ(&F)"), self.filter)
+		self.filterButton = self.creator.button(_("このユーザのみ表示(&O)"), self.filter)
 		self.creator.AddSpace(-1)
 		self.removeButton = self.creator.button(_("削除"), self.remove)
 
