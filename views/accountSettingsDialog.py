@@ -38,10 +38,6 @@ class Dialog(BaseDialog):
 		self.wnd.EndModal(wx.ID_OK)
 
 	def load(self):
-		ret = self.service.login(self.app.config.getstring("account","id"),self.app.config.getstring("account","password"))
-		if ret != errorCodes.OK:
-			self.log.error("login failed")
-			return ret
 		data = self.service.getProfile()
 		if type(data)==int:
 				return data
