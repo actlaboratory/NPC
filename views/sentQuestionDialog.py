@@ -55,10 +55,6 @@ class Dialog(BaseDialog):
 		self.detailButton.Enable(selected >= 0)
 
 	def load(self):
-		ret = self.service.login(self.app.config.getstring("account","id"),self.app.config.getstring("account","password"))
-		if ret != errorCodes.OK:
-			self.log.error("login failed")
-			return ret
 		qList = self.service.getSentList()
 		if type(qList)!=list:
 			return qList

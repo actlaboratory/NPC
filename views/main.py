@@ -426,7 +426,7 @@ class Events(BaseEvents):
 			if d.Initialize()==errorCodes.OK:
 				d.Show()
 			else:
-				errorDialog(_("ログインまたは質問の取得に失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+				errorDialog(_("質問の取得に失敗しました。以下の対処をお試しください。\n\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
 
 		if selected == menuItemsStore.getRef("ACCOUNT_ARCHIVED"):
 			if not self.loginCheck():
@@ -435,7 +435,7 @@ class Events(BaseEvents):
 			if d.Initialize()==errorCodes.OK:
 				d.Show()
 			else:
-				errorDialog(_("ログインまたは質問の取得に失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+				errorDialog(_("質問の取得に失敗しました。以下の対処をお試しください。\n\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
 
 		if selected == menuItemsStore.getRef("ACCOUNT_SENT_LIST"):
 			if not self.loginCheck():
@@ -444,7 +444,7 @@ class Events(BaseEvents):
 			if d.Initialize()==errorCodes.OK:
 				d.Show()
 			else:
-				errorDialog(_("ログインまたは質問の取得に失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+				errorDialog(_("質問の取得に失敗しました。以下の対処をお試しください。\n\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
 
 		if selected == menuItemsStore.getRef("ACCOUNT_SETTINGS"):
 			if not self.loginCheck():
@@ -567,10 +567,7 @@ class Events(BaseEvents):
 	def postQuestion(self,target,parent=None):
 		useSession = self.parent.app.config.getboolean("account","use_always",False)
 		if useSession:
-			ret = self.parent.service.login(self.parent.app.config.getstring("account","id"),self.parent.app.config.getstring("account","password"))
-			if ret != errorCodes.OK:
-				self.log.error("login failed")
-				errorDialog(_("ログインに失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+			if not self.loginCheck():
 				return
 
 		d = SimpleInputDialog.Dialog(_("質問を投稿"),_("%sさんへの質問内容") % target.getViewString(), parent)
@@ -599,13 +596,23 @@ class Events(BaseEvents):
 
 		if code!=errorCodes.OK:
 			self.log.warning("show error:%d" % code)
-		if code==errorCodes.OK:
-			return
-		elif code==errorCodes.PEING_ERROR or code==errorCodes.NOT_FOUND:
+		if code==errorCodes.PEING_ERROR or code==errorCodes.NOT_FOUND:
 			errorDialog(_("指定されたユーザが存在しないか、通信に失敗しました。以下の対処をお試しください。\n\n・入力内容が正しいか、再度お確かめください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),parent)
 		elif code==errorCodes.TWITTER_ERROR:
 			errorDialog(_("Twitterとの通信でエラーが発生しました。指定したユーザ名が間違っているか、インターネット接続に問題が発生した可能性があります。"),parent)
-		else:
+		elif code==errorCodes.LOGIN_WRONG_PASSWORD:
+			errorDialog(_("ログインに失敗しました。設定されたアカウント情報に誤りがあります。\n\n・設定内容が正しいか、設定したものと同じ情報でブラウザからログインできるかを再度確認してください。\n・ブラウザから正しくログインできる場合には、サイトの仕様変更が考えられます。このメッセージと使用したIDの種類を添えて開発者までお問い合わせください。\n"),parent)
+		elif code==errorCodes.LOGIN_CONFIRM_NEEDED:
+			errorDialog(_("ログインに失敗しました。ログインに際して権限の認可が要求されています。同じIDでブラウザからログインした後、再度お試しください。"),parent)
+		elif code==errorCodes.LOGIN_PEING_ERROR:
+			errorDialog(_("ログインに失敗しました。Peingのサーバやお使いのインターネット接続に障害が発生している可能性があります。ブラウザから同じIDでログインできるか確認してください。\nブラウザから正常にログインできる場合には、サイトの仕様変更が考えられますので、このメッセージと利用したIDの種類を添えて開発者までお問い合わせください。"),parent)
+		elif code==errorCodes.LOGIN_TWITTER_ERROR:
+			errorDialog(_("ログインに失敗しました。Twitterのサーバやお使いのインターネット接続に障害が発生している可能性があります。ブラウザから同じIDでログインできるか確認してください。\nブラウザから正常にログインできる場合には、サイトの仕様変更が考えられますので、このメッセージと利用したIDの種類を添えて開発者までお問い合わせください。"),parent)
+		elif code==errorCodes.LOGIN_UNKNOWN_ERROR:
+			errorDialog(_("不明なエラーの為、ログインに失敗しました。サイトの仕様変更や、お使いのインターネット接続の障害が考えられます。まずは、ブラウザから同じIDでログインできるか確認してください。\nブラウザから正常にログインできる場合には、サイトの仕様変更が考えられますので、このメッセージと利用したIDの種類を添えて開発者までお問い合わせください。"),parent)
+		elif code==errorCodes.LOGIN_RECAPTCHA_NEEDED:
+			errorDialog(_("ログインに失敗しました。ログインに際してRECAPTCHA(ロボットでないことの確認)が要求されています。同じIDでブラウザからログインした後、再度お試しください。"),parent)
+		elif code != errorCodes.OK:
 			errorDialog(_("不明なエラー%(code)dが発生しました。大変お手数ですが、本ソフトの実行ファイルのあるディレクトリに生成された%(log)sを添付し、作者までご連絡ください。") %{"code":code,"log":constants.LOG_FILE_NAME},parent)
 		return
 
@@ -651,10 +658,21 @@ class Events(BaseEvents):
 		newMap.write()
 		return True
 
-	#ログイン情報が設定されているか調べる
-	#値が入っているかどうかのみの確認であり、有効性の確認はしない
+	# ログイン状態を確認し、必要ならログインする
 	def loginCheck(self):
 		ret = self.parent.app.config.getstring("account","id")!="" and self.parent.app.config.getstring("account","password")!=""
 		if not ret:
 			errorDialog(_("この機能を利用するには、ログインが必要です。\n[オプション]→[設定]にて、アカウント情報を設定してください。詳細は、readme.txtをご確認ください。"))
-		return ret
+			return False
+
+		ret = self.parent.service.login(
+			self.parent.app.config.getint("account","id_type",constants.LOGIN_PEING,0,1),
+			self.parent.app.config.getstring("account","id"),
+			self.parent.app.config.getstring("account","password")
+		)
+		if ret != errorCodes.OK:
+			self.log.error("login failed")
+			self.showError(ret)
+			return False
+		return True
+

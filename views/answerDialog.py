@@ -69,10 +69,6 @@ class Dialog(BaseDialog):
 		self.archiveButton.Enable(selected >= 0)
 
 	def load(self):
-		ret = self.service.login(self.app.config.getstring("account","id"),self.app.config.getstring("account","password"))
-		if ret != errorCodes.OK:
-			self.log.error("login failed")
-			return ret
 		if self.type == constants.RECEIVED:
 			qList = self.service.getReceivedItemList()
 		elif self.type == constants.ARCHIVED:

@@ -97,7 +97,7 @@ class ConfigManager(configparser.ConfigParser):
 				if selection==None:return ret
 
 		if selection!=None and ret not in selection:
-			self.log.debug("value "+ret+" not in selection.  at section "+section+", key "+key)
+			self.log.debug("value "+str(ret)+" not in selection.  at section "+section+", key "+key)
 			self[section][key]=default
 			ret=default
 		return ret

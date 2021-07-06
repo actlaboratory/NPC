@@ -8,6 +8,7 @@ import dao
 import errorCodes
 import entity.user
 import entity.answer
+import twitterLogin
 import peing
 import views.main
 
@@ -260,18 +261,47 @@ class Service():
 	#
 	#	質問への応答
 	#
-	def login(self,id,pw,force=False):
+	def login(self,idType,id,pw,force=False):
 		if not force and self.session:
 			self.log.debug("already logined")
 			return errorCodes.OK
+		self.log.debug("try login")
+		if idType==constants.LOGIN_PEING:
+			try:
+				self.log.info("login with peing")
+				session = peing.login(id,pw)
+				if session == errorCodes.PEING_ERROR:
+					return errorCodes.LOGIN_PEING_ERROR
+				elif type(session)==int:
+					return session
+				self.session = session
+				self.selfId = id
+				return errorCodes.OK
+			except Exception as e:
+				self.log.error(e)
+				return errorCodes.LOGIN_PEING_ERROR
+		else:
+			try:
+				self.log.info("login with twitter")
+				session = twitterLogin.login(id,pw)
+				if type(session) == int:
+					self.log.error("login failed. code="+str(session))
+					return session
+				self.log.debug("try to get userId")
+				self.selfId = self.getSelfId(session)
+				if type(self.selfId)!=str:
+					self.log.error("getSelfId() failed. code="+str(self.selfId))
+					return self.selfId
+				self.log.info("twitter login succeseeded:"+self.selfId)
+				self.session = session
+				return errorCodes.OK
+			except Exception as e:
+				self.log.error(e)
+				return errorCodes.LOGIN_UNKNOWN_ERROR
+
+	def getSelfId(self,session):
 		try:
-			self.log.debug("try login")
-			session = peing.login(id,pw)
-			if session == errorCodes.PEING_ERROR:
-				return errorCodes.PEING_ERROR
-			self.session = session
-			self.selfId = id
-			return errorCodes.OK
+			return peing.getLoginUser(session)
 		except Exception as e:
 			self.log.error(e)
 			return errorCodes.PEING_ERROR
@@ -349,7 +379,7 @@ class Service():
 						q["uuid_hash"]
 						).__dict__)
 					if len(self.userDao.get(user.id))==0:		#新規
-						user.flag|=FLG_USER_NOT_REGISTERED
+						user.flag|=constants.FLG_USER_NOT_REGISTERED
 						self.userDao.insert(user.__dict__)
 					else:
 						self.userDao.update(user.__dict__)
