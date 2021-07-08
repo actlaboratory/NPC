@@ -75,7 +75,7 @@ class Dialog(BaseDialog):
 		ret = simpleDialog.yesNoDialog(_("一括登録の確認"),_("表示している%d件のアカウントを登録しますか？") % len(self.lst),self.wnd)
 		if ret == wx.ID_NO:
 			return
-		event.Skip()
+		self.wnd.EndModal(wx.ID_OK)
 
 	def GetData(self):
 		return self.lst
