@@ -19,7 +19,7 @@ class Dialog(BaseDialog):
 	def __init__(self,lst,service):
 		super().__init__("userListDialog")
 		self.lst = lst
-		self.data = copy.deepcopy(lst)
+		self.data=[*lst]
 		self.service = service
 
 	def Initialize(self,title=_("登録済みユーザ一覧"),parent=None):
