@@ -195,9 +195,10 @@ def getProfile(session):
 		return errorCodes.PEING_ERROR
 	return json.loads(entity.get("data-user"))
 
-def setProfile(session,*,name="",profile=""):
+def setProfile(session,*,name="",profile=None,is_receive_baton=None):
 	assert type(session)==requests.sessions.Session
-	assert type(profile)==str
+	assert type(profile) in (str,None)
+	assert type(is_receive_baton) in (bool,None)
 
 	#CSRF対策会費のためのリクエスト
 	page = session.get("https://peing.net/ja/stg", timeout=5)
@@ -216,15 +217,15 @@ def setProfile(session,*,name="",profile=""):
 	data={}
 	if name!="":
 		data["user[name]"]=name
-	if profile!="":
+	if profile!=None:
 		data["user[profile]"]=profile
-	#user[is_send_email]
-	#user[is_auto_recruit]
-	#user[is_receive_baton]
-	#user_status[is_auto_message_recruit]
-
+	if is_receive_baton!=None:
+		data["user[is_receive_baton]"]=str(is_receive_baton).lower()
 	ret = session.put("https://peing.net/api/v1/user/profiles", headers=headers, data=data, timeout=5)
-	return errorCodes.OK
+	if ret.status_code==200:
+		return errorCodes.OK
+	else:
+		return errorCodes.PEING_ERROR
 
 def getLoginUser(session):
 	assert type(session)==requests.sessions.Session

@@ -27,8 +27,8 @@ class Dialog(BaseDialog):
 		"""いろんなwidgetを設置する。"""
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.VERTICAL,0,style=wx.EXPAND|wx.ALL,margin=20)
 		self.name,dummy = self.creator.inputbox(_("名前"),sizerFlag=wx.ALL|wx.EXPAND)
-
 		self.profile,dummy = self.creator.inputbox(_("プロフィール"),style=wx.TE_MULTILINE,sizerFlag=wx.ALL|wx.EXPAND)
+		self.getAutoQuestion,dummy = self.creator.combobox(_("運営からの自動質問"),(_("受信する"),_("受信しない")),None,1)
 
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALL|wx.ALIGN_RIGHT|wx.RIGHT,margin=20)
 		self.bOk=self.creator.okbutton(_("設定"), self.ok)
@@ -44,6 +44,8 @@ class Dialog(BaseDialog):
 		try:
 			self.name.SetValue(data["name"])
 			self.profile.SetValue(data["profile"])
+			if data["is_receive_baton"]:
+				self.getAutoQuestion.SetSelection(0)
 		except KeyError:
 			return errorCodes.PEING_ERROR
 		return errorCodes.OK
@@ -52,4 +54,6 @@ class Dialog(BaseDialog):
 		r={}
 		r["name"]=self.name.GetValue()
 		r["profile"]=self.profile.GetValue()
+		r["is_receive_baton"]=(self.getAutoQuestion.GetSelection()==0)
+		print(self.getAutoQuestion.GetSelection())
 		return r
