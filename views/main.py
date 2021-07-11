@@ -153,6 +153,9 @@ class Menu(BaseMenu):
 			"FILTER_USER",
 			"FILTER_SEARCH",
 		])
+		self.RegisterMenuCommand(self.hFilterMenu,[
+			"FILTER_CLEAR",
+		])
 
 		#アカウントメニューの中身
 		self.RegisterMenuCommand(self.hAccountMenu,[
@@ -419,6 +422,13 @@ class Events(BaseEvents):
 			self.parent.refresh()
 			event.Skip()
 
+		if selected == menuItemsStore.getRef("FILTER_CLEAR"):
+			self.log.debug("Clear Filter")
+			for f in filter.getFilterList():
+				f.enable(False)
+			self.parent.refresh()
+			event.Skip()
+
 		if selected == menuItemsStore.getRef("ACCOUNT_ANSWER"):
 			if not self.loginCheck():
 				return
@@ -512,6 +522,10 @@ class Events(BaseEvents):
 			"FILE_SHOW_USER_WEB",
 			"FILTER_USER",
 		], enable)
+
+		self.parent.menu.EnableMenu([
+			"FILTER_CLEAR",
+		], (filter.getFilterList()))
 
 	def OnMenuOpen(self,event):
 		menuObject = event.GetEventObject()
