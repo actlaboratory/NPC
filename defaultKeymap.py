@@ -21,10 +21,13 @@ defaultKeymap["mainView"]={
 	"FILTER_AUTO_QUESTION":"",
 	"FILTER_BATON":"",
 	"FILTER_USER":"",
+	"FILTER_SEARCH":"ctrl+f/F3",
+	"FILTER_CLEAR":"",
 
 	"ACCOUNT_ANSWER":"",
 	"ACCOUNT_ARCHIVED":"",
 	"ACCOUNT_SENT_LIST":"",
+	"ACCOUNT_SETTINGS":"",
 
 	"OPTION_OPTION":"",
 	"OPTION_KEY_CONFIG":"",
@@ -36,6 +39,7 @@ defaultKeymap["mainView"]={
 
 defaultKeymap["USERLISTDIALOG"]={
 	"DELETE" : "delete",
+	"POPUP" : "Shift+F10",
 }
 
 defaultKeymap["CANDIDATEUSERLISTDIALOG"]={

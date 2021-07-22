@@ -39,7 +39,7 @@ class Dialog(BaseDialog):
 		type,dummy = grid.inputbox(_("種別"), None, self.answer.getTypeString(), wx.TE_READONLY|wx.BORDER_RAISED, 320)
 		type.hideScrollBar(wx.HORIZONTAL)
 
-		self.closeButton=self.creator.okbutton(_("閉じる(&C)"))
+		self.closeButton=self.creator.closebutton(_("閉じる(&C)"))
 
 	def processEnter(self,event):
 		self.wnd.Close()

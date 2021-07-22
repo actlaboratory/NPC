@@ -1,8 +1,10 @@
 # NPC list filter
 # Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
 
-import constants
+import re
 
+import constants
+import globalVars
 
 enableFilters=[]
 
@@ -18,6 +20,13 @@ class FilterBase():
 			enableFilters.append(self)
 		else:
 			enableFilters = [x for x in enableFilters if type(x)!= type(self)]
+
+	#現在有効になっていればTrue
+	def isEnable(self):
+		for f in getFilterList():
+			if type(self)==type(f):
+				return True
+		return False
 
 	#フィルタが有効な場合にのみ呼び出される
 	#与えられたanswerを画面に表示すべきならTrue
@@ -51,6 +60,51 @@ class UserFilter(FilterBase):
 		else:
 			return True
 
+#検索条件に一致する回答のみを表示
+class SearchFilter(FilterBase):
+	def __init__(self,keyword="",type=0,isRe=False):
+		self.keyword = keyword
+		self.type = type
+		self.isRe = isRe
+		if isRe:
+			self.ptn = re.compile(keyword)
+
+	def test(self,**args):
+		if self.isRe:
+			if self.type == 0 and not self.ptn.search(args["q"]):
+				return False
+			elif self.type == 1 and not self.ptn.search(args["a"]):
+				return False
+			elif self.type == 2 and not (self.ptn.search(args["a"])!=None or self.ptn.search(args["q"])!=None):
+				return False
+		else:
+			if self.type == 0 and not self.keyword in args["q"]:
+				return False
+			elif self.type == 1 and not self.keyword in args["a"]:
+				return False
+			elif self.type == 2 and not (self.keyword in args["q"] or self.keyword in args["a"]):
+				return False
+		return True
+
 
 def getFilterList():
 	return enableFilters
+
+# 適用状況を設定から読込
+def loadStatus():
+	if globalVars.app.config.getboolean("filter_status","auto_question",False):
+		AutoQuestionFilter().enable(True)
+	if globalVars.app.config.getboolean("filter_status","baton",False):
+		BatonFilter().enable(True)
+
+# 適用状況を保存
+def saveStatus():
+	# いったんすべてFalseにしておく
+	globalVars.app.config["filter_status"]["auto_question"]=False
+	globalVars.app.config["filter_status"]["baton"]=False
+
+	for f in getFilterList():
+		if type(f)==AutoQuestionFilter:
+			globalVars.app.config["filter_status"]["auto_question"]=True
+		elif type(f)==BatonFilter:
+			globalVars.app.config["filter_status"]["baton"]=True

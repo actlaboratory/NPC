@@ -84,6 +84,8 @@ def login(id,pw):
 
 	result = session.post("https://peing.net/ja/acc/login_confirm", body, headers=headers, timeout=5)
 	if result.status_code!=200 or len(result.history)!=1 or result.history[0].status_code!=302:
+		if result.status_code==200 and len(result.history)==0:
+			return errorCodes.LOGIN_WRONG_PASSWORD
 		return errorCodes.PEING_ERROR
 	return session
 
@@ -182,5 +184,58 @@ def getSentList(session,page=1):
 
 	result = session.get("https://peing.net/api/v2/send_questions?page="+str(page))
 	return json.loads(result.text)["items"]
+
+def getProfile(session):
+	assert type(session)==requests.sessions.Session
+
+	page = session.get("https://peing.net/ja/stg", timeout=5)
+	soup = BeautifulSoup(page.content, "lxml")
+	entity = soup.find("div", {"data-vue-component":"profile-form"})
+	if entity==None:
+		return errorCodes.PEING_ERROR
+	return json.loads(entity.get("data-user"))
+
+def setProfile(session,*,name="",profile=None,is_receive_baton=None):
+	assert type(session)==requests.sessions.Session
+	assert type(profile) in (str,None)
+	assert type(is_receive_baton) in (bool,None)
+
+	#CSRF対策会費のためのリクエスト
+	page = session.get("https://peing.net/ja/stg", timeout=5)
+	soup = BeautifulSoup(page.content, "lxml")
+	tmp = soup.find("meta", {"name": "csrf-token"})
+	token = tmp["content"]
+
+	headers={
+		"Accept": "application/json",
+		"Host": "peing.net",
+		"Origin": "https://peing.net",
+		"Referer": "https://peing.net/ja/stg",
+		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0",
+		"X-CSRF-TOKEN": token,
+	}
+	data={}
+	if name!="":
+		data["user[name]"]=name
+	if profile!=None:
+		data["user[profile]"]=profile
+	if is_receive_baton!=None:
+		data["user[is_receive_baton]"]=str(is_receive_baton).lower()
+	ret = session.put("https://peing.net/api/v1/user/profiles", headers=headers, data=data, timeout=5)
+	if ret.status_code==200:
+		return errorCodes.OK
+	else:
+		return errorCodes.PEING_ERROR
+
+def getLoginUser(session):
+	assert type(session)==requests.sessions.Session
+
+	page = session.get("https://peing.net/ja/me/home", timeout=5)
+	soup = BeautifulSoup(page.content, "lxml")
+	entity = soup.find("input", {"name":"user[account]", "id":"user_account"})
+	if entity==None:
+		return errorCodes.PEING_ERROR
+	return entity["value"]
+
 
 #GET /api/v2/me/friends?page=1

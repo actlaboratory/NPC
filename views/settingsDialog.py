@@ -30,6 +30,10 @@ class Dialog(BaseDialog):
 	#	"NVDA": "NVDA",
 	#	"JAWS": "JAWS for Windows"
 	#}
+	loginTypeSelection = {
+		str(constants.LOGIN_PEING):"PeingID",
+		str(constants.LOGIN_TWITTER):"TwitterID"
+	}
 	logLevelSelection = {
 		"50":"CRITICAL",
 		"40":"ERROR",
@@ -71,15 +75,23 @@ class Dialog(BaseDialog):
 		creator=views.ViewCreator.ViewCreator(self.viewMode,self.tab,None,views.ViewCreator.GridBagSizer,label=_("一般"),style=wx.ALL|wx.EXPAND,proportion=1,margin=20)
 		self.autoreload = creator.checkbox(_("起動時に最新の情報を取得する"))
 		creator.GetSizer().SetItemSpan(self.autoreload.GetParent(),2)
-		self.id,dummy = creator.inputbox("peing &ID",sizerFlag=wx.EXPAND)
+		self.keepFilter = creator.checkbox(_("次回起動時にフィルタの状況を維持"))
+		creator.GetSizer().SetItemSpan(self.keepFilter.GetParent(),2)
+		self.logLevel,dummy = creator.combobox(_("ログ記録レベル(&L)"),list(self.logLevelSelection.values()))
+		#self.reader, static = creator.combobox(_("出力先(&O)"), list(self.readerSelection.values()))
+
+		# login
+		creator=views.ViewCreator.ViewCreator(self.viewMode,self.tab,None,views.ViewCreator.GridBagSizer,label=_("ログイン"),style=wx.ALL,margin=20)
+		self.loginType,dummy = creator.combobox(_("利用するIDの種類"),list(self.loginTypeSelection.values()))
+		self.id,dummy = creator.inputbox("&ID",sizerFlag=wx.EXPAND)
 		self.id.hideScrollBar(wx.HORIZONTAL)
 		self.password,dummy = creator.inputbox(_("パスワード(&P)"),x=400,style=wx.TE_PASSWORD,sizerFlag=wx.EXPAND)
 		self.password.hideScrollBar(wx.HORIZONTAL)
 		self.loginAlways = creator.checkbox(_("ログインした状態で質問する"))
 		creator.GetSizer().SetItemSpan(self.loginAlways.GetParent(),2)
 
-		self.logLevel,dummy = creator.combobox(_("ログ記録レベル(&L)"),list(self.logLevelSelection.values()))
-		#self.reader, static = creator.combobox(_("出力先(&O)"), list(self.readerSelection.values()))
+
+
 
 		# view
 		creator=views.ViewCreator.ViewCreator(self.viewMode,self.tab,None,views.ViewCreator.GridBagSizer,label=_("表示/言語"),style=wx.ALL,margin=20)
@@ -103,11 +115,15 @@ class Dialog(BaseDialog):
 	def load(self):
 		# general
 		self._setValue(self.autoreload,"general","auto_reload",configType.BOOL)
+		self._setValue(self.keepFilter,"general","keep_filter",configType.BOOL)
 		#self._setValue(self.reader,"speech","reader",configType.DIC,self.readerSelection)
+		self._setValue(self.logLevel,"general","log_level",configType.DIC,self.logLevelSelection)
+
+		# login
+		self._setValue(self.loginType,"account","id_type",configType.DIC,self.loginTypeSelection,constants.LOGIN_PEING)
 		self._setValue(self.id,"account","id",configType.STRING,"")
 		self._setValue(self.password,"account","password",configType.STRING,"")
 		self._setValue(self.loginAlways,"account","use_always",configType.BOOL,False)
-		self._setValue(self.logLevel,"general","log_level",configType.DIC,self.logLevelSelection)
 
 		# view
 		self._setValue(self.language,"general","language",configType.DIC,self.languageSelection)

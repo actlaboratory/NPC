@@ -27,12 +27,14 @@ dic={
 	"FILTER_AUTO_QUESTION":_("運営からの質問を非表示(&M)"),
 	"FILTER_BATON":_("バトン質問を非表示(&B)"),
 	"FILTER_USER":_("選択中ユーザのみ表示(&U)"),
+	"FILTER_SEARCH":_("指定条件で検索して表示(&S)"),
+	"FILTER_CLEAR":_("すべてのフィルタを解除(&C)"),
 
 	"ACCOUNT_ANSWER":_("届いている質問に回答"),
 	"ACCOUNT_ARCHIVED":_("アーカイブ済みの質問を表示"),
 	"ACCOUNT_SENT_LIST":_("送信した質問を表示"),
 	#"ACCOUNT_ADD_FOLLOWEES":_("アカウントのフォロイーから一括登録"),
-
+	"ACCOUNT_SETTINGS":_("アカウント設定"),
 
 	"OPTION_OPTION":_("設定(&S)")+"...",
 	"OPTION_KEY_CONFIG":_("ショートカットキーの設定(&K)")+"...",
@@ -40,4 +42,12 @@ dic={
 
 	"HELP_UPDATE":_("最新バージョンを確認(&U)")+"...",
 	"HELP_VERSIONINFO":_("バージョン情報(&V)")+"...",
+
+
+	#ユーザ一覧
+	"DETAIL":_("詳細"),
+	"FILTER":_("このユーザのみ表示"),
+	"ASK":_("質問を投稿(&Q)"),
+	"DELETE":_("削除"),
+	"REORDER":_("列の並び替え(&R)"),
 }

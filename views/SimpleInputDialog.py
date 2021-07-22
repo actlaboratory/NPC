@@ -1,7 +1,7 @@
 ﻿# -*- coding: utf-8 -*-
-#Symple imput dialog view
-#Copyright (C) 2019-2020 yamahubuki <itiro.ishino@gmail.com>
-#Note: All comments except these top lines will be written in Japanese. 
+# Simple input dialog view
+# Copyright (C) 2019-2020 yamahubuki <itiro.ishino@gmail.com>
+# Note: All comments except these top lines will be written in Japanese. 
 
 import re
 import wx
@@ -13,7 +13,7 @@ from views.baseDialog import *
 
 class Dialog(BaseDialog):
 	def __init__(self,title,detail,parent=None,validationPattern=None):
-		super().__init__("SympleImputDialog")
+		super().__init__("SimpleInputDialog")
 		self.title=title
 		self.detail=detail
 		if parent!=None:
@@ -21,7 +21,6 @@ class Dialog(BaseDialog):
 		else:
 			self.parent=self.app.hMainView.hFrame
 		self.validationPattern = validationPattern
-
 
 	def Initialize(self):
 		self.log.debug("created")
@@ -32,7 +31,7 @@ class Dialog(BaseDialog):
 
 	def InstallControls(self):
 		"""いろんなwidgetを設置する。"""
-		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.VERTICAL,20,style=wx.ALL,margin=20)
+		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.VERTICAL,20,style=wx.ALL|wx.EXPAND,margin=20)
 		self.edit,self.static=self.creator.inputbox(self.detail,x=-1,style=wx.BORDER_RAISED|wx.TE_DONTWRAP,sizerFlag=wx.EXPAND)
 		self.edit.hideScrollBar(wx.HORIZONTAL)
 

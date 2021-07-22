@@ -9,7 +9,7 @@ import errorCodes
 import filter
 import simpleDialog
 import views.ViewCreator
-import views.SimpleImputDialog
+import views.SimpleInputDialog
 
 from views.baseDialog import *
 
@@ -47,7 +47,7 @@ class Dialog(BaseDialog):
 		elif self.type == constants.ARCHIVED:
 			self.archiveButton = self.creator.button(_("元に戻す"), self.recycle)
 		self.creator=views.ViewCreator.ViewCreator(self.viewMode,self.panel,self.sizer,wx.HORIZONTAL,0,"",wx.ALL|wx.ALIGN_RIGHT|wx.RIGHT,margin=20)
-		self.bOk=self.creator.okbutton(_("閉じる(&C)"), self.close)
+		self.bOk=self.creator.closebutton(_("閉じる(&C)"), self.close)
 
 		self.onItemSelected()
 
@@ -69,10 +69,6 @@ class Dialog(BaseDialog):
 		self.archiveButton.Enable(selected >= 0)
 
 	def load(self):
-		ret = self.service.login(self.app.config.getstring("account","id"),self.app.config.getstring("account","password"))
-		if ret != errorCodes.OK:
-			self.log.error("login failed")
-			return ret
 		if self.type == constants.RECEIVED:
 			qList = self.service.getReceivedItemList()
 		elif self.type == constants.ARCHIVED:
@@ -88,7 +84,7 @@ class Dialog(BaseDialog):
 
 	def answer(self,event):
 		q = self.lst[self.hListCtrl.GetFocusedItem()].question
-		d = views.SimpleImputDialog.Dialog(_("回答の入力"),q,self.wnd)
+		d = views.SimpleInputDialog.Dialog(_("回答の入力"),q,self.wnd)
 		d.Initialize()
 		if d.Show()==wx.ID_CANCEL:
 			return

@@ -21,15 +21,17 @@ import twitterService
 
 from .base import *
 from simpleDialog import *
+from views import accountSettingsDialog
 from views import answerDialog
 from views import candidateUserListDialog
 from views import detailDialog
 from views import globalKeyConfig
 from views import listConfigurationDialog
 from views import progress
+from views import searchConditionDialog
 from views import sentQuestionDialog
 from views import settingsDialog
-from views import SimpleImputDialog
+from views import SimpleInputDialog
 from views import userDetailDialog
 from views import userListDialog
 from views import versionDialog
@@ -69,6 +71,9 @@ class MainView(BaseView):
 		self.lst.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.events.listSelectEvent)
 		self.events.listSelectEvent()		#最初に１度実行し、未選択状態をメニューに反映
 
+		self.hFrame.Bind(wx.EVT_MENU_OPEN, self.events.OnMenuOpen)
+
+
 		self.refresh()
 
 	#DBの内容でビューを更新する
@@ -101,7 +106,7 @@ class MainView(BaseView):
 	#表示情報タプルiを基に、有効になっているフィルタにかけた結果、表示すべきか否かを判断して返す
 	def testFilter(self,i):
 		for f in filter.getFilterList():
-			if not f.test(userId=i[6],answerFlag=i[5]):
+			if not f.test(userId=i[6],answerFlag=i[5],q=i[2],a=i[3]):
 				return False
 		return True
 
@@ -134,7 +139,7 @@ class Menu(BaseMenu):
 			"FILE_EXIT",
 		])
 
-		self.RegisterCheckMenuCommand(self.hOptionMenu,[
+		self.RegisterMenuCommand(self.hOptionMenu,[
 			"OPTION_OPTION",
 			"OPTION_LIST_CONFIG",
 			"OPTION_KEY_CONFIG",
@@ -146,6 +151,10 @@ class Menu(BaseMenu):
 			"FILTER_AUTO_QUESTION",
 			"FILTER_BATON",
 			"FILTER_USER",
+			"FILTER_SEARCH",
+		])
+		self.RegisterMenuCommand(self.hFilterMenu,[
+			"FILTER_CLEAR",
 		])
 
 		#アカウントメニューの中身
@@ -153,6 +162,7 @@ class Menu(BaseMenu):
 			"ACCOUNT_ANSWER",
 			"ACCOUNT_ARCHIVED",
 			"ACCOUNT_SENT_LIST",
+			"ACCOUNT_SETTINGS",
 		])
 
 		#ヘルプメニューの中身
@@ -180,13 +190,15 @@ class Events(BaseEvents):
 		selected=event.GetId()#メニュー識別しの数値が出る
 
 		if selected==menuItemsStore.getRef("FILE_ADD_USER"):
-			d = SimpleImputDialog.Dialog(_("ユーザの追加"),_("peingページURLまたはTwitterユーザ名"))
+			d = SimpleInputDialog.Dialog(_("ユーザの追加"),_("peingページURLまたはTwitterユーザ名"))
 			d.Initialize()
 			r = d.Show()
 			if r==wx.ID_CANCEL:
 				return
 			# peingではユーザ名は小文字固定で大文字はエラーとなるため対策
 			prm = re.sub("https://peing.net/[^/]+/","", d.GetValue().lower())
+			#先頭の@はいらないので対策。入力時はあってもなくても良い
+			prm = re.sub("@?(.*)","\\1", prm)
 
 			self.log.debug("add user: %s" % prm)
 			if self.parent.service.isUserRegistered(prm)==True:
@@ -263,15 +275,14 @@ class Events(BaseEvents):
 			users = self.parent.service.getUserList()
 			d = userListDialog.Dialog(users,self.parent.service)
 			d.Initialize()
-			if d.Show()==constants.SET_FILTER:
-				self.log.debug("set userFilter from userListDialog")
-				self.parent.menu.CheckMenu("FILTER_USER",True)
+			d.Show()
 			self.parent.refresh()
 
 		if selected==menuItemsStore.getRef("FILE_ADD_USER_FROM_TWITTER_FOLLOW_LIST"):
 			self.log.debug("addListFromTwitterUser:start")
-			d=progress.Dialog(progress.MODE_NO_GAUGE)
+			d=progress.Dialog()
 			d.Initialize(_("Twitterアカウントの認証のため、ブラウザの操作を待っています。")+"...",_("Twitterのフォローリストから一括登録"))
+			d.gauge.Hide()
 			d.Show(modal=False)
 			self.parent.hFrame.Disable()
 
@@ -283,7 +294,7 @@ class Events(BaseEvents):
 				d.Destroy()
 				return
 
-			d2 = SimpleImputDialog.Dialog(_("対象ユーザの指定"),_("フォロー中のユーザを取得するアカウントの@からはじまるアカウント名を入力してください。\n後悔アカウント、認証に用いたアカウント、\nまたは認証に用いたアカウントがフォローしている非公開アカウントを指定できます。"),d.wnd,"^(@?[a-zA-Z0-9_]*)$")
+			d2 = SimpleInputDialog.Dialog(_("対象ユーザの指定"),_("フォロー中のユーザを取得するアカウントの@からはじまるアカウント名を入力してください。\n後悔アカウント、認証に用いたアカウント、\nまたは認証に用いたアカウントがフォローしている非公開アカウントを指定できます。"),d.wnd,"^(@?[a-zA-Z0-9_]*)$")
 			d2.Initialize()
 			r = d2.Show()
 			if r==wx.ID_CANCEL:
@@ -320,14 +331,20 @@ class Events(BaseEvents):
 				users.add(user.account.lower())
 			target = follows - users
 
-			d.update(label=_("Peingへの登録状況を調べています。")+"...")
+			d.update(label=_("Peingへの登録状況を調べています。")+"...",max=len(target))
+			d.gauge.Show()
+			d.panel.Layout()
+			d.sizer.Fit(d.wnd)
 			result = []
-			for account in target:
+			for i,account in enumerate(target):
+				d.update(i)
 				wx.YieldIfNeeded()
 				info = self.parent.service.getUserInfo(account)
-				if info == errorCodes.NOT_FOUND:
+				if not d.isOk():
+					break
+				elif info == errorCodes.NOT_FOUND:
 					continue
-				if info == errorCodes.PEING_ERROR:
+				elif info == errorCodes.PEING_ERROR:
 					dialog(_("通信エラー"),_("Peingとの通信でエラーが発生しました。インターネット接続を確認し、しばらくたってから再度お試しください。状況が改善しない場合は、Twitterでのフォロー数が多すぎる可能性があります。\n\nこのメッセージを閉じた後、もしもこのエラー発生時までに取得できたアカウントがあれば一覧が表示されます。"),self.parent.hFrame)
 					break
 				result.append(info)
@@ -348,8 +365,11 @@ class Events(BaseEvents):
 
 			#登録
 			if len(d2.GetValue())>0:
-				for user in d2.GetValue():
+				d.update(0,_("指定されたユーザを登録しています。"),len(d2.GetValue()))
+				for i,user in enumerate(d2.GetValue()):
 					self.parent.service.addUser(user)
+					d.update(i)
+					wx.YieldIfNeeded()
 				dialog(_("登録完了"),_("ユーザの一括登録に成功しました。今回登録したユーザの回答を表示するには、ビューを再読み込みしてください。"),d.wnd)
 
 			self.parent.hFrame.Enable()
@@ -377,14 +397,35 @@ class Events(BaseEvents):
 			event.Skip()
 
 		if selected==menuItemsStore.getRef("FILTER_USER"):
-			index = self.parent.lst.GetFirstSelected()
-			target = self.parent.service.getAnswer(self.parent.answerIdList[index]).user
 			if event.IsChecked():
+				index = self.parent.lst.GetFirstSelected()
+				target = self.parent.service.getAnswer(self.parent.answerIdList[index]).user
 				self.log.debug("set userFilter = "+str(target.id))
 				filter.UserFilter(target).enable(event.IsChecked())
 			else:
-				self.log.debug("set battonFilter = "+str(event.IsChecked()))
+				self.log.debug("set userFilter = "+str(event.IsChecked()))
 				filter.UserFilter().enable(event.IsChecked())
+			self.parent.refresh()
+			event.Skip()
+
+		if selected==menuItemsStore.getRef("FILTER_SEARCH"):
+			if event.IsChecked():
+				d = views.searchConditionDialog.Dialog()
+				d.Initialize()
+				if d.Show() == wx.ID_CANCEL:
+					return
+				self.log.debug("set searchFilter = "+str(d.GetValue()))
+				filter.SearchFilter(*d.GetValue()).enable(event.IsChecked())
+			else:
+				self.log.debug("set searchFilter = "+str(event.IsChecked()))
+				filter.SearchFilter().enable(event.IsChecked())
+			self.parent.refresh()
+			event.Skip()
+
+		if selected == menuItemsStore.getRef("FILTER_CLEAR"):
+			self.log.debug("Clear Filter")
+			for f in filter.getFilterList():
+				f.enable(False)
 			self.parent.refresh()
 			event.Skip()
 
@@ -395,7 +436,7 @@ class Events(BaseEvents):
 			if d.Initialize()==errorCodes.OK:
 				d.Show()
 			else:
-				errorDialog(_("ログインまたは質問の取得に失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+				errorDialog(_("質問の取得に失敗しました。以下の対処をお試しください。\n\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
 
 		if selected == menuItemsStore.getRef("ACCOUNT_ARCHIVED"):
 			if not self.loginCheck():
@@ -404,7 +445,7 @@ class Events(BaseEvents):
 			if d.Initialize()==errorCodes.OK:
 				d.Show()
 			else:
-				errorDialog(_("ログインまたは質問の取得に失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+				errorDialog(_("質問の取得に失敗しました。以下の対処をお試しください。\n\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
 
 		if selected == menuItemsStore.getRef("ACCOUNT_SENT_LIST"):
 			if not self.loginCheck():
@@ -413,7 +454,23 @@ class Events(BaseEvents):
 			if d.Initialize()==errorCodes.OK:
 				d.Show()
 			else:
-				errorDialog(_("ログインまたは質問の取得に失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+				errorDialog(_("質問の取得に失敗しました。以下の対処をお試しください。\n\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+
+		if selected == menuItemsStore.getRef("ACCOUNT_SETTINGS"):
+			if not self.loginCheck():
+				return
+			d = accountSettingsDialog.Dialog(self.parent.service)
+			if d.Initialize()==errorCodes.OK:
+				if d.Show()==wx.ID_CANCEL:
+					return
+			else:
+				errorDialog(_("ログインまたはアカウント設定の取得に失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+				return
+			ret = self.parent.service.setProfile(d.GetValue())
+			if ret == errorCodes.OK:
+				dialog(_("設定完了"),_("設定しました。"))
+			else:
+				self.showError(ret)
 
 		if selected == menuItemsStore.getRef("OPTION_OPTION"):
 			d = settingsDialog.Dialog()
@@ -466,6 +523,19 @@ class Events(BaseEvents):
 			"FILTER_USER",
 		], enable)
 
+		self.parent.menu.EnableMenu([
+			"FILTER_CLEAR",
+		], (filter.getFilterList()))
+
+	def OnMenuOpen(self,event):
+		menuObject = event.GetEventObject()
+		if event.GetMenu()==self.parent.menu.hFilterMenu:
+			menuObject.Check(menuItemsStore.getRef("FILTER_AUTO_QUESTION"),filter.AutoQuestionFilter().isEnable())
+			menuObject.Check(menuItemsStore.getRef("FILTER_BATON"),filter.BatonFilter().isEnable())
+			menuObject.Check(menuItemsStore.getRef("FILTER_USER"),filter.UserFilter().isEnable())
+			menuObject.Check(menuItemsStore.getRef("FILTER_SEARCH"),filter.SearchFilter().isEnable())
+
+
 	def reload(self):
 		self.log.debug("reload:start")
 		d=progress.Dialog()
@@ -476,7 +546,7 @@ class Events(BaseEvents):
 
 		users = self.parent.service.getEnableUserList()
 		for i,user in enumerate(users):
-			d.update(None,user.getViewString())
+			d.update(None,"%d / %d " % (i+1,len(users)) + user.getViewString())
 			info = self.parent.service.getUserInfo(user.account)
 			if info==errorCodes.NOT_FOUND:
 				d.update(i+1,None,len(users))
@@ -511,13 +581,10 @@ class Events(BaseEvents):
 	def postQuestion(self,target,parent=None):
 		useSession = self.parent.app.config.getboolean("account","use_always",False)
 		if useSession:
-			ret = self.parent.service.login(self.parent.app.config.getstring("account","id"),self.parent.app.config.getstring("account","password"))
-			if ret != errorCodes.OK:
-				self.log.error("login failed")
-				errorDialog(_("ログインに失敗しました。以下の対処をお試しください。\n\n・設定されたアカウント情報が誤っていないか、設定画面から再度ご確認ください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+			if not self.loginCheck():
 				return
 
-		d = SimpleImputDialog.Dialog(_("質問を投稿"),_("%sさんへの質問内容") % target.getViewString(), parent)
+		d = SimpleInputDialog.Dialog(_("質問を投稿"),_("%sさんへの質問内容") % target.getViewString(), parent)
 		d.Initialize()
 		r = d.Show()
 		if r==wx.ID_CANCEL:
@@ -543,22 +610,29 @@ class Events(BaseEvents):
 
 		if code!=errorCodes.OK:
 			self.log.warning("show error:%d" % code)
-		if code==errorCodes.OK:
-			return
-		elif code==errorCodes.PEING_ERROR or code==errorCodes.NOT_FOUND:
+		if code==errorCodes.PEING_ERROR or code==errorCodes.NOT_FOUND:
 			errorDialog(_("指定されたユーザが存在しないか、通信に失敗しました。以下の対処をお試しください。\n\n・入力内容が正しいか、再度お確かめください。\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),parent)
 		elif code==errorCodes.TWITTER_ERROR:
 			errorDialog(_("Twitterとの通信でエラーが発生しました。指定したユーザ名が間違っているか、インターネット接続に問題が発生した可能性があります。"),parent)
-		else:
+		elif code==errorCodes.LOGIN_WRONG_PASSWORD:
+			errorDialog(_("ログインに失敗しました。設定されたアカウント情報に誤りがあります。\n\n・設定内容が正しいか、設定したものと同じ情報でブラウザからログインできるかを再度確認してください。\n・ブラウザから正しくログインできる場合には、サイトの仕様変更が考えられます。このメッセージと使用したIDの種類を添えて開発者までお問い合わせください。\n"),parent)
+		elif code==errorCodes.LOGIN_CONFIRM_NEEDED:
+			errorDialog(_("ログインに失敗しました。ログインに際して権限の認可が要求されています。同じIDでブラウザからログインした後、再度お試しください。"),parent)
+		elif code==errorCodes.LOGIN_PEING_ERROR:
+			errorDialog(_("ログインに失敗しました。Peingのサーバやお使いのインターネット接続に障害が発生している可能性があります。ブラウザから同じIDでログインできるか確認してください。\nブラウザから正常にログインできる場合には、サイトの仕様変更が考えられますので、このメッセージと利用したIDの種類を添えて開発者までお問い合わせください。"),parent)
+		elif code==errorCodes.LOGIN_TWITTER_ERROR:
+			errorDialog(_("ログインに失敗しました。Twitterのサーバやお使いのインターネット接続に障害が発生している可能性があります。ブラウザから同じIDでログインできるか確認してください。\nブラウザから正常にログインできる場合には、サイトの仕様変更が考えられますので、このメッセージと利用したIDの種類を添えて開発者までお問い合わせください。"),parent)
+		elif code==errorCodes.LOGIN_UNKNOWN_ERROR:
+			errorDialog(_("不明なエラーの為、ログインに失敗しました。サイトの仕様変更や、お使いのインターネット接続の障害が考えられます。まずは、ブラウザから同じIDでログインできるか確認してください。\nブラウザから正常にログインできる場合には、サイトの仕様変更が考えられますので、このメッセージと利用したIDの種類を添えて開発者までお問い合わせください。"),parent)
+		elif code==errorCodes.LOGIN_RECAPTCHA_NEEDED:
+			errorDialog(_("ログインに失敗しました。ログインに際してRECAPTCHA(ロボットでないことの確認)が要求されています。同じIDでブラウザからログインした後、再度お試しください。"),parent)
+		elif code != errorCodes.OK:
 			errorDialog(_("不明なエラー%(code)dが発生しました。大変お手数ですが、本ソフトの実行ファイルのあるディレクトリに生成された%(log)sを添付し、作者までご連絡ください。") %{"code":code,"log":constants.LOG_FILE_NAME},parent)
 		return
 
-	def Exit(self,event=None):
+	def Exit(self):
 		self.parent.lst.saveColumnInfo()
 		super().Exit(event)
-
-
-
 
 	def setKeymap(self, identifier,ttl, keymap=None,filter=None):
 		if keymap:
@@ -598,10 +672,21 @@ class Events(BaseEvents):
 		newMap.write()
 		return True
 
-	#ログイン情報が設定されているか調べる
-	#値が入っているかどうかのみの確認であり、有効性の確認はしない
+	# ログイン状態を確認し、必要ならログインする
 	def loginCheck(self):
 		ret = self.parent.app.config.getstring("account","id")!="" and self.parent.app.config.getstring("account","password")!=""
 		if not ret:
 			errorDialog(_("この機能を利用するには、ログインが必要です。\n[オプション]→[設定]にて、アカウント情報を設定してください。詳細は、readme.txtをご確認ください。"))
-		return ret
+			return False
+
+		ret = self.parent.service.login(
+			self.parent.app.config.getint("account","id_type",constants.LOGIN_PEING,0,1),
+			self.parent.app.config.getstring("account","id"),
+			self.parent.app.config.getstring("account","password")
+		)
+		if ret != errorCodes.OK:
+			self.log.error("login failed")
+			self.showError(ret)
+			return False
+		return True
+
