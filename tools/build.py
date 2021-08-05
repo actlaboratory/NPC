@@ -46,8 +46,6 @@ class build:
 			pyinstaller_path = r"D:\Dev\python38\Scripts\pyinstaller.exe"
 		else:
 			pyinstaller_path = "%PYTHON%\\Scripts\\pyinstaller.exe"
-		#@@@
-		pyinstaller_path = r"D:\python\WPy-3710b1\python-3.7.1rc1\Scripts\pyinstaller.exe"
 		print("pyinstaller_path=%s" % pyinstaller_path)
 		hooks_path = os.path.join(PyInstaller.__path__[0], "hooks/")
 		print("hooks_path is %s" % (hooks_path))
@@ -98,8 +96,6 @@ class build:
 			shutil.rmtree("build\\")
 
 	def makeSnapshotVersionNumber(self):
-		#@@@
-		os.environ["APPVEYOR_REPO_COMMIT_TIMESTAMP"]="2021-09-10T13:15:50+09:00"
 		dt = datetime.datetime.fromisoformat(os.environ["APPVEYOR_REPO_COMMIT_TIMESTAMP"])
 		major = str(dt.year)[2:4]+str(dt.month).zfill(2)
 		minor = str(dt.day)
