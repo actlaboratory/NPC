@@ -99,7 +99,7 @@ class build:
 		#日本標準時オブジェクト
 		JST = datetime.timezone(datetime.timedelta(hours=+9))
 		#Pythonは世界標準時のZに対応していないので文字列処理で乗り切り、それを日本標準時に変換
-		dt = datetime.datetime.fromisoformat(os.environ["APPVEYOR_REPO_COMMIT_TIMESTAMP"][0:19]+"+00:00")astimezone(JST)
+		dt = datetime.datetime.fromisoformat(os.environ["APPVEYOR_REPO_COMMIT_TIMESTAMP"][0:19]+"+00:00").astimezone(JST)
 		major = str(dt.year)[2:4]+str(dt.month).zfill(2)
 		minor = str(dt.day)
 		patch = str(int(math.floor((dt.hour*3600+dt.minute*60+dt.second)/86400*1000)))
