@@ -4,6 +4,9 @@
 #Copyright (C) 2019-2020 guredora <contact@guredora.com>
 #Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
 
+#import‘O‚É•K—v
+sys.path.append(os.getcwd())
+
 import datetime
 import glob
 import hashlib
@@ -197,5 +200,4 @@ class build:
 			json.dump(info, f)
 
 if __name__ == "__main__":
-	sys.path.append(os.getcwd())
 	build()
