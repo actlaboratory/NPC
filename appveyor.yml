@@ -8,7 +8,7 @@ skip_tags: true
 
 environment:
   githubToken:
-      secure: iNSx8v6c+0TP9IyckinrvNWuX+hc7SKruOqRDl9GxdX59sZ2yqB8+UDAtqdPzKIg
+    secure: iNSx8v6c+0TP9IyckinrvNWuX+hc7SKruOqRDl9GxdX59sZ2yqB8+UDAtqdPzKIg
   SCRIPT_PASSWORD:
     secure: 9RvVUKVQ8MsoG5LOZ86VyFQF19JXXS33tDzomLH/jZM=
   matrix:
@@ -69,4 +69,5 @@ deploy:
       branch: master                 # release from master branch only
 
 after_deploy:
+  - cmd: print "https://actlab.org/api/addAlphaVersion?repo_name=%APPVEYOR_REPO_NAME%&commit_hash=%APPVEYOR_REPO_COMMIT_HASH%"
   - cmd: curl "https://actlab.org/api/addAlphaVersion?repo_name=%APPVEYOR_REPO_NAME%&commit_hash=%APPVEYOR_REPO_COMMIT_HASH%&password=%SCRIPT_PASSWORD%"
