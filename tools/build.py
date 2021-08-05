@@ -4,7 +4,8 @@
 #Copyright (C) 2019-2020 guredora <contact@guredora.com>
 #Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
 
-#import前に必要
+#constantsのimport前に必要
+import sys
 sys.path.append(os.getcwd())
 
 import datetime
@@ -16,7 +17,6 @@ import os
 import PyInstaller
 import shutil
 import subprocess
-import sys
 import urllib.request
 import zipfile
 
