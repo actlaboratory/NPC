@@ -52,6 +52,7 @@ after_test:
 
 artifacts:
   - path: NPC-*.zip
+  - path: NPC-*.json
 
 deploy:
   - provider: GitHub
@@ -61,8 +62,11 @@ deploy:
     description: 'automatic build from master branch'
     auth_token:
       secure: iNSx8v6c+0TP9IyckinrvNWuX+hc7SKruOqRDl9GxdX59sZ2yqB8+UDAtqdPzKIg
-    artifact: NPC-snapshot.zip                # upload all NuGet packages to release assets
+    artifact: /(NPC-.*\.zip)|(NPC-.*\.json)/                # upload all NuGet packages to release assets
     draft: false
     prerelease: false
     on:
       branch: master                 # release from master branch only
+
+after_deploy:
+  - cmd: curl "https://actlab.org/api/addAlphaVersion?repo_name=%APPVEYOR_REPO_NAME%&commit_hash=%APPVEYOR_REPO_COMMIT_HASH%&password=%SCRIPT_PASSWORD%"
