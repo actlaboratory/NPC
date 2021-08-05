@@ -5,6 +5,7 @@
 #Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
 
 #constants‚Ìimport‘O‚É•K—v
+import os
 import sys
 sys.path.append(os.getcwd())
 
@@ -13,7 +14,6 @@ import glob
 import hashlib
 import json
 import math
-import os
 import PyInstaller
 import shutil
 import subprocess
