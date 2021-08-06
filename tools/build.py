@@ -109,7 +109,7 @@ class build:
 		bumpup.bumpup(major+"."+minor+"."+patch, str(dt.date()))
 
 	def makeVersionInfo(self):
-		print("making version info... version=".constants.APP_VERSION)
+		print("making version info... version="+constants.APP_VERSION)
 		with open("tools/baseVersionInfo.txt", mode = "r") as f:
 			version_text = f.read()
 		version_text = version_text.replace("%FILE_VERSION%", constants.APP_VERSION.replace(".", ","))
