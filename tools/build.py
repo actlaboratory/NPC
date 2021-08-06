@@ -75,6 +75,7 @@ class build:
 			if constants.UPDATER_URL is not None:
 				self.addUpdater(archive_name)
 			self.makePackageInfo(archive_name, patch_name, build_filename)
+			os.environ["BUILD_VERSION"]=constants.APP_VERSION
 		print("Build finished!")
 
 
@@ -108,7 +109,7 @@ class build:
 		bumpup.bumpup(major+"."+minor+"."+patch, str(dt.date()))
 
 	def makeVersionInfo(self):
-		print("making version info...")
+		print("making version info... version=".constants.APP_VERSION)
 		with open("tools/baseVersionInfo.txt", mode = "r") as f:
 			version_text = f.read()
 		version_text = version_text.replace("%FILE_VERSION%", constants.APP_VERSION.replace(".", ","))
