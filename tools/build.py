@@ -75,15 +75,12 @@ class build:
 			if constants.UPDATER_URL is not None:
 				self.addUpdater(archive_name)
 			self.makePackageInfo(archive_name, patch_name, build_filename)
-			os.environ["BUILD_VERSION"]=constants.APP_VERSION
 		print("Build finished!")
-
 
 	def runcmd(self,cmd):
 		proc=subprocess.Popen(cmd.split(), shell=True, stdout=1, stderr=2)
 		proc.communicate()
 		return proc.poll()
-
 
 	def setAppVeyor(self):
 		if len(sys.argv)>=2 and sys.argv[1]=="--appveyor":
@@ -132,7 +129,7 @@ class build:
 		if constants.APP_ICON == None:
 			ret = self.runcmd("%s --windowed --log-level=ERROR --version-file=version.txt %s" % (pyinstaller_path, constants.STARTUP_FILE))
 		else:
-			ret = runcmd("%s --windowed --log-level=ERROR --version-file=version.txt --icon=%s %s" % (pyinstaller_path, constants.APP_ICON, constants.STARTUP_FILE))
+			ret = self.runcmd("%s --windowed --log-level=ERROR --version-file=version.txt --icon=%s %s" % (pyinstaller_path, constants.APP_ICON, constants.STARTUP_FILE))
 		print("build finished with status %d" % ret)
 		if ret != 0:
 			sys.exit(ret)
@@ -186,8 +183,7 @@ class build:
 		package_hash = hashlib.sha1(content).hexdigest()
 		if constants.BASE_PACKAGE_URL is not None:
 			with open(patch_name+".zip", mode = "rb") as f:
-				content = f.read()
-				patch_hash = hashlib.sha1(content).hexdigest()
+				patch_hash = hashlib.sha1(f.read()).hexdigest()
 		else:
 			patch_hash = None
 		print("creating package info...")
@@ -198,6 +194,7 @@ class build:
 		info["released_date"] = constants.APP_LAST_RELEASE_DATE
 		with open("%s-%s_info.json" % (constants.APP_NAME, build_filename), mode = "w") as f:
 			json.dump(info, f)
+
 
 if __name__ == "__main__":
 	build()
