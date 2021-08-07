@@ -20,6 +20,10 @@ environment:
 
     - PYTHON: "C:\\Python38"
 
+cache:
+  - "C:\\Python38\\Scripts"
+  - "C:\\Python38\\lib"
+
 install:
   # We need wheel installed to build wheels
   - "%PYTHON%\\python.exe -m pip install -r requirements.txt"
@@ -48,8 +52,6 @@ after_test:
   - cmd: git tag NPC-latestcommit
   - cmd: git push https://actlab-auto:%githubToken%@github.com/actlaboratory/NPC.git NPC-latestcommit
 
-
-
 artifacts:
   - path: NPC-*.zip
   - path: NPC-*.json
@@ -69,4 +71,4 @@ deploy:
       branch: master                 # release from master branch only
 
 after_deploy:
-  - cmd: curl "https://actlab.org/api/addAlphaVersion?repo_name=%APPVEYOR_REPO_NAME%&commit_hash=%APPVEYOR_REPO_COMMIT%&version=%BUILD_VERSION%&password=%SCRIPT_PASSWORD%"
+  - cmd: echo import constants;print("https://actlab.org/api/addAlphaVersion?repo_name=%APPVEYOR_REPO_NAME%&commit_hash=%APPVEYOR_REPO_COMMIT%&version="+constants.APP_VERSION+"&password=%SCRIPT_PASSWORD%") | python | xargs -n1 curl
