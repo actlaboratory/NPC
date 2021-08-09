@@ -43,7 +43,7 @@ class build:
 
 		# pyinstaller‚ÌƒpƒX‚ðŒˆ’è
 		if not appveyor:
-			pyinstaller_path = r"D:\Dev\python38\Scripts\pyinstaller.exe"
+			pyinstaller_path = "pyinstaller.exe"
 		else:
 			pyinstaller_path = "%PYTHON%\\Scripts\\pyinstaller.exe"
 		print("pyinstaller_path=%s" % pyinstaller_path)
@@ -179,8 +179,7 @@ class build:
 	def makePackageInfo(self, archive_name, patch_name, build_filename):
 		print("computing hash...")
 		with open(archive_name, mode = "rb") as f:
-			content = f.read()
-		package_hash = hashlib.sha1(content).hexdigest()
+			package_hash = hashlib.sha1(f.read()).hexdigest()
 		if constants.BASE_PACKAGE_URL is not None:
 			with open(patch_name+".zip", mode = "rb") as f:
 				patch_hash = hashlib.sha1(f.read()).hexdigest()
