@@ -3,8 +3,9 @@
 #Copyright (C) 2019 Yukio Nozawa <personal@nyanchangames.com>
 #Copyright (C) 2019-2020 guredora <contact@guredora.com>
 #Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
+#Copyright (C) 2021 Hiroki Fujii <hfujii@hisystron.com>
 
-#constants‚Ìimport‘O‚É•K—v
+#constantsã®importå‰ã«å¿…è¦
 import os
 import sys
 sys.path.append(os.getcwd())
@@ -29,11 +30,11 @@ from tools import bumpup
 
 class build:
 	def __init__(self):
-		# appVeyor‚©‚Ç‚¤‚©‚ğ”»•Ê‚µAˆ—‚ğƒXƒ^[ƒg
+		# appVeyorã‹ã©ã†ã‹ã‚’åˆ¤åˆ¥ã—ã€å‡¦ç†ã‚’ã‚¹ã‚¿ãƒ¼ãƒˆ
 		appveyor = self.setAppVeyor()
 		print("Starting build for %s(appveyor mode=%s)" % (constants.APP_NAME, appveyor))
 
-		# ƒpƒbƒP[ƒW‚ÌƒpƒX‚Æƒtƒ@ƒCƒ‹–¼‚ğŒˆ’è
+		# ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ã®ãƒ‘ã‚¹ã¨ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ±ºå®š
 		package_path = os.path.join("dist", os.path.splitext(os.path.basename(constants.STARTUP_FILE))[0])
 		if 'APPVEYOR_REPO_TAG_NAME' in os.environ:
 			build_filename = os.environ['APPVEYOR_REPO_TAG_NAME']
@@ -41,7 +42,7 @@ class build:
 			build_filename = 'snapshot'
 		print("Will be built as %s" % build_filename)
 
-		# pyinstaller‚ÌƒpƒX‚ğŒˆ’è
+		# pyinstallerã®ãƒ‘ã‚¹ã‚’æ±ºå®š
 		if not appveyor:
 			pyinstaller_path = "pyinstaller.exe"
 		else:
@@ -50,24 +51,24 @@ class build:
 		hooks_path = os.path.join(PyInstaller.__path__[0], "hooks/")
 		print("hooks_path is %s" % (hooks_path))
 
-		# localeƒtƒHƒ‹ƒ_‚Ì‘¶İ‚ğŠm”F
+		# localeãƒ•ã‚©ãƒ«ãƒ€ã®å­˜åœ¨ã‚’ç¢ºèª
 		if not os.path.exists("locale"):
 			print("Error: no locale folder found. Your working directory must be the root of the project. You shouldn't cd to tools and run this script.")
 			exit(-1)
 
-		# ‘O‚Ìƒrƒ‹ƒh‚ğƒNƒŠ[ƒ“ƒAƒbƒv
+		# å‰ã®ãƒ“ãƒ«ãƒ‰ã‚’ã‚¯ãƒªãƒ¼ãƒ³ã‚¢ãƒƒãƒ—
 		self.creen(package_path)
 
-		# appveyor‚Å‚ÌƒXƒiƒbƒvƒVƒ‡ƒbƒg‚Ìê‡‚Íƒo[ƒWƒ‡ƒ“”Ô†‚ğˆê“I‚É‘‚«Š·‚¦
+		# appveyorã§ã®ã‚¹ãƒŠãƒƒãƒ—ã‚·ãƒ§ãƒƒãƒˆã®å ´åˆã¯ãƒãƒ¼ã‚¸ãƒ§ãƒ³ç•ªå·ã‚’ä¸€æ™‚çš„ã«æ›¸ãæ›ãˆ
 		if build_filename == "snapshot" and appveyor:
 			self.makeSnapshotVersionNumber()
 
-		# ƒrƒ‹ƒh
+		# ãƒ“ãƒ«ãƒ‰
 		self.makeVersionInfo()
 		self.build(pyinstaller_path, hooks_path, package_path, build_filename)
 		archive_name = "%s-%s.zip" % (constants.APP_NAME, build_filename)
 
-		# ƒXƒiƒbƒvƒVƒ‡ƒbƒg‚Å‚È‚¯‚ê‚Î
+		# ã‚¹ãƒŠãƒƒãƒ—ã‚·ãƒ§ãƒƒãƒˆã§ãªã‘ã‚Œã°
 		if build_filename == "snapshot" and not appveyor:
 			print("Skipping batch archiving because this is a local snapshot.")
 		else:
@@ -94,9 +95,9 @@ class build:
 			shutil.rmtree("build\\")
 
 	def makeSnapshotVersionNumber(self):
-		#“ú–{•W€ƒIƒuƒWƒFƒNƒg
+		#æ—¥æœ¬æ¨™æº–æ™‚ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 		JST = datetime.timezone(datetime.timedelta(hours=+9))
-		#Python‚Í¢ŠE•W€‚ÌZ‚É‘Î‰‚µ‚Ä‚¢‚È‚¢‚Ì‚Å•¶š—ñˆ—‚Åæ‚èØ‚èA‚»‚ê‚ğ“ú–{•W€‚É•ÏŠ·
+		#Pythonã¯ä¸–ç•Œæ¨™æº–æ™‚ã®Zã«å¯¾å¿œã—ã¦ã„ãªã„ã®ã§æ–‡å­—åˆ—å‡¦ç†ã§ä¹—ã‚Šåˆ‡ã‚Šã€ãã‚Œã‚’æ—¥æœ¬æ¨™æº–æ™‚ã«å¤‰æ›
 		dt = datetime.datetime.fromisoformat(os.environ["APPVEYOR_REPO_COMMIT_TIMESTAMP"][0:19]+"+00:00").astimezone(JST)
 		major = str(dt.year)[2:4]+str(dt.month).zfill(2)
 		minor = str(dt.day)
