@@ -28,6 +28,7 @@ def getVersion():
 				next[i]=current[i]
 		print("Warning: Unrecognized bumpup option %s." % arg)
 
+	next = current
 	next[2]=str(int(next[2])+1)
 	next=".".join(next)
 	inp=input("Type next version (leave blank to use %s): " % next)
