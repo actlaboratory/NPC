@@ -2,6 +2,7 @@
 #Version setter
 #Copyright (C) 2020 Yukio Nozawa <personal@nyanchangames.com>
 #Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
+#Copyright (C) 2021 Hiroki Fujii <hfujii@hisystron.com>
 
 import datetime
 import json
@@ -65,6 +66,9 @@ def getCurrentVersion():
 		except:
 			print("Unable to parse %s, using default." % VERSION_FILE_NAME)
 			return "1.0.0"
+	else:
+		print("File not found %s, using default." % VERSION_FILE_NAME)
+		return "1.0.0"
 
 
 #step3: bumpup
