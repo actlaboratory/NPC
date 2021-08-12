@@ -69,7 +69,7 @@ deploy:
 after_deploy:
   - cmd: echo import constants;print("https://actlab.org/api/addAlphaVersion?repo_name=%APPVEYOR_REPO_NAME%&commit_hash=%APPVEYOR_REPO_COMMIT%&version="+constants.APP_VERSION+"&password=%SCRIPT_PASSWORD%",end="") | C:\\Python38\python.exe | xargs -n1 curl
 
-notification:
+notifications:
   - provider: Slack
     incoming_webhook:
       secure: 2lf0ZZRGjOPm8oPiqMUUi4x2dGIaEV40qhiFGRvfgUGY1huxK2wBYI7BHnvrb+eG2NpPMo83QwgrVD212aooDwV9k9bK3V3b4uULEuiOcVIvQnA1f0hg1GeCc8kHa6cg
