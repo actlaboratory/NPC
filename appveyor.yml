@@ -20,10 +20,6 @@ environment:
 
     - PYTHON: "C:\\Python38"
 
-cache:
-  - "C:\\Python38\\Scripts"
-  - "C:\\Python38\\lib"
-
 install:
   # We need wheel installed to build wheels
   - "%PYTHON%\\python.exe -m pip install -r requirements.txt"
@@ -72,3 +68,10 @@ deploy:
 
 after_deploy:
   - cmd: echo import constants;print("https://actlab.org/api/addAlphaVersion?repo_name=%APPVEYOR_REPO_NAME%&commit_hash=%APPVEYOR_REPO_COMMIT%&version="+constants.APP_VERSION+"&password=%SCRIPT_PASSWORD%",end="") | C:\\Python38\python.exe | xargs -n1 curl
+
+notification:
+  - provider: Slack
+      incoming_webhook:
+        secure: 2lf0ZZRGjOPm8oPiqMUUi4x2dGIaEV40qhiFGRvfgUGY1huxK2wBYI7BHnvrb+eG2NpPMo83QwgrVD212aooDwV9k9bK3V3b4uULEuiOcVIvQnA1f0hg1GeCc8kHa6cg
+      template: "[テスト]　Appveyor Build Failed!\n<{{buildUrl}}|Build {{projectName}}>\nCommit <{{commitUrl}}|{{commitId}}> by {{commitAuthor}}<br><br>対応着手時・完了後は、本チャンネルにて経緯を報告ください。
+
