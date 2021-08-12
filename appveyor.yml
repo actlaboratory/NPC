@@ -73,5 +73,5 @@ notification:
   - provider: Slack
     incoming_webhook:
       secure: 2lf0ZZRGjOPm8oPiqMUUi4x2dGIaEV40qhiFGRvfgUGY1huxK2wBYI7BHnvrb+eG2NpPMo83QwgrVD212aooDwV9k9bK3V3b4uULEuiOcVIvQnA1f0hg1GeCc8kHa6cg
-    template: "[テスト]　Appveyor Build Failed!\n<{{buildUrl}}|Build {{projectName}}>\nCommit <{{commitUrl}}|{{commitId}}> by {{commitAuthor}}<br><br>対応着手時・完了後は、本チャンネルにて経緯を報告ください。
+    template: "[テスト]　Appveyor Build Failed!\n<{{buildUrl}}|Build {{projectName}}>\nCommit <{{commitUrl}}|{{commitId}}> by {{commitAuthor}}<br><br>対応着手時・完了後は、本チャンネルにて経緯を報告ください。"
 
