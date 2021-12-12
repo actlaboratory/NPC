@@ -73,8 +73,14 @@ class MainView(BaseView):
 
 		self.hFrame.Bind(wx.EVT_MENU_OPEN, self.events.OnMenuOpen)
 
-
 		self.refresh()
+
+		# 最終閲覧位置への復帰
+		index = self.app.config.getint(self.identifier,"last_cursor_item",-1)
+		if self.app.config.getboolean("general","keep_cursor",True) and index in self.answerIdList:
+			index = self.answerIdList.index(index)
+			self.lst.Select(index)
+			self.lst.Focus(index)
 
 	#DBの内容でビューを更新する
 	def refresh(self):
@@ -631,7 +637,13 @@ class Events(BaseEvents):
 		return
 
 	def OnExit(self, event):
+		# 最終閲覧位置を記録
+		index = self.parent.lst.GetFirstSelected()
+		self.parent.app.config[self.parent.identifier]["last_cursor_item"] = self.parent.answerIdList[index]
+
+		# リスト表示設定の保存
 		self.parent.lst.saveColumnInfo()
+
 		super().OnExit(event)
 
 	def setKeymap(self, identifier,ttl, keymap=None,filter=None):

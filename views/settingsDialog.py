@@ -77,6 +77,8 @@ class Dialog(BaseDialog):
 		creator.GetSizer().SetItemSpan(self.autoreload.GetParent(),2)
 		self.keepFilter = creator.checkbox(_("次回起動時にフィルタの状況を維持"))
 		creator.GetSizer().SetItemSpan(self.keepFilter.GetParent(),2)
+		self.keepCursor = creator.checkbox(_("次回起動時にカーソルの位置を復元"))
+		creator.GetSizer().SetItemSpan(self.keepCursor.GetParent(),2)
 		self.logLevel,dummy = creator.combobox(_("ログ記録レベル(&L)"),list(self.logLevelSelection.values()))
 		#self.reader, static = creator.combobox(_("出力先(&O)"), list(self.readerSelection.values()))
 
@@ -116,6 +118,7 @@ class Dialog(BaseDialog):
 		# general
 		self._setValue(self.autoreload,"general","auto_reload",configType.BOOL)
 		self._setValue(self.keepFilter,"general","keep_filter",configType.BOOL)
+		self._setValue(self.keepCursor,"general","keep_cursor",configType.BOOL)
 		#self._setValue(self.reader,"speech","reader",configType.DIC,self.readerSelection)
 		self._setValue(self.logLevel,"general","log_level",configType.DIC,self.logLevelSelection)
 
