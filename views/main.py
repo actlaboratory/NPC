@@ -630,9 +630,9 @@ class Events(BaseEvents):
 			errorDialog(_("不明なエラー%(code)dが発生しました。大変お手数ですが、本ソフトの実行ファイルのあるディレクトリに生成された%(log)sを添付し、作者までご連絡ください。") %{"code":code,"log":constants.LOG_FILE_NAME},parent)
 		return
 
-	def Exit(self):
+	def OnExit(self, event):
 		self.parent.lst.saveColumnInfo()
-		super().Exit(event)
+		super().OnExit(event)
 
 	def setKeymap(self, identifier,ttl, keymap=None,filter=None):
 		if keymap:
