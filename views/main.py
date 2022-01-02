@@ -206,11 +206,6 @@ class Events(BaseEvents):
 			#先頭の@はいらないので対策。入力時はあってもなくても良い
 			prm = re.sub("@?(.*)","\\1", prm)
 
-			self.log.debug("add user: %s" % prm)
-			if self.parent.service.isUserRegistered(prm)==True:
-				errorDialog(_("指定されたユーザは既に登録済みです。"),self.parent.hFrame)
-				self.log.warning("user %s already registered." % prm)
-				return errorCodes.DUPLICATED
 			user = self.parent.service.getUserInfo(prm)
 			if user in (errorCodes.PEING_ERROR,errorCodes.NOT_FOUND):
 				self.showError(user)
@@ -218,11 +213,12 @@ class Events(BaseEvents):
 			if yesNoDialog(_("ユーザ追加"),_("以下のユーザを追加しますか？\n\nID:%(id)d\n%(name)s(%(account)s)") % {"id":user.id,"name":user.name,"account":user.account},self.parent.hFrame)==wx.ID_NO:
 				self.log.debug("add user:canceled by user")
 				return
-			if self.parent.service.addUser(user)==errorCodes.OK:
+			ret = self.parent.service.addUser(user)
+			if ret==errorCodes.OK:
 				dialog(_("登録完了"),_("ユーザの登録に成功しました。今回登録したユーザの回答を表示するには、ビューを再読み込みしてください。"),self.parent.hFrame)
 				self.log.info("user %s added!" % prm)
 			else:
-				errorDialog(_("ユーザの登録に失敗しました。"),self.parent.hFrame)
+				self.showError(ret)
 				self.log.error("add user:failed.")
 
 		if selected==menuItemsStore.getRef("FILE_POST_QUESTION"):
@@ -632,6 +628,8 @@ class Events(BaseEvents):
 			errorDialog(_("不明なエラーの為、ログインに失敗しました。サイトの仕様変更や、お使いのインターネット接続の障害が考えられます。まずは、ブラウザから同じIDでログインできるか確認してください。\nブラウザから正常にログインできる場合には、サイトの仕様変更が考えられますので、このメッセージと利用したIDの種類を添えて開発者までお問い合わせください。"),parent)
 		elif code==errorCodes.LOGIN_RECAPTCHA_NEEDED:
 			errorDialog(_("ログインに失敗しました。ログインに際してRECAPTCHA(ロボットでないことの確認)が要求されています。同じIDでブラウザからログインした後、再度お試しください。"),parent)
+		elif code == errorCodes.DUPLICATED:
+			errorDialog(_("指定されたユーザは既に登録済みです。"))
 		elif code != errorCodes.OK:
 			errorDialog(_("不明なエラー%(code)dが発生しました。大変お手数ですが、本ソフトの実行ファイルのあるディレクトリに生成された%(log)sを添付し、作者までご連絡ください。") %{"code":code,"log":constants.LOG_FILE_NAME},parent)
 		return

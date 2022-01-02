@@ -39,19 +39,26 @@ class Service():
 
 	# 指定のユーザが回答の閲覧対象として登録済みならTrue
 	def isUserRegistered(self,info):
-		if type(info) in (int,entity.user.User):		#idで照会
-			if type(info)==entity.user.User:
-				info=info.id
+		if type(info)==int:		#idで照会
 			try:
-				if self.userDao.getWithoutFlag(info,constants.FLG_USER_NOT_REGISTERED|constants.FLG_USER_NOT_REGISTERED) != []:
+				if self.userDao.getWithoutFlag(info,constants.FLG_USER_NOT_REGISTERED|constants.FLG_USER_DISABLE) != []:
 					return True
 				return False
 			except Exception as e:
 				self.log.error(e)
 				raise e
+		if type(info)==entity.user.User: #userEntityで照会。idとaccountの両者一致を確認
+			try:
+				ret = self.userDao.getWithoutFlag(info.id,constants.FLG_USER_NOT_REGISTERED|constants.FLG_USER_DISABLE)
+				if ret == [] or self._createUserObj(ret).account!=info.account:
+					return False
+				return True
+			except Exception as e:
+				self.log.error(e)
+				raise e
 		elif type(info)==str:	#accountで照会
 			try:
-				if self.userDao.getFromUserAccountWithoutFlag(info,constants.FLG_USER_NOT_REGISTERED|constants.FLG_USER_NOT_REGISTERED) != []:
+				if self.userDao.getFromUserAccountWithoutFlag(info,constants.FLG_USER_NOT_REGISTERED|constants.FLG_USER_DISABLE) != []:
 					return True
 				return False
 			except Exception as e:
