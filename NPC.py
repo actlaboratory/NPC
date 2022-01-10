@@ -19,7 +19,7 @@ def exchandler(type, exc, tb):
 		f.close()
 	except:
 		pass
-	simpleDialog.winDialog("error", "An error has occured. Contact to the developer for further assistance. Detail:" + "\n".join(msg[-2:]))
+	simpleDialog.winDialog("error", "An error has occurred. Contact to the developer for further assistance. Detail:" + "\n".join(msg[-2:]))
 	sys.exit(1)
 
 sys.excepthook=exchandler
