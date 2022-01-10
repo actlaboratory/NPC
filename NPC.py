@@ -43,7 +43,6 @@ def main():
 	globalVars.app=app
 	app.initialize()
 	app.MainLoop()
-	app.config.write()
 
 #global schope
 if __name__ == "__main__": main()

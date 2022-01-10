@@ -1,7 +1,7 @@
 ﻿# -*- coding: utf-8 -*-
 #main view
 #Copyright (C) 2019 Yukio Nozawa <personal@nyanchangames.com>
-#Copyright (C) 2019-2021 yamahubuki <itiro.ishino@gmail.com>
+#Copyright (C) 2019-2022 yamahubuki <itiro.ishino@gmail.com>
 
 
 import wx
@@ -679,7 +679,8 @@ class Events(BaseEvents):
 				newMap[identifier.upper()][menuData[name]]=key
 			else:
 				newMap[identifier.upper()][menuData[name]]=""
-		newMap.write()
+		if newMap.write() != errorCodes.OK:
+			errorDialog(_("設定の保存に失敗しました。下記のファイルへのアクセスが可能であることを確認してください。") + "\n" + self.config.getAbsFileName())
 		return True
 
 	# ログイン状態を確認し、必要ならログインする

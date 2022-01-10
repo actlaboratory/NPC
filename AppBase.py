@@ -2,22 +2,24 @@
 #Application Initializer
 
 import accessible_output2.outputs
-from accessible_output2.outputs.base import OutputError
-import sys
-import gettext
-import logging
-import wx
-import locale
-import win32api
 import datetime
+import gettext
+import locale
+import logging
+import os
+import sys
+import traceback
+import win32api
+import wx
+
+from accessible_output2.outputs.base import OutputError
 from logging import getLogger, FileHandler, Formatter
 
 import constants
 import DefaultSettings
 import views.langDialog
 import simpleDialog
-import os
-import traceback
+
 
 class MaiｎBase(wx.App):
 	def __init__(self):
@@ -111,7 +113,8 @@ class MaiｎBase(wx.App):
 			#初回起動
 			self.config.read_dict(DefaultSettings.initialValues)
 			self.config.write()
-		self.hLogHandler.setLevel(self.config.getint("general","log_level",20,0,50))
+		if self.log.hasHandlers():
+			self.hLogHandler.setLevel(self.config.getint("general","log_level",20,0,50))
 
 	def InitTranslation(self):
 		"""翻訳を初期化する。"""

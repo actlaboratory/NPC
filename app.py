@@ -9,9 +9,11 @@ import wx
 
 import AppBase
 import constants
+import errorCodes
 import filter
 import globalVars
 import proxyUtil
+import simpleDialog
 import update
 
 class Main(AppBase.MainBase):
@@ -75,6 +77,9 @@ class Main(AppBase.MainBase):
 		self.log.info("DB connection closed.")
 
 		self._releaseMutex()
+
+		if self.config.write() != errorCodes.OK:
+			simpleDialog.errorDialog(_("設定の保存に失敗しました。下記のファイルへのアクセスが可能であることを確認してください。") + "\n" + self.config.getAbsFileName())
 
 		# アップデート
 		globalVars.update.runUpdate()
