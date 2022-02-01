@@ -33,11 +33,13 @@ class UserDao(dao.baseDao.BaseDao):
 		assert type(id)==int
 		return self.select("SELECT * FROM users WHERE id = ?;",(id,))
 
-	#指定したフラグが立っていないユーザの一覧を得る
+	#指定したフラグが立っていないユーザ１人を得る
 	def getWithoutFlag(self,id,disableFlag):
 		assert type(id)==int
-		return self.select("SELECT * FROM users WHERE id = ? AND flag&?==0;",(id,disableFlag))
-
+		ret = self.select("SELECT * FROM users WHERE id = ? AND flag&?==0;",(id,disableFlag))
+		if ret:
+			return ret[0]
+		return ret
 
 	def getFromUserAccount(self, account):
 		assert type(account)==str
@@ -64,7 +66,7 @@ class UserDao(dao.baseDao.BaseDao):
 			profile = :profile,
 			followees = :followees,
 			flag = :flag
-			WHERE id = :id;""", values)
+			WHERE id = :id;""", values).rowcount
 
 	def delete(self,id):
 		return self.connection.execute("DELETE FROM users WHERE id = ?;",(id,))

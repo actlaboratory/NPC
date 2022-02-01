@@ -19,7 +19,7 @@ def exchandler(type, exc, tb):
 		f.close()
 	except:
 		pass
-	simpleDialog.winDialog("error", "An error has occured. Contact to the developer for further assistance. Detail:" + "\n".join(msg[-2:]))
+	simpleDialog.winDialog("error", "An error has occurred. Contact to the developer for further assistance. Detail:" + "\n".join(msg[-2:]))
 	sys.exit(1)
 
 sys.excepthook=exchandler
@@ -43,7 +43,6 @@ def main():
 	globalVars.app=app
 	app.initialize()
 	app.MainLoop()
-	app.config.write()
 
 #global schope
 if __name__ == "__main__": main()
