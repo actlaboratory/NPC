@@ -637,7 +637,8 @@ class Events(BaseEvents):
 	def OnExit(self, event):
 		# 最終閲覧位置を記録
 		index = self.parent.lst.GetFirstSelected()
-		self.parent.app.config[self.parent.identifier]["last_cursor_item"] = self.parent.answerIdList[index]
+		if index >= 0:
+			self.parent.app.config[self.parent.identifier]["last_cursor_item"] = self.parent.answerIdList[index]
 
 		# リスト表示設定の保存
 		self.parent.lst.saveColumnInfo()
