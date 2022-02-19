@@ -18,6 +18,7 @@ import globalVars
 import menuItemsStore
 import service
 import twitterService
+import update
 
 from .base import *
 from simpleDialog import *
@@ -494,7 +495,7 @@ class Events(BaseEvents):
 			d.Show()
 
 		if selected == menuItemsStore.getRef("HELP_UPDATE"):
-			globalVars.update.update()
+			update.checkUpdate()
 
 		if selected==menuItemsStore.getRef("HELP_VERSIONINFO"):
 			d = versionDialog.versionDialog()
