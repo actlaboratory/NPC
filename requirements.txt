@@ -1,7 +1,7 @@
-﻿wxpython>=4.1
+﻿wxpython==4.1
 pywin32
 winpaths
-pyinstaller>=4
+pyinstaller==5.3
 pyperclip
 requests
 bs4
