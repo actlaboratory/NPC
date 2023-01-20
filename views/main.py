@@ -587,7 +587,10 @@ class Events(BaseEvents):
 			if not self.loginCheck():
 				return
 
-		d = SimpleInputDialog.Dialog(_("質問を投稿"),_("%sさんへの質問内容") % target.getViewString(), parent)
+		style = 0
+		if self.parent.app.config.getboolean("view", "enableMultiline", False):
+			style = wx.TE_MULTILINE
+		d = SimpleInputDialog.Dialog(_("質問を投稿"),_("%sさんへの質問内容") % target.getViewString(), parent, style=style)
 		d.Initialize()
 		r = d.Show()
 		if r==wx.ID_CANCEL:
