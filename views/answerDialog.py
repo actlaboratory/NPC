@@ -84,7 +84,10 @@ class Dialog(BaseDialog):
 
 	def answer(self,event):
 		q = self.lst[self.hListCtrl.GetFocusedItem()].question
-		d = views.SimpleInputDialog.Dialog(_("回答の入力"),q,self.wnd)
+		style = 0
+		if self.app.config.getboolean("view", "enableMultiline", False):
+			style = wx.TE_MULTILINE
+		d = views.SimpleInputDialog.Dialog(_("回答の入力"),q,self.wnd, style=style)
 		d.Initialize()
 		if d.Show()==wx.ID_CANCEL:
 			return
