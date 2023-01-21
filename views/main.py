@@ -70,7 +70,10 @@ class MainView(BaseView):
 		self.lst.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.events.listActivated)
 		self.lst.Bind(wx.EVT_LIST_ITEM_SELECTED, self.events.listSelectEvent)
 		self.lst.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.events.listSelectEvent)
+		self.lst.Bind(wx.EVT_LIST_ITEM_FOCUSED, self.events.updateFocus)
 		self.events.listSelectEvent()		#最初に１度実行し、未選択状態をメニューに反映
+
+		self.hFrame.CreateStatusBar()
 
 		self.hFrame.Bind(wx.EVT_MENU_OPEN, self.events.OnMenuOpen)
 
@@ -702,4 +705,10 @@ class Events(BaseEvents):
 			self.showError(ret)
 			return False
 		return True
+
+	def updateFocus(self, event):
+		if event.GetIndex():
+			self.parent.hFrame.SetStatusText(_("%d個中%d個目を選択中" % (self.parent.lst.GetItemCount(), event.GetIndex())))
+		else:
+			self.parent.hFrame.SetStatusText(_("%d個表示中、選択項目なし" % self.parent.lst.GetItemCount()))
 
