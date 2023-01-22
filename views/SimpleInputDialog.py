@@ -43,9 +43,9 @@ class Dialog(BaseDialog):
 
 	def ok(self,event):
 		if self.validationPattern:
-			if not re.fullmatch(self.validationPattern,self.edit.GetLineText(0)):
+			if not re.fullmatch(self.validationPattern,self.edit.GetValue()):
 				return
 		event.Skip()
 
 	def GetData(self):
-		return self.edit.GetLineText(0)
+		return self.edit.GetValue()
