@@ -13,7 +13,7 @@ from logging import getLogger
 from views.baseDialog import *
 import simpleDialog
 
-DEFAULT_STYLE=wx.BORDER_RAISED|wx.TE_DONTWRAP
+DEFAULT_STYLE=wx.BORDER_RAISED
 
 # 入力値のバリデーション、値の返却のモード
 class Mode(enum.Enum):
