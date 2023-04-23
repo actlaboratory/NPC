@@ -3,6 +3,7 @@
 # Copyright (C) 2019-2020 yamahubuki <itiro.ishino@gmail.com>
 # Note: All comments except these top lines will be written in Japanese. 
 
+import enum
 import re
 import wx
 
@@ -10,11 +11,23 @@ import views.ViewCreator
 
 from logging import getLogger
 from views.baseDialog import *
+import simpleDialog
 
 DEFAULT_STYLE=wx.BORDER_RAISED|wx.TE_DONTWRAP
 
+# 入力値のバリデーション、値の返却のモード
+class Mode(enum.Enum):
+	# 空行を飛ばしつつ、1行ずつバリデーション
+	# パターンにマッチしない行が1行でもあればinvalid
+	# 返却時は、空行を除く各行のデータを改行コードで繋いで返す
+	EACH_LINE = enum.auto()
+	# 入力値全体がパターンとマッチするかを調べる
+	# 返却時は、入力されたデータを加工せずに返す
+	WHOLE = enum.auto()
+
+
 class Dialog(BaseDialog):
-	def __init__(self,title,detail,parent=None,validationPattern=None,defaultValue="",style=0):
+	def __init__(self,title,detail,parent=None,validationPattern=None,defaultValue="",style=0,mode=Mode.EACH_LINE):
 		super().__init__("SimpleInputDialog")
 		self.title=title
 		self.detail=detail
@@ -25,6 +38,7 @@ class Dialog(BaseDialog):
 			self.parent=self.app.hMainView.hFrame
 		self.validationPattern = validationPattern
 		self.style=style
+		self.mode=mode
 
 	def Initialize(self):
 		super().Initialize(self.parent,self.title)
@@ -47,12 +61,29 @@ class Dialog(BaseDialog):
 		event.Skip()
 
 	def GetData(self):
-		return self.edit.GetValue()
+		if self.mode == Mode.EACH_LINE:
+			ret = []
+			for line in self.edit.GetValue().splitlines():
+				line = line.strip()
+				if len(line) == 0:
+					continue
+				ret.append(line)
+			return "\n".join(ret)
+		elif self.mode == Mode.WHOLE:
+			return self.edit.GetValue()
 
 	def validate(self):
 		if self.validationPattern:
 			pattern = re.compile(self.validationPattern)
-			for line in self.edit.GetValue().splitlines():
-				if len(line.strip()) > 0 and not re.match(pattern, line):
+			if self.mode == Mode.EACH_LINE:
+				lineNum = 0
+				for line in self.edit.GetValue().splitlines():
+					lineNum += 1
+					if len(line.strip()) > 0 and not re.fullmatch(pattern, line):
+						simpleDialog.errorDialog(_("入力内容に誤りがあります。") + "\n" + _("行: %d") % lineNum, self.wnd)
+						return False
+			elif self.mode == Mode.WHOLE:
+				if not re.fullmatch(pattern, self.edit.GetValue()):
+					simpleDialog.errorDialog(_("入力内容に誤りがあります。"), self.wnd)
 					return False
 		return True
