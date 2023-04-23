@@ -76,13 +76,21 @@ class Dialog(BaseDialog):
 		if self.validationPattern:
 			pattern = re.compile(self.validationPattern)
 			if self.mode == Mode.EACH_LINE:
+				exists = False
 				lineNum = 0
 				for line in self.edit.GetValue().splitlines():
 					lineNum += 1
 					line = line.strip()
-					if len(line) > 0 and not re.fullmatch(pattern, line):
+					if len(line) == 0:
+						continue
+					if not re.fullmatch(pattern, line):
 						simpleDialog.errorDialog(_("入力内容に誤りがあります。") + "\n" + _("行: %d") % lineNum, self.wnd)
 						return False
+					# バリデーションに成功した
+					exists = True
+				if not exists:
+					simpleDialog.errorDialog(_("有効な値が入力されていません。"), self.wnd)
+					return False
 			elif self.mode == Mode.WHOLE:
 				if not re.fullmatch(pattern, self.edit.GetValue()):
 					simpleDialog.errorDialog(_("入力内容に誤りがあります。"), self.wnd)
