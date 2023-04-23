@@ -42,10 +42,17 @@ class Dialog(BaseDialog):
 		self.bCancel=self.creator.cancelbutton(_("キャンセル"),None)
 
 	def ok(self,event):
-		if self.validationPattern:
-			if not re.fullmatch(self.validationPattern,self.edit.GetValue()):
-				return
+		if not self.validate():
+			return
 		event.Skip()
 
 	def GetData(self):
 		return self.edit.GetValue()
+
+	def validate(self):
+		if self.validationPattern:
+			pattern = re.compile(self.validationPattern)
+			for line in self.edit.GetValue().splitlines():
+				if len(line.strip()) > 0 and not re.match(pattern, line):
+					return False
+		return True
