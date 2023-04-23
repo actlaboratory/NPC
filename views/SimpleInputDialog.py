@@ -79,7 +79,8 @@ class Dialog(BaseDialog):
 				lineNum = 0
 				for line in self.edit.GetValue().splitlines():
 					lineNum += 1
-					if len(line.strip()) > 0 and not re.fullmatch(pattern, line):
+					line = line.strip()
+					if len(line) > 0 and not re.fullmatch(pattern, line):
 						simpleDialog.errorDialog(_("入力内容に誤りがあります。") + "\n" + _("行: %d") % lineNum, self.wnd)
 						return False
 			elif self.mode == Mode.WHOLE:
