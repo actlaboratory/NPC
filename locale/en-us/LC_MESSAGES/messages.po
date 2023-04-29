@@ -7,23 +7,42 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NPC\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-18 14:44+0900\n"
-"PO-Revision-Date: 2021-12-18 14:47+0900\n"
+"POT-Creation-Date: 2023-04-29 23:44+0900\n"
+"PO-Revision-Date: 2023-04-29 23:46+0900\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
-#: AppBase.py:45
+#: app.py:82 views\main.py:677
+msgid ""
+"設定の保存に失敗しました。下記のファイルへのアクセスが可能であることを確認し"
+"てください。"
+msgstr ""
+"Failed to save settings. Make sure you can access to the following files:"
+
+#: AppBase.py:48
 msgid ""
 "ログ機能の初期化に失敗しました。下記のファイルへのアクセスが可能であることを"
 "確認してください。"
 msgstr ""
 "Failed to initialize logger. Make sure you have permission to access to the "
 "following file:"
+
+#: AppBase.py:57
+msgid "音声エンジンエラー"
+msgstr "Speech Synthesizer Error"
+
+#: AppBase.py:57
+msgid ""
+"音声読み上げ機能の初期化に失敗したため、読み上げ機能を使用できません。出力先"
+"の変更をお試しください。"
+msgstr ""
+"Failed to initialize speech function. You cannot use speech. Please try to "
+"change speech output."
 
 #: keymapHandlerBase.py:696 keymapHandlerBase.py:726
 #, python-format
@@ -99,9 +118,9 @@ msgstr "Open a user's page in a &browser"
 msgid "登録済みユーザリスト(&L)"
 msgstr "Registered Users &List"
 
-#: menuItemsDic.py:24 views\main.py:290
-msgid "Twitterのフォローリストから一括登録"
-msgstr "Add Users from Twitter's Following List"
+#: menuItemsDic.py:24 views\main.py:308
+msgid "ユーザの一括追加"
+msgstr "Add users in bulk"
 
 #: menuItemsDic.py:25
 msgid "終了(&X)"
@@ -180,24 +199,6 @@ msgstr "delete"
 #: menuItemsDic.py:52
 msgid "列の並び替え(&R)"
 msgstr "&Reorder Columns"
-
-#: twitterService.py:36
-msgid ""
-"認証に成功しました。このウィンドウを閉じて、アプリケーションに戻ってくださ"
-"い。"
-msgstr ""
-"Authorization successful. Close this window and go back to the application."
-
-#: twitterService.py:37
-msgid "認証に失敗しました。もう一度お試しください。"
-msgstr "Authorization failed.  Please try again."
-
-#: twitterService.py:38
-msgid ""
-"しばらくしても画面が切り替わらない場合は、別のブラウザでお試しください。"
-msgstr ""
-"If the screen does not change after a while, open this page in another "
-"browser."
 
 #: update.py:50 update.py:59 update.py:73 update.py:79 update.py:90
 #: update.py:98 update.py:103 update.py:108 update.py:160
@@ -284,7 +285,7 @@ msgid "受信しない"
 msgstr "Do not receive"
 
 #: views\accountSettingsDialog.py:34 views\globalKeyConfig.py:75
-#: views\settingsDialog.py:61
+#: views\settingsDialog.py:57
 msgid "設定"
 msgstr "settings"
 
@@ -328,19 +329,19 @@ msgstr "Unanswered questions"
 msgid "アーカイブ済みの質問"
 msgstr "Archived Questions"
 
-#: views\answerDialog.py:87
+#: views\answerDialog.py:90
 msgid "回答の入力"
 msgstr "Enter answers"
 
-#: views\answerDialog.py:93
+#: views\answerDialog.py:96
 msgid "回答完了"
 msgstr "Answer complete"
 
-#: views\answerDialog.py:93
+#: views\answerDialog.py:96
 msgid "回答が送信されました。"
 msgstr "An answer has been sent."
 
-#: views\answerDialog.py:96
+#: views\answerDialog.py:99
 msgid ""
 "指定された質問が存在しないか、通信に失敗しました。以下の対処をお試しくださ"
 "い。\n"
@@ -360,11 +361,11 @@ msgstr ""
 "Try again after a while.\n"
 "If this issue could not be resolved, contact to the developers."
 
-#: views\answerDialog.py:100
+#: views\answerDialog.py:103
 msgid "質問をアーカイブ"
 msgstr "Archive questions"
 
-#: views\answerDialog.py:100
+#: views\answerDialog.py:103
 #, python-format
 msgid ""
 "以下の質問をアーカイブしますか？\n"
@@ -375,11 +376,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: views\answerDialog.py:108
+#: views\answerDialog.py:111
 msgid "質問を元に戻す"
 msgstr "Undo a question"
 
-#: views\answerDialog.py:108
+#: views\answerDialog.py:111
 #, python-format
 msgid ""
 "以下の質問を元に戻しますか？\n"
@@ -434,12 +435,12 @@ msgstr "&Register"
 
 #: views\candidateUserListDialog.py:48 views\KeyValueSettingDialogBase.py:84
 #: views\KeyValueSettingDialogBase.py:275 views\listConfigurationDialog.py:60
-#: views\searchConditionDialog.py:38 views\settingsDialog.py:115
-#: views\SimpleInputDialog.py:40 views\updateDialog.py:45
+#: views\searchConditionDialog.py:38 views\settingsDialog.py:110
+#: views\SimpleInputDialog.py:56 views\updateDialog.py:45
 msgid "キャンセル"
 msgstr "cancel"
 
-#: views\candidateUserListDialog.py:63 views\main.py:240
+#: views\candidateUserListDialog.py:63 views\main.py:239
 #: views\userListDialog.py:79
 msgid "ユーザの削除"
 msgstr "Delete a user"
@@ -493,7 +494,7 @@ msgstr "shortcut"
 msgid "識別子"
 msgstr "identifier"
 
-#: views\globalKeyConfig.py:31 views\main.py:489
+#: views\globalKeyConfig.py:31 views\main.py:475
 msgid "ショートカットキーの設定"
 msgstr "Shortcut Key Configuration"
 
@@ -502,7 +503,7 @@ msgstr "Shortcut Key Configuration"
 #: views\globalKeyConfig.py:120 views\globalKeyConfig.py:128
 #: views\globalKeyConfig.py:138 views\globalKeyConfig.py:143
 #: views\keyConfig.py:57 views\KeyValueSettingDialogBase.py:333
-#: views\main.py:667 views\main.py:680
+#: views\main.py:659 views\main.py:672
 msgid "なし"
 msgstr "None"
 
@@ -546,7 +547,7 @@ msgstr "register set contents"
 msgid "このショートカットは変更できません。"
 msgstr "This shortcut cannot be modified."
 
-#: views\globalKeyConfig.py:127 views\globalKeyConfig.py:130 views\main.py:477
+#: views\globalKeyConfig.py:127 views\globalKeyConfig.py:130 views\main.py:463
 msgid "設定完了"
 msgstr "Setup has been completed"
 
@@ -593,7 +594,7 @@ msgstr "&Delete"
 
 #: views\KeyValueSettingDialogBase.py:83 views\KeyValueSettingDialogBase.py:274
 #: views\listConfigurationDialog.py:59 views\searchConditionDialog.py:37
-#: views\SimpleInputDialog.py:39
+#: views\SimpleInputDialog.py:55
 msgid "ＯＫ"
 msgstr "OK"
 
@@ -667,43 +668,39 @@ msgstr "&Hide headers on the screen"
 msgid "全ての列を非表示にすることはできません。"
 msgstr "Not all columns can be hidden."
 
-#: views\main.py:181
+#: views\main.py:184
 msgid "ファイル(&F)"
 msgstr "&File"
 
-#: views\main.py:182
+#: views\main.py:185
 msgid "フィルタ(&I)"
 msgstr "F&ilter"
 
-#: views\main.py:183
+#: views\main.py:186
 msgid "アカウント(&A)"
 msgstr "&Account"
 
-#: views\main.py:184
+#: views\main.py:187
 msgid "オプション(&O)"
 msgstr "&Options"
 
-#: views\main.py:185
+#: views\main.py:188
 msgid "ヘルプ(&H)"
 msgstr "&Help"
 
-#: views\main.py:199
+#: views\main.py:202
 msgid "ユーザの追加"
 msgstr "Add a user"
 
-#: views\main.py:199
+#: views\main.py:202
 msgid "peingページURLまたはTwitterユーザ名"
 msgstr "peing page URL or twitter user name"
 
-#: views\main.py:211
-msgid "指定されたユーザは既に登録済みです。"
-msgstr "The specified user is already registered."
-
-#: views\main.py:218
+#: views\main.py:216
 msgid "ユーザ追加"
 msgstr "Add user"
 
-#: views\main.py:218
+#: views\main.py:216
 #, python-format
 msgid ""
 "以下のユーザを追加しますか？\n"
@@ -716,11 +713,11 @@ msgstr ""
 "ID:%(id)d\n"
 "%(name)s (%(account)s)"
 
-#: views\main.py:222 views\main.py:379
+#: views\main.py:221 views\main.py:365
 msgid "登録完了"
 msgstr "Registeration Completed"
 
-#: views\main.py:222
+#: views\main.py:221
 msgid ""
 "ユーザの登録に成功しました。今回登録したユーザの回答を表示するには、ビューを"
 "再読み込みしてください。"
@@ -728,11 +725,7 @@ msgstr ""
 "The user was successfully registered. To view the answers of the users who "
 "registered this time, please reload the view."
 
-#: views\main.py:225
-msgid "ユーザの登録に失敗しました。"
-msgstr "User registration failed."
-
-#: views\main.py:240 views\userListDialog.py:79
+#: views\main.py:239 views\userListDialog.py:79
 #, python-format
 msgid ""
 "以下のユーザの登録と、過去の回答履歴を削除しますか？\n"
@@ -744,95 +737,46 @@ msgstr ""
 "\n"
 "%s"
 
-#: views\main.py:253
+#: views\main.py:252
 msgid ""
 "このユーザは既に退会したか、peingIDを変更しているため開くことができません。"
 msgstr ""
 "This user cannot be opened because he has already unsubscribed or changed "
 "his peingID."
 
-#: views\main.py:271
+#: views\main.py:270
 msgid "出力先ファイルの指定"
 msgstr "Specify destination file"
 
-#: views\main.py:271
+#: views\main.py:270
 msgid "CSVファイル(*.csv) | *.csv; | すべてのファイル(*.*) | *.*"
 msgstr "CSV file (*.csv) | *.csv; | All files (*.*) | *.*"
 
 #: views\main.py:290
-msgid "Twitterアカウントの認証のため、ブラウザの操作を待っています。"
-msgstr "Waiting for browser..."
-
-#: views\main.py:297
-msgid ""
-"Twitterの認証に失敗しました。ブラウザ上で認証を拒否した、時間がかかりすぎた、"
-"またはインターネット接続に問題がある可能性があります。"
-msgstr ""
-"Twitter authentication failed. Your browser may have refused to "
-"authenticate, took too long, or you may have a problem with your Internet "
-"connection."
-
-#: views\main.py:303
 msgid "対象ユーザの指定"
 msgstr "specify users"
 
-#: views\main.py:303
+#: views\main.py:291
 msgid ""
-"フォロー中のユーザを取得するアカウントの@からはじまるアカウント名を入力してく"
-"ださい。\n"
-"後悔アカウント、認証に用いたアカウント、\n"
-"または認証に用いたアカウントがフォローしている非公開アカウントを指定できま"
-"す。"
+"対象アカウントの@からはじまるアカウント名を、\n"
+"改行区切りで入力してください。"
 msgstr ""
-"Enter the account name that starts with @, the account you want to get "
-"following users for.\n"
-"Regret accounts, accounts used for authentication,\n"
-"Or you can specify a private account that the account you used to "
-"authenticate follows."
+"Enter the account name of the target account starting with @,\n"
+"separated by line breaks."
 
-#: views\main.py:314
-msgid "フォローリストを取得しています。"
-msgstr "Retrieving following users data"
-
-#: views\main.py:318
-msgid ""
-"Twitterからフォローリストを取得できませんでした。指定したユーザが存在しない"
-"か、フォローしていない非公開アカウントである可能性があります。"
-msgstr ""
-"Failed to get a follow list from Twitter. The specified user may not exist "
-"or may be a private account that you do not follow."
-
-#: views\main.py:320
-msgid ""
-"Twitterからフォローリストを取得できませんでした。しばらくたってから再度お試し"
-"ください。状況が改善しない場合には、開発者までお問い合わせください。"
-msgstr ""
-"Failed to get a follow list from Twitter. Please try again after a while. If "
-"the situation does not improve, contact the developer."
-
-#: views\main.py:325
-msgid ""
-"Twitterからフォローリストを取得できませんでした。まだ誰もフォローしていないア"
-"カウントであるか、通信回数の上限に達しています。後者の場合には、15分以上待っ"
-"てから再度お試しください。"
-msgstr ""
-"Failed to get a follow list from Twitter. It's an account that no one has "
-"followed yet, or you're at the maximum number of communications. In the "
-"latter case, wait at least 15 minutes and try again."
-
-#: views\main.py:328
+#: views\main.py:308
 msgid "登録済みユーザのリストを取得しています。"
 msgstr "Retrieving registered users data"
 
-#: views\main.py:340
+#: views\main.py:326
 msgid "Peingへの登録状況を調べています。"
 msgstr "Checking the status of registration with Peing."
 
-#: views\main.py:354
+#: views\main.py:340
 msgid "通信エラー"
 msgstr "Communication error"
 
-#: views\main.py:354
+#: views\main.py:340
 msgid ""
 "Peingとの通信でエラーが発生しました。インターネット接続を確認し、しばらくたっ"
 "てから再度お試しください。状況が改善しない場合は、Twitterでのフォロー数が多す"
@@ -848,21 +792,21 @@ msgstr ""
 "After closing this message, you will see a list of any accounts that were "
 "able to be retrieved by the time this error occurred."
 
-#: views\main.py:359
+#: views\main.py:345
 msgid "処理終了"
 msgstr "End of processing"
 
-#: views\main.py:359
+#: views\main.py:345
 msgid "一括登録を試みましたが、登録の候補となるユーザが見つかりませんでした。"
 msgstr ""
 "I tried to register in bulk, but I couldn't find a potential user to "
 "register."
 
-#: views\main.py:374
+#: views\main.py:360
 msgid "指定されたユーザを登録しています。"
 msgstr "Adding specified users."
 
-#: views\main.py:379
+#: views\main.py:365
 msgid ""
 "ユーザの一括登録に成功しました。今回登録したユーザの回答を表示するには、"
 "ビューを再読み込みしてください。"
@@ -870,7 +814,7 @@ msgstr ""
 "The user was successfully registered. To view the answers of the users who "
 "registered this time, please reload the view."
 
-#: views\main.py:445 views\main.py:454 views\main.py:463
+#: views\main.py:431 views\main.py:440 views\main.py:449
 msgid ""
 "質問の取得に失敗しました。以下の対処をお試しください。\n"
 "\n"
@@ -884,7 +828,7 @@ msgstr ""
 "Take a while and redo the operation.\n"
 "If this problem does not be resolved, contact to the developer."
 
-#: views\main.py:473
+#: views\main.py:459
 msgid ""
 "ログインまたはアカウント設定の取得に失敗しました。以下の対処をお試しくださ"
 "い。\n"
@@ -902,23 +846,23 @@ msgstr ""
 "Try again after a while.\n"
 "If this issue does not resolved, contact to developers."
 
-#: views\main.py:477
+#: views\main.py:463
 msgid "設定しました。"
 msgstr "Configured."
 
-#: views\main.py:548
+#: views\main.py:534
 msgid "準備中"
 msgstr "Preparing"
 
-#: views\main.py:548
+#: views\main.py:534
 msgid "回答データを取得しています"
 msgstr "Retrieving answer data"
 
-#: views\main.py:568
+#: views\main.py:554
 msgid "登録ユーザの更新除外について"
 msgstr "About update exclusions for registered users"
 
-#: views\main.py:568
+#: views\main.py:554
 #, python-format
 msgid ""
 "登録していた以下のユーザは、アカウント名が変更されたか、削除されました。その"
@@ -937,24 +881,24 @@ msgstr ""
 "\n"
 "Applicable user: %s"
 
-#: views\main.py:593
+#: views\main.py:582
 msgid "質問を投稿"
 msgstr "Post a &question"
 
-#: views\main.py:593
+#: views\main.py:582
 #, python-format
 msgid "%sさんへの質問内容"
 msgstr "question to %s"
 
-#: views\main.py:605
+#: views\main.py:594
 msgid "投稿完了"
 msgstr "Post completed"
 
-#: views\main.py:605
+#: views\main.py:594
 msgid "質問を投稿しました。"
 msgstr "Your question successfully posted."
 
-#: views\main.py:620
+#: views\main.py:609
 msgid ""
 "指定されたユーザが存在しないか、通信に失敗しました。以下の対処をお試しくださ"
 "い。\n"
@@ -971,7 +915,7 @@ msgstr ""
 "Please try again after a while.\n"
 "If the problem is not resolved, please contact to the developer."
 
-#: views\main.py:622
+#: views\main.py:611
 msgid ""
 "Twitterとの通信でエラーが発生しました。指定したユーザ名が間違っているか、イン"
 "ターネット接続に問題が発生した可能性があります。"
@@ -980,7 +924,7 @@ msgstr ""
 "may be incorrect or you may have experienced problems with your Internet "
 "connection."
 
-#: views\main.py:624
+#: views\main.py:613
 msgid ""
 "ログインに失敗しました。設定されたアカウント情報に誤りがあります。\n"
 "\n"
@@ -996,7 +940,7 @@ msgstr ""
 "If you can login on your browser, the website might change. Contact to the "
 "developer.\n"
 
-#: views\main.py:626
+#: views\main.py:615
 msgid ""
 "ログインに失敗しました。ログインに際して権限の認可が要求されています。同じID"
 "でブラウザからログインした後、再度お試しください。"
@@ -1004,7 +948,7 @@ msgstr ""
 "Failed to login. Authentication is required. After login on your browser, "
 "try again."
 
-#: views\main.py:628
+#: views\main.py:617
 msgid ""
 "ログインに失敗しました。Peingのサーバやお使いのインターネット接続に障害が発生"
 "している可能性があります。ブラウザから同じIDでログインできるか確認してくださ"
@@ -1018,7 +962,7 @@ msgstr ""
 "the specifications of the site, so please contact the developer with this "
 "message and the type of ID you used."
 
-#: views\main.py:630
+#: views\main.py:619
 msgid ""
 "ログインに失敗しました。Twitterのサーバやお使いのインターネット接続に障害が発"
 "生している可能性があります。ブラウザから同じIDでログインできるか確認してくだ"
@@ -1032,7 +976,7 @@ msgstr ""
 "the specifications of the site, so please contact the developer with this "
 "message and the type of ID you used."
 
-#: views\main.py:632
+#: views\main.py:621
 msgid ""
 "不明なエラーの為、ログインに失敗しました。サイトの仕様変更や、お使いのイン"
 "ターネット接続の障害が考えられます。まずは、ブラウザから同じIDでログインでき"
@@ -1047,7 +991,7 @@ msgstr ""
 "the specifications of the site, so please contact the developer with this "
 "message and the type of ID you used."
 
-#: views\main.py:634
+#: views\main.py:623
 msgid ""
 "ログインに失敗しました。ログインに際してRECAPTCHA(ロボットでないことの確認)が"
 "要求されています。同じIDでブラウザからログインした後、再度お試しください。"
@@ -1055,7 +999,11 @@ msgstr ""
 "Login failed. RECAPTCHA (confirmation that you are not a robot) is required "
 "when logging in. Log in from your browser with the same ID and try again."
 
-#: views\main.py:636
+#: views\main.py:625
+msgid "指定されたユーザは既に登録済みです。"
+msgstr "The specified user is already registered."
+
+#: views\main.py:627
 #, python-format
 msgid ""
 "不明なエラー%(code)dが発生しました。大変お手数ですが、本ソフトの実行ファイル"
@@ -1065,7 +1013,7 @@ msgstr ""
 "attaching the information generated in the directory %(log)s the execution "
 "file of this software."
 
-#: views\main.py:691
+#: views\main.py:684
 msgid ""
 "この機能を利用するには、ログインが必要です。\n"
 "[オプション]→[設定]にて、アカウント情報を設定してください。詳細は、readme.txt"
@@ -1074,6 +1022,16 @@ msgstr ""
 "You must be logged in to take advantage of this feature.\n"
 "Configure account from settings on the options menu. See readme.txt for "
 "further information."
+
+#: views\main.py:700
+#, python-format
+msgid "%d個中%d個目を選択中"
+msgstr "Selecting %d of %d"
+
+#: views\main.py:702
+#, python-format
+msgid "%d個表示中、選択項目なし"
+msgstr "%d displayed, no selections"
 
 #: views\progress.py:35
 msgid "中止(&C)"
@@ -1120,106 +1078,119 @@ msgstr "to"
 msgid "詳細を表示(&D)"
 msgstr "View &Details"
 
-#: views\settingsDialog.py:46
+#: views\settingsDialog.py:42
 msgid "標準"
 msgstr "normal"
 
-#: views\settingsDialog.py:47
+#: views\settingsDialog.py:43
 msgid "ダーク"
 msgstr "Dark"
 
-#: views\settingsDialog.py:50
+#: views\settingsDialog.py:46
 msgid "画面幅で折り返し"
 msgstr "Wrap by screen width"
 
-#: views\settingsDialog.py:51
+#: views\settingsDialog.py:47
 msgid "折り返さない"
 msgstr "Don't wrap"
 
-#: views\settingsDialog.py:72
+#: views\settingsDialog.py:68
 msgid "カテゴリ選択"
 msgstr "Category selection"
 
-#: views\settingsDialog.py:75
+#: views\settingsDialog.py:71
 msgid "一般"
 msgstr "general"
 
-#: views\settingsDialog.py:76
+#: views\settingsDialog.py:72
 msgid "起動時に最新の情報を取得する"
 msgstr "Get the latest information at startup"
 
-#: views\settingsDialog.py:78
+#: views\settingsDialog.py:74
 msgid "次回起動時にフィルタの状況を維持"
 msgstr "Keep the filter status"
 
-#: views\settingsDialog.py:80
+#: views\settingsDialog.py:76
 msgid "次回起動時にカーソルの位置を復元"
 msgstr "Recover cursor position when startup"
 
-#: views\settingsDialog.py:82
+#: views\settingsDialog.py:78
 msgid "ログ記録レベル(&L)"
 msgstr "&Logging Level"
 
-#: views\settingsDialog.py:86
+#: views\settingsDialog.py:82
 msgid "ログイン"
 msgstr "Login"
 
-#: views\settingsDialog.py:87
-msgid "利用するIDの種類"
-msgstr "Types of IDs to use"
-
-#: views\settingsDialog.py:90
+#: views\settingsDialog.py:85
 msgid "パスワード(&P)"
 msgstr "&Password"
 
-#: views\settingsDialog.py:92
+#: views\settingsDialog.py:87
 msgid "ログインした状態で質問する"
 msgstr "Ask questions while logged in"
 
-#: views\settingsDialog.py:99
+#: views\settingsDialog.py:91
 msgid "表示/言語"
 msgstr "Display/Language"
 
-#: views\settingsDialog.py:100
+#: views\settingsDialog.py:92
 msgid "言語(&L)"
 msgstr "&Language"
 
-#: views\settingsDialog.py:101
+#: views\settingsDialog.py:93
 msgid "画面表示モード(&D)"
 msgstr "Screen &Display Mode"
 
-#: views\settingsDialog.py:102
+#: views\settingsDialog.py:94
 msgid "テキストの折り返し(&W)"
 msgstr "Text &Wrap"
 
-#: views\settingsDialog.py:105
+#: views\settingsDialog.py:95
+msgid "複数行の質問・回答を入力可能にする"
+msgstr "Allow multiple lines of questions and answers"
+
+#: views\settingsDialog.py:100
 msgid "ネットワーク"
 msgstr "network"
 
-#: views\settingsDialog.py:106
+#: views\settingsDialog.py:101
 msgid "起動時に更新を確認(&U)"
 msgstr "Automatically Check for &Update"
 
-#: views\settingsDialog.py:107
+#: views\settingsDialog.py:102
 msgid "プロキシサーバーの情報を手動で設定する(&M)"
 msgstr "&Manually set up proxy server information"
 
-#: views\settingsDialog.py:108
+#: views\settingsDialog.py:103
 msgid "サーバーURL"
 msgstr "Server URL"
 
-#: views\settingsDialog.py:110
+#: views\settingsDialog.py:105
 msgid "ポート番号"
 msgstr "Port number"
 
-#: views\settingsDialog.py:145
+#: views\settingsDialog.py:140
 msgid "IDとPWは両方を入力するか、両方を空欄としてください。"
 msgstr "Enter both ID and PW, or leave both blank."
 
-#: views\settingsDialog.py:149
+#: views\settingsDialog.py:144
 msgid ""
 "ログインした状態で質問をする場合には、IDとパスワードを入力してください。"
 msgstr "To ask questions while loged in, enter your ID and password."
+
+#: views\SimpleInputDialog.py:87 views\SimpleInputDialog.py:96
+msgid "入力内容に誤りがあります。"
+msgstr "There is an error in the information you entered."
+
+#: views\SimpleInputDialog.py:87
+#, python-format
+msgid "行: %d"
+msgstr "Line: %d"
+
+#: views\SimpleInputDialog.py:92
+msgid "有効な値が入力されていません。"
+msgstr "You have not entered a valid value."
 
 #: views\updateDialog.py:23
 #, python-format
@@ -1313,6 +1284,81 @@ msgstr "See the included license.txt for licensing / copyright information."
 #: views\versionDialog.py:49
 msgid "閉じる"
 msgstr "close"
+
+#~ msgid "Twitterのフォローリストから一括登録"
+#~ msgstr "Add Users from Twitter's Following List"
+
+#~ msgid ""
+#~ "認証に成功しました。このウィンドウを閉じて、アプリケーションに戻ってくださ"
+#~ "い。"
+#~ msgstr ""
+#~ "Authorization successful. Close this window and go back to the "
+#~ "application."
+
+#~ msgid "認証に失敗しました。もう一度お試しください。"
+#~ msgstr "Authorization failed.  Please try again."
+
+#~ msgid ""
+#~ "しばらくしても画面が切り替わらない場合は、別のブラウザでお試しください。"
+#~ msgstr ""
+#~ "If the screen does not change after a while, open this page in another "
+#~ "browser."
+
+#~ msgid "ユーザの登録に失敗しました。"
+#~ msgstr "User registration failed."
+
+#~ msgid "Twitterアカウントの認証のため、ブラウザの操作を待っています。"
+#~ msgstr "Waiting for browser..."
+
+#~ msgid ""
+#~ "Twitterの認証に失敗しました。ブラウザ上で認証を拒否した、時間がかかりすぎ"
+#~ "た、またはインターネット接続に問題がある可能性があります。"
+#~ msgstr ""
+#~ "Twitter authentication failed. Your browser may have refused to "
+#~ "authenticate, took too long, or you may have a problem with your Internet "
+#~ "connection."
+
+#~ msgid ""
+#~ "フォロー中のユーザを取得するアカウントの@からはじまるアカウント名を入力し"
+#~ "てください。\n"
+#~ "後悔アカウント、認証に用いたアカウント、\n"
+#~ "または認証に用いたアカウントがフォローしている非公開アカウントを指定できま"
+#~ "す。"
+#~ msgstr ""
+#~ "Enter the account name that starts with @, the account you want to get "
+#~ "following users for.\n"
+#~ "Regret accounts, accounts used for authentication,\n"
+#~ "Or you can specify a private account that the account you used to "
+#~ "authenticate follows."
+
+#~ msgid "フォローリストを取得しています。"
+#~ msgstr "Retrieving following users data"
+
+#~ msgid ""
+#~ "Twitterからフォローリストを取得できませんでした。指定したユーザが存在しな"
+#~ "いか、フォローしていない非公開アカウントである可能性があります。"
+#~ msgstr ""
+#~ "Failed to get a follow list from Twitter. The specified user may not "
+#~ "exist or may be a private account that you do not follow."
+
+#~ msgid ""
+#~ "Twitterからフォローリストを取得できませんでした。しばらくたってから再度お"
+#~ "試しください。状況が改善しない場合には、開発者までお問い合わせください。"
+#~ msgstr ""
+#~ "Failed to get a follow list from Twitter. Please try again after a while. "
+#~ "If the situation does not improve, contact the developer."
+
+#~ msgid ""
+#~ "Twitterからフォローリストを取得できませんでした。まだ誰もフォローしていな"
+#~ "いアカウントであるか、通信回数の上限に達しています。後者の場合には、15分以"
+#~ "上待ってから再度お試しください。"
+#~ msgstr ""
+#~ "Failed to get a follow list from Twitter. It's an account that no one has "
+#~ "followed yet, or you're at the maximum number of communications. In the "
+#~ "latter case, wait at least 15 minutes and try again."
+
+#~ msgid "利用するIDの種類"
+#~ msgstr "Types of IDs to use"
 
 #~ msgid "フィルタ(&F)"
 #~ msgstr "&Filter"
