@@ -1,11 +1,11 @@
-﻿wxpython>=4.1
+﻿wxpython==4.1
 pywin32
 winpaths
-pyinstaller>=4
+pyinstaller==5.3
 pyperclip
 requests
 bs4
 lxml
 https://github.com/actlaboratory/proxyutil/archive/0.2.4.zip
 https://github.com/actlaboratory/diff_archiver/archive/v1.0.1.zip
-https://github.com/actlaboratory/twitter-authorization/archive/1.0.2.zip
+https://github.com/actlaboratory/twitter-authorization/archive/2.0.2.zip

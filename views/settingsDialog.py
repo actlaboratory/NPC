@@ -30,10 +30,6 @@ class Dialog(BaseDialog):
 	#	"NVDA": "NVDA",
 	#	"JAWS": "JAWS for Windows"
 	#}
-	loginTypeSelection = {
-		str(constants.LOGIN_PEING):"PeingID",
-		str(constants.LOGIN_TWITTER):"TwitterID"
-	}
 	logLevelSelection = {
 		"50":"CRITICAL",
 		"40":"ERROR",
@@ -84,7 +80,6 @@ class Dialog(BaseDialog):
 
 		# login
 		creator=views.ViewCreator.ViewCreator(self.viewMode,self.tab,None,views.ViewCreator.GridBagSizer,label=_("ログイン"),style=wx.ALL,margin=20)
-		self.loginType,dummy = creator.combobox(_("利用するIDの種類"),list(self.loginTypeSelection.values()))
 		self.id,dummy = creator.inputbox("&ID",sizerFlag=wx.EXPAND)
 		self.id.hideScrollBar(wx.HORIZONTAL)
 		self.password,dummy = creator.inputbox(_("パスワード(&P)"),x=400,style=wx.TE_PASSWORD,sizerFlag=wx.EXPAND)
@@ -92,14 +87,14 @@ class Dialog(BaseDialog):
 		self.loginAlways = creator.checkbox(_("ログインした状態で質問する"))
 		creator.GetSizer().SetItemSpan(self.loginAlways.GetParent(),2)
 
-
-
-
 		# view
 		creator=views.ViewCreator.ViewCreator(self.viewMode,self.tab,None,views.ViewCreator.GridBagSizer,label=_("表示/言語"),style=wx.ALL,margin=20)
 		self.language, static = creator.combobox(_("言語(&L)"), list(self.languageSelection.values()))
 		self.colormode, static = creator.combobox(_("画面表示モード(&D)"), list(self.colorModeSelection.values()))
 		self.textwrapping, static = creator.combobox(_("テキストの折り返し(&W)"), list(self.textWrappingSelection.values()))
+		self.enableMultiline = creator.checkbox(_("複数行の質問・回答を入力可能にする"))
+		creator.GetSizer().SetItemSpan(self.enableMultiline.GetParent(), 2)
+
 
 		# network
 		creator=views.ViewCreator.ViewCreator(self.viewMode,self.tab,None,wx.VERTICAL,space=20,label=_("ネットワーク"),style=wx.ALL,margin=20)
@@ -123,7 +118,6 @@ class Dialog(BaseDialog):
 		self._setValue(self.logLevel,"general","log_level",configType.DIC,self.logLevelSelection)
 
 		# login
-		self._setValue(self.loginType,"account","id_type",configType.DIC,self.loginTypeSelection,constants.LOGIN_PEING)
 		self._setValue(self.id,"account","id",configType.STRING,"")
 		self._setValue(self.password,"account","password",configType.STRING,"")
 		self._setValue(self.loginAlways,"account","use_always",configType.BOOL,False)
@@ -132,6 +126,7 @@ class Dialog(BaseDialog):
 		self._setValue(self.language,"general","language",configType.DIC,self.languageSelection)
 		self._setValue(self.colormode,"view","colormode",configType.DIC,self.colorModeSelection)
 		self._setValue(self.textwrapping,"view","textwrapping",configType.DIC,self.textWrappingSelection)
+		self._setValue(self.enableMultiline,"view","enableMultiline",configType.BOOL,False)
 
 		# network
 		self._setValue(self.update, "general", "update", configType.BOOL)

@@ -17,7 +17,7 @@ import filter
 import globalVars
 import menuItemsStore
 import service
-import twitterService
+import update
 
 from .base import *
 from simpleDialog import *
@@ -69,7 +69,10 @@ class MainView(BaseView):
 		self.lst.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.events.listActivated)
 		self.lst.Bind(wx.EVT_LIST_ITEM_SELECTED, self.events.listSelectEvent)
 		self.lst.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.events.listSelectEvent)
+		self.lst.Bind(wx.EVT_LIST_ITEM_FOCUSED, self.events.updateFocus)
 		self.events.listSelectEvent()		#最初に１度実行し、未選択状態をメニューに反映
+
+		self.hFrame.CreateStatusBar()
 
 		self.hFrame.Bind(wx.EVT_MENU_OPEN, self.events.OnMenuOpen)
 
@@ -282,46 +285,33 @@ class Events(BaseEvents):
 
 		if selected==menuItemsStore.getRef("FILE_ADD_USER_FROM_TWITTER_FOLLOW_LIST"):
 			self.log.debug("addListFromTwitterUser:start")
+
+			# ダイアログ表示用パラメータ
+			title = _("対象ユーザの指定")
+			msg = _("対象アカウントの@からはじまるアカウント名を、\n改行区切りで入力してください。")
+			pattern = "^(@?[a-zA-Z0-9_]*)$"
+			style = wx.TE_MULTILINE
+			d = views.SimpleInputDialog.Dialog(title, msg, validationPattern=pattern, style=style)
+			d.Initialize()
+			d.edit.SetMinSize((-1,200))
+			if d.Show() == wx.ID_CANCEL:
+				return
+			# 改行区切りの文字列
+			users = d.GetValue()
+			users = users.split("\n")
+			# 先頭の'@'があれば削除
+			for i in range(len(users)):
+				if users[i][0] == "@":
+					users[i] = users[i][1:]
+
 			d=progress.Dialog()
-			d.Initialize(_("Twitterアカウントの認証のため、ブラウザの操作を待っています。")+"...",_("Twitterのフォローリストから一括登録"))
+			d.Initialize(_("登録済みユーザのリストを取得しています。")+"...",_("ユーザの一括追加"))
 			d.gauge.Hide()
 			d.Show(modal=False)
 			self.parent.hFrame.Disable()
 
-			token = twitterService.authorize(d.isOk)
-			if token == None:
-				errorDialog(_("Twitterの認証に失敗しました。ブラウザ上で認証を拒否した、時間がかかりすぎた、またはインターネット接続に問題がある可能性があります。"),d.wnd)
-			if token == None or token == errorCodes.CANCELED:
-				self.parent.hFrame.Enable()
-				d.Destroy()
-				return
+			follows=set(users)
 
-			d2 = SimpleInputDialog.Dialog(_("対象ユーザの指定"),_("フォロー中のユーザを取得するアカウントの@からはじまるアカウント名を入力してください。\n後悔アカウント、認証に用いたアカウント、\nまたは認証に用いたアカウントがフォローしている非公開アカウントを指定できます。"),d.wnd,"^(@?[a-zA-Z0-9_]*)$")
-			d2.Initialize()
-			r = d2.Show()
-			if r==wx.ID_CANCEL:
-				self.parent.hFrame.Enable()
-				d.Destroy()
-				return
-			#先頭の@はいらないので対策。入力時はあってもなくても良い
-			target = re.sub("@?(.*)","\\1", d2.GetValue())
-			self.log.debug("target=%s" % target)
-
-			d.update(label=_("フォローリストを取得しています。")+"...")
-			followList = twitterService.getFollowList(token,target)
-			if type(followList)==int:
-				if followList == errorCodes.TWITTER_ERROR:
-					errorDialog(_("Twitterからフォローリストを取得できませんでした。指定したユーザが存在しないか、フォローしていない非公開アカウントである可能性があります。"),d.wnd)
-				else:
-					errorDialog(_("Twitterからフォローリストを取得できませんでした。しばらくたってから再度お試しください。状況が改善しない場合には、開発者までお問い合わせください。"),d.wnd)
-				self.parent.hFrame.Enable()
-				d.Destroy()
-				return
-			if len(followList)==0:
-				errorDialog(_("Twitterからフォローリストを取得できませんでした。まだ誰もフォローしていないアカウントであるか、通信回数の上限に達しています。後者の場合には、15分以上待ってから再度お試しください。"),d.wnd)
-			follows=set(followList)
-
-			d.update(label=_("登録済みユーザのリストを取得しています。")+"...")
 			userList = self.parent.service.getEnableUserList()
 			users = set()
 			if type(users)==int:
@@ -494,7 +484,7 @@ class Events(BaseEvents):
 			d.Show()
 
 		if selected == menuItemsStore.getRef("HELP_UPDATE"):
-			globalVars.update.update()
+			update.checkUpdate()
 
 		if selected==menuItemsStore.getRef("HELP_VERSIONINFO"):
 			d = versionDialog.versionDialog()
@@ -586,7 +576,10 @@ class Events(BaseEvents):
 			if not self.loginCheck():
 				return
 
-		d = SimpleInputDialog.Dialog(_("質問を投稿"),_("%sさんへの質問内容") % target.getViewString(), parent)
+		style = 0
+		if self.parent.app.config.getboolean("view", "enableMultiline", False):
+			style = wx.TE_MULTILINE
+		d = SimpleInputDialog.Dialog(_("質問を投稿"),_("%sさんへの質問内容") % target.getViewString(), parent, style=style)
 		d.Initialize()
 		r = d.Show()
 		if r==wx.ID_CANCEL:
@@ -692,7 +685,7 @@ class Events(BaseEvents):
 			return False
 
 		ret = self.parent.service.login(
-			self.parent.app.config.getint("account","id_type",constants.LOGIN_PEING,0,1),
+			constants.LOGIN_PEING,
 			self.parent.app.config.getstring("account","id"),
 			self.parent.app.config.getstring("account","password")
 		)
@@ -701,4 +694,10 @@ class Events(BaseEvents):
 			self.showError(ret)
 			return False
 		return True
+
+	def updateFocus(self, event):
+		if event.GetIndex():
+			self.parent.hFrame.SetStatusText(_("%d個中%d個目を選択中" % (self.parent.lst.GetItemCount(), event.GetIndex())))
+		else:
+			self.parent.hFrame.SetStatusText(_("%d個表示中、選択項目なし" % self.parent.lst.GetItemCount()))
 
