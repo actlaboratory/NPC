@@ -1,24 +1,27 @@
 ﻿# -*- coding: utf-8 -*-
 #Application Initializer
+#Copyright (C) 2019-2022 yamahubuki <itiro.ishino@gmail.com>
+
 
 import accessible_output2.outputs
 import datetime
 import gettext
+import glob
 import locale
 import logging
+import logging.handlers
 import os
 import sys
 import traceback
 import win32api
 import wx
 
-from accessible_output2.outputs.base import OutputError
-from logging import getLogger, FileHandler, Formatter
-
 import constants
 import DefaultSettings
-import views.langDialog
 import simpleDialog
+import views.langDialog
+
+from accessible_output2.outputs.base import OutputError
 
 
 class MaiｎBase(wx.App):
@@ -92,19 +95,30 @@ class MaiｎBase(wx.App):
 
 	def InitLogger(self):
 		"""ログ機能を初期化して準備する。"""
+		ex = ""
 		try:
-			self.hLogHandler=FileHandler(constants.LOG_FILE_NAME, mode="w", encoding="UTF-8")
+			self.deleteAllLogs()
+		except Exception as e:
+			ex = "".join(traceback.TracebackException.from_exception(e).format())
+		try:
+			self.hLogHandler=logging.handlers.RotatingFileHandler(constants.LOG_FILE_NAME, mode="w", encoding="UTF-8", maxBytes=2**20*256, backupCount=5)
 			self.hLogHandler.setLevel(logging.DEBUG)
-			self.hLogFormatter=Formatter("%(name)s - %(levelname)s - %(message)s (%(asctime)s)")
+			self.hLogFormatter=logging.Formatter("%(name)s - %(levelname)s - %(message)s (%(asctime)s)")
 			self.hLogHandler.setFormatter(self.hLogFormatter)
-			logger=getLogger(constants.LOG_PREFIX)
+			logger=logging.getLogger(constants.LOG_PREFIX)
 			logger.setLevel(logging.DEBUG)
 			logger.addHandler(self.hLogHandler)
 		except Exception as e:
 			traceback.print_exc()
-		self.log=getLogger(constants.LOG_PREFIX+".Main")
+		self.log=logging.getLogger(constants.LOG_PREFIX+".Main")
 		r="executable" if self.frozen else "interpreter"
 		self.log.info("Starting"+constants.APP_NAME+" "+constants.APP_VERSION+" as %s!" % r)
+		if ex:
+			self.log.error("failed to deleteAllLogs().\n"+ex)
+
+	def deleteAllLogs(self):
+		for i in glob.glob("%s*" % constants.LOG_FILE_NAME):
+			os.remove(i)
 
 	def LoadSettings(self):
 		"""設定ファイルを読み込む。なければデフォルト設定を適用し、設定ファイルを書く。"""
@@ -141,6 +155,7 @@ class MaiｎBase(wx.App):
 		"""スクリーンリーダーでしゃべらせる。"""
 		self.speech.speak(s, interrupt=interrupt)
 		self.speech.braille(s)
+		self.log.debug("speech: " + s + ", interrupt=" + str(interrupt))
 
 	def SetTimeZone(self):
 		bias=win32api.GetTimeZoneInformation(True)[1][0]*-1
