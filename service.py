@@ -378,7 +378,6 @@ class Service():
 		except Exception as e:
 			self.log.error(e)
 			self.connection.rollback()
-			raise e
 			return errorCodes.PEING_ERROR
 
 		#リストを返却
