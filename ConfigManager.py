@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #ConfigManager
-#Copyright (C) 2019-2022 yamahubuki <itiro.ishino@gmail.com>
+#Copyright (C) 2019-2020 yamahubuki <itiro.ishino@gmail.com>
 
 import os
 import configparser
@@ -15,7 +15,6 @@ class ConfigManager(configparser.ConfigParser):
 		self.identifier="ConfigManager"
 		self.log=getLogger(self.identifier)
 		self.log.debug("Create config instance")
-		self.fileName = None
 
 	def read(self,fileName):
 		self.fileName=fileName
@@ -53,12 +52,6 @@ class ConfigManager(configparser.ConfigParser):
 			except:
 				self.log.error("save failed.")
 				return errorCodes.ACCESS_DENIED
-
-	def getFileName(self):
-		return self.fileName
-
-	def getAbsFileName(self):
-		return os.path.abspath(self.fileName)
 
 	def __getitem__(self,key):
 		try:

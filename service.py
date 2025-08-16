@@ -8,7 +8,6 @@ import dao
 import errorCodes
 import entity.user
 import entity.answer
-import twitterLogin
 import peing
 import views.main
 
@@ -288,23 +287,7 @@ class Service():
 				self.log.error(e)
 				return errorCodes.LOGIN_PEING_ERROR
 		else:
-			try:
-				self.log.info("login with twitter")
-				session = twitterLogin.login(id,pw)
-				if type(session) == int:
-					self.log.error("login failed. code="+str(session))
-					return session
-				self.log.debug("try to get userId")
-				self.selfId = self.getSelfId(session)
-				if type(self.selfId)!=str:
-					self.log.error("getSelfId() failed. code="+str(self.selfId))
-					return self.selfId
-				self.log.info("twitter login succeseeded:"+self.selfId)
-				self.session = session
-				return errorCodes.OK
-			except Exception as e:
-				self.log.error(e)
-				return errorCodes.LOGIN_UNKNOWN_ERROR
+			return errorCodes.LOGIN_UNKNOWN_ERROR
 
 	def getSelfId(self,session):
 		try:
@@ -395,7 +378,6 @@ class Service():
 		except Exception as e:
 			self.log.error(e)
 			self.connection.rollback()
-			raise e
 			return errorCodes.PEING_ERROR
 
 		#リストを返却
