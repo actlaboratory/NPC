@@ -20,7 +20,7 @@ from dao import userDao, answerDao,sentQuestionDao
 
 
 JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
-
+MAX_BLANK_PAGE_RETRY_COUNT = 5
 
 class Service():
 	def __init__(self):
@@ -152,6 +152,17 @@ class Service():
 			result.append(self._createUserObj(user))
 		return result
 
+	#解凍件数より回答データが少ないユーザーを調べる
+	def checkUserAnswerCount(self):
+		result = ""
+		users = self.userDao.getAllWithoutFlag(constants.FLG_USER_NOT_REGISTERED)
+		for user in users:
+			if user["answers"] > self.answerDao.count(user["id"])[0]["cnt"]:
+				result += (user["account"] + ":回答数" + str(user["answers"]) + ",回答データ" + str(self.answerDao.count(user["id"])[0]["cnt"]) + "\n")
+		if not result:
+			return _("機械的に確認可能な不整合は見当たりませんでした。")
+		return result
+
 	def updateUserInfo(self,user):
 		try:
 			self.userDao.update(user.__dict__)
@@ -197,20 +208,20 @@ class Service():
 	#
 	#	更新系
 	#
-	def update(self,user):
+	def update(self,user, force = False):
 		try:
 			lastAnswer = self.answerDao.getLast(user.id)
 		except Exception as e:
 			self.log.debug("last answer check failed.")
 			self.log.error(e)
 			raise e
-		if lastAnswer == []:
-			return self._updateAnswer(user, datetime.datetime.fromtimestamp(0).replace(tzinfo=JST))
+		if (lastAnswer == []) or force:
+			return self._updateAnswer(user, datetime.datetime.fromtimestamp(0).replace(tzinfo=JST), force)
 		else:
-			return self._updateAnswer(user, lastAnswer[0]["answered_at"].replace(tzinfo=JST))
+			return self._updateAnswer(user, lastAnswer[0]["answered_at"].replace(tzinfo=JST), force)
 
 	#指定ユーザの指定時刻以降の回答を取得
-	def _updateAnswer(self, user, time):
+	def _updateAnswer(self, user, time, force = False):
 		flg = False
 		page = 1
 		lastAdd = datetime.datetime.now().replace(tzinfo=JST)
@@ -222,13 +233,30 @@ class Service():
 				self.log.error(e)
 				return errorCodes.PEING_ERROR
 			if answers == []:
-				break
+				# 途中にブランクページが入ることがあるらしいので対策
+				is_end = True
+				for i in range(1, MAX_BLANK_PAGE_RETRY_COUNT + 1):
+					try:
+						next_page_answers = peing.getAnswers(user.account, page=(page + i))
+					except Exception as e:
+						self.connection.rollback()
+						self.log.error(e)
+						return errorCodes.PEING_ERROR
+					if next_page_answers:
+						page += (i - 1)		# 下で1足すのでここでは-1する必要がある
+						is_end = False
+						break
+				if is_end:
+					break
 			for answer in answers:
 				answered_at = datetime.datetime.fromisoformat(answer["answer_created_at"])
 				if answered_at <= time:		#これより先は前回以前に取得済みのため扶養
 					flg = True
 					break
 				if lastAdd <= answered_at: # このループ中に追加の質問回答をした場合に発生する重複受信
+					continue
+				if force and len(self.answerDao.get(answer["answer_id"])):
+					# すでに受信済み
 					continue
 				flag=self.makeAnswerFlag(answer["question_type"])
 				data = (answer["answer_id"],user.id, answer["body"], answer["answer_body"], answered_at.replace(tzinfo=None),flag)

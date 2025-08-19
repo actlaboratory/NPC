@@ -22,6 +22,7 @@ dic={
 	"FILE_SHOW_USER_WEB":_("ブラウザでユーザのページを開く(&B)"),
 	"FILE_USER_LIST":_("登録済みユーザリスト(&L)")+"...",
 	"FILE_ADD_USER_FROM_TWITTER_FOLLOW_LIST":_("ユーザの一括追加"),
+	"FILE_CHECK_USER_ANSWER_COUNT":_("ユーザの回答数の不整合を確認"),
 	"FILE_EXIT":_("終了(&X)"),
 
 	"FILTER_AUTO_QUESTION":_("運営からの質問を非表示(&M)"),
@@ -50,4 +51,5 @@ dic={
 	"ASK":_("質問を投稿(&Q)"),
 	"DELETE":_("削除"),
 	"REORDER":_("列の並び替え(&R)"),
+	"FORCE_UPDATE":_("強制再受信"),
 }

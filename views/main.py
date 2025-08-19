@@ -145,6 +145,7 @@ class Menu(BaseMenu):
 			"FILE_EXPORT",
 			"FILE_USER_LIST",
 			"FILE_ADD_USER_FROM_TWITTER_FOLLOW_LIST",
+			"FILE_CHECK_USER_ANSWER_COUNT",
 			"FILE_EXIT",
 		])
 
@@ -367,6 +368,8 @@ class Events(BaseEvents):
 			self.parent.hFrame.Enable()
 			d.Destroy()
 
+		if selected==menuItemsStore.getRef("FILE_CHECK_USER_ANSWER_COUNT"):
+			dialog(_("確認結果"), self.parent.service.checkUserAnswerCount())
 
 		if selected==menuItemsStore.getRef("FILE_EXIT"):
 			self.parent.hFrame.Close()
@@ -696,8 +699,8 @@ class Events(BaseEvents):
 		return True
 
 	def updateFocus(self, event):
-		if event.GetIndex():
-			self.parent.hFrame.SetStatusText(_("%d個中%d個目を選択中" % (self.parent.lst.GetItemCount(), event.GetIndex())))
+		if event.GetIndex() >= 0:
+			self.parent.hFrame.SetStatusText(_("%d個中%d個目を選択中" % (self.parent.lst.GetItemCount(), event.GetIndex() + 1)))
 		else:
 			self.parent.hFrame.SetStatusText(_("%d個表示中、選択項目なし" % self.parent.lst.GetItemCount()))
 
