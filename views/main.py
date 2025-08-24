@@ -1,7 +1,7 @@
 ﻿# -*- coding: utf-8 -*-
 #main view
 #Copyright (C) 2019 Yukio Nozawa <personal@nyanchangames.com>
-#Copyright (C) 2019-2022 yamahubuki <itiro.ishino@gmail.com>
+#Copyright (C) 2019-2025 yamahubuki <itiro.ishino@gmail.com>
 
 
 import wx
@@ -445,11 +445,16 @@ class Events(BaseEvents):
 		if selected == menuItemsStore.getRef("ACCOUNT_SENT_LIST"):
 			if not self.loginCheck():
 				return
+			ret = self.parent.service.updateSentQuestionList()
+			if ret != errorCodes.OK:
+				self.showError(ret)
+				# ここでは受信失敗しても以前の受信内容デビューを表示したいのでreturnしない
 			d = sentQuestionDialog.Dialog(self.parent.service)
-			if d.Initialize()==errorCodes.OK:
-				d.Show()
-			else:
-				errorDialog(_("質問の取得に失敗しました。以下の対処をお試しください。\n\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+			ret = d.Initialize()
+			if ret != errorCodes.OK:
+				self.showError(ret)
+				return
+			d.Show()
 
 		if selected == menuItemsStore.getRef("ACCOUNT_SETTINGS"):
 			if not self.loginCheck():

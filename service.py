@@ -1,5 +1,5 @@
 # npc service
-# Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
+# Copyright (C) 2021-2025 yamahubuki <itiro.ishino@gmail.com>
 
 
 import constants
@@ -152,7 +152,8 @@ class Service():
 			result.append(self._createUserObj(user))
 		return result
 
-	#解凍件数より回答データが少ないユーザーを調べる
+	# 解凍件数より回答データが少ないユーザーを調べる
+	# 結果は文字列
 	def checkUserAnswerCount(self):
 		result = ""
 		users = self.userDao.getAllWithoutFlag(constants.FLG_USER_NOT_REGISTERED)
@@ -177,8 +178,15 @@ class Service():
 	def getViewData(self,userId=-1):
 		self.log.debug("getViewData.target="+str(userId))
 		try:
-			data = self.answerDao.getViewData(userId)
-			return data
+			return self.answerDao.getViewData(userId)
+		except Exception as e:
+			self.log.error(e)
+			raise e
+
+	def getSentQuestionList(self):
+		self.log.debug("getSentQuestionViewData")
+		try:
+			return self.sentQuestionDao.getViewData()
 		except Exception as e:
 			self.log.error(e)
 			raise e
@@ -360,8 +368,9 @@ class Service():
 			self.log.error(e)
 			return errorCodes.PEING_ERROR
 
-	def getSentList(self):
+	def updateSentQuestionList(self):
 		#まずは最新情報を更新
+		self.log.debug("update sent questions")
 		try:
 			last = self.sentQuestionDao.getLast()
 		except Exception as e:
@@ -408,11 +417,7 @@ class Service():
 			self.connection.rollback()
 			return errorCodes.PEING_ERROR
 
-		#リストを返却
-		l = self.sentQuestionDao.getAll()
-		ret = []
-		for q in l:
-			return self.sentQuestionDao.getViewData()
+		return errorCodes.OK
 
 	def answer(self,hash,answer):
 		try:
