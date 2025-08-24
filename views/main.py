@@ -1,7 +1,7 @@
 ﻿# -*- coding: utf-8 -*-
 #main view
 #Copyright (C) 2019 Yukio Nozawa <personal@nyanchangames.com>
-#Copyright (C) 2019-2022 yamahubuki <itiro.ishino@gmail.com>
+#Copyright (C) 2019-2025 yamahubuki <itiro.ishino@gmail.com>
 
 
 import wx
@@ -145,6 +145,7 @@ class Menu(BaseMenu):
 			"FILE_EXPORT",
 			"FILE_USER_LIST",
 			"FILE_ADD_USER_FROM_TWITTER_FOLLOW_LIST",
+			"FILE_CHECK_USER_ANSWER_COUNT",
 			"FILE_EXIT",
 		])
 
@@ -367,6 +368,8 @@ class Events(BaseEvents):
 			self.parent.hFrame.Enable()
 			d.Destroy()
 
+		if selected==menuItemsStore.getRef("FILE_CHECK_USER_ANSWER_COUNT"):
+			dialog(_("確認結果"), self.parent.service.checkUserAnswerCount())
 
 		if selected==menuItemsStore.getRef("FILE_EXIT"):
 			self.parent.hFrame.Close()
@@ -442,11 +445,16 @@ class Events(BaseEvents):
 		if selected == menuItemsStore.getRef("ACCOUNT_SENT_LIST"):
 			if not self.loginCheck():
 				return
+			ret = self.parent.service.updateSentQuestionList()
+			if ret != errorCodes.OK:
+				self.showError(ret)
+				# ここでは受信失敗しても以前の受信内容デビューを表示したいのでreturnしない
 			d = sentQuestionDialog.Dialog(self.parent.service)
-			if d.Initialize()==errorCodes.OK:
-				d.Show()
-			else:
-				errorDialog(_("質問の取得に失敗しました。以下の対処をお試しください。\n\n・peing.netにアクセスできるか、ブラウザから確認してください。\n・しばらくたってから再度お試しください。\n・問題が解決しない場合、開発者までお問い合わせください。"),self.parent.hFrame)
+			ret = d.Initialize()
+			if ret != errorCodes.OK:
+				self.showError(ret)
+				return
+			d.Show()
 
 		if selected == menuItemsStore.getRef("ACCOUNT_SETTINGS"):
 			if not self.loginCheck():
@@ -696,8 +704,8 @@ class Events(BaseEvents):
 		return True
 
 	def updateFocus(self, event):
-		if event.GetIndex():
-			self.parent.hFrame.SetStatusText(_("%d個中%d個目を選択中" % (self.parent.lst.GetItemCount(), event.GetIndex())))
+		if event.GetIndex() >= 0:
+			self.parent.hFrame.SetStatusText(_("%d個中%d個目を選択中" % (self.parent.lst.GetItemCount(), event.GetIndex() + 1)))
 		else:
 			self.parent.hFrame.SetStatusText(_("%d個表示中、選択項目なし" % self.parent.lst.GetItemCount()))
 

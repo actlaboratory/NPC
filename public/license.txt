@@ -1,4 +1,4 @@
-Copyright (c)2021 yamahubuki,ACT laboratory All rights reserved.
+Copyright (c)2021-2025 yamahubuki,ACT laboratory All rights reserved.
 
 本ソフトウェアは、Apache license v2の条件に従い、自由に利用することができます。
 本ソフトウェアのソースコードは、readme.txtに記載のURLよりダウンロード可能です。

@@ -1,6 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
 # ユーザ一覧ダイアログ
-# Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
+# Copyright (C) 2021-2025 yamahubuki <itiro.ishino@gmail.com>
 
 
 import copy
@@ -84,6 +84,16 @@ class Dialog(BaseDialog):
 		self.data.remove(user)
 		self.hListCtrl.DeleteItem(self.hListCtrl.GetFocusedItem())
 
+	def forceUpdate(self,event=None):
+		user = self.lst[self.hListCtrl.GetFocusedItem()]
+		ret = simpleDialog.yesNoDialog(_("強制再受信"),_("以下のユーザの回答を全件再受信します。\nこの機能は、Version 1.4.1以前において過去の回答の一部を正しく受信できなかった場合にのみ使用するもので、その他の場合には使用しても効果がありません。\n実行すると、解凍件数に比例して時間がかかります。その間、本ソフトは一切の操作を受け付けません。\n\n%s")%user.getViewString())
+		if ret == wx.ID_NO:
+			return
+		self.wnd.Disable()
+		self.service.update(user, True)
+		self.wnd.Enable()
+		simpleDialog.dialog(_("完了"),_("強制再受信が完了しました。"))
+
 	def detail(self,event=None):
 		d = views.userDetailDialog.Dialog(self.lst[self.hListCtrl.GetFocusedItem()])
 		d.Initialize(self.wnd)
@@ -115,6 +125,8 @@ class Dialog(BaseDialog):
 				self.contextMenu()
 			elif selected==menuItemsStore.getRef("REORDER"):
 				self.reorder()
+			elif selected==menuItemsStore.getRef("FORCE_UPDATE"):
+				self.forceUpdate()
 		else:
 			event.Skip()
 
@@ -164,6 +176,7 @@ class Dialog(BaseDialog):
 			"DELETE",
 			"ASK",
 			"REORDER",
+			"FORCE_UPDATE",
 		])
 		if self.hListCtrl.GetFocusedItem()==-1:
 			menu.Enable(menuItemsStore.getRef("DETAIL"),False)

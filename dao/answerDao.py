@@ -1,5 +1,5 @@
 # answer Dao
-# Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
+# Copyright (C) 2021-2025 yamahubuki <itiro.ishino@gmail.com>
 
 
 import dao.baseDao
@@ -50,3 +50,6 @@ class AnswerDao(dao.baseDao.BaseDao):
 
 	def deleteFromUser(self,userId):
 		return self.connection.execute("DELETE FROM answers WHERE user_id = ?;", (userId,))
+
+	def count(self,userId):
+		return self.select("select COUNT(*) AS cnt from answers WHERE user_id = ?;", (userId,))

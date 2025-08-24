@@ -55,7 +55,7 @@ class Dialog(BaseDialog):
 		self.detailButton.Enable(selected >= 0)
 
 	def load(self):
-		qList = self.service.getSentList()
+		qList = self.service.getSentQuestionList()
 		if type(qList)!=list:
 			return qList
 		for q in qList:
