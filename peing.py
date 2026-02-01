@@ -1,3 +1,4 @@
+import cloudscraper
 import requests
 import json
 
@@ -5,8 +6,17 @@ import errorCodes
 
 from bs4 import BeautifulSoup
 
+def makeScraper():
+	return cloudscraper.create_scraper(
+		browser={
+			'browser': 'firefox',
+			'platform': 'windows',
+			'mobile': False
+		}
+	)
+
 def getUserInfo(userId):
-	page = requests.get("https://peing.net/%s/"% (userId),timeout=5)
+	page = makeScraper().get("https://peing.net/%s/"% (userId), timeout=5)
 	soup = BeautifulSoup(page.content, "lxml")
 	entity = soup.find("div", {"id": "user-id"})
 	if entity==None:	#ユーザ不存在
@@ -16,14 +26,15 @@ def getUserInfo(userId):
 def getAnswers(userId, page):
 	assert page > 0
 	answers = []
-	page_content = requests.get("https://peing.net/api/v2/items/?type=answered&account=%s&page=%d" % (userId, page),timeout=5).json()
+	scraper = makeScraper()
+	page_content = scraper.get("https://peing.net/api/v2/items/?type=answered&account=%s&page=%d" % (userId, page),timeout=5).json()
 	for item in page_content["items"]:
 		answers.append(item)
 	return answers
 
 def postQuestion(userId, message,session=None):
 	if not session:
-		session = requests.Session()
+		session = makeScraper()
 
 	# CSRFトークンとクッキーの取得のために一度アクセスしておく。
 	page = session.get("https://peing.net/%s" % (userId),timeout=5)
@@ -67,7 +78,7 @@ def _getAuthenticityToken(session):
 
 #idとpwを用いてログインする
 def login(id,pw):
-	session = requests.Session()
+	session = makeScraper()
 	token = _getAuthenticityToken(session)
 	if token == errorCodes.PEING_ERROR:
 		return errorCodes.PEING_ERROR
@@ -91,19 +102,19 @@ def login(id,pw):
 
 
 def _getToken(session):
-	assert type(session)==requests.sessions.Session
+	assert isinstance(session, (requests.sessions.Session, cloudscraper.CloudScraper))
 	response = session.get("https://peing.net/api/v2/user_tokens/me")
 	if response.status_code!=200 or len(response.text)!=32:
 		return errorCodes.PEING_ERROR
 	return response.text
 
 def getReceivedItemList(session,page=1):
-	assert type(session)==requests.sessions.Session
+	assert isinstance(session, (requests.sessions.Session, cloudscraper.CloudScraper))
 	result = session.get("https://peing.net/api/v2/me/items/received?status=%E6%9C%AA%E8%AA%AD&page="+str(page))
 	return json.loads(result.text)["items"]
 
 def getArchivedItemList(session,page):
-	assert type(session)==requests.sessions.Session
+	assert isinstance(session, (requests.sessions.Session, cloudscraper.CloudScraper))
 	if page==1:
 		# 1ページ目にpage=1を入れると未回答が取得されてしまうため対策
 		result = session.get("https://peing.net/api/v2/me/items/received?status=%E9%9D%9E%E8%A1%A8%E7%A4%BA")
@@ -112,7 +123,7 @@ def getArchivedItemList(session,page):
 	return json.loads(result.text)["items"]
 
 def postAnswer(session,hash,answer):
-	assert type(session)==requests.sessions.Session
+	assert isinstance(session, (requests.sessions.Session, cloudscraper.CloudScraper))
 	assert type(hash)==str
 	assert type(answer)==str
 
@@ -139,7 +150,7 @@ def postAnswer(session,hash,answer):
 	return errorCodes.OK
 
 def archive(session,hash):
-	assert type(session)==requests.sessions.Session
+	assert isinstance(session, (requests.sessions.Session, cloudscraper.CloudScraper))
 	assert type(hash)==str
 
 	#CSRF対策の為閲覧
@@ -159,7 +170,7 @@ def archive(session,hash):
 	return errorCodes.OK
 
 def recycle(session,hash):
-	assert type(session)==requests.sessions.Session
+	assert isinstance(session, (requests.sessions.Session, cloudscraper.CloudScraper))
 	assert type(hash)==str
 
 	#CSRF対策の為閲覧
@@ -179,14 +190,14 @@ def recycle(session,hash):
 	return errorCodes.OK
 
 def getSentList(session,page=1):
-	assert type(session)==requests.sessions.Session
+	assert isinstance(session, (requests.sessions.Session, cloudscraper.CloudScraper))
 	assert page>0
 
 	result = session.get("https://peing.net/api/v2/send_questions?page="+str(page))
 	return json.loads(result.text)["items"]
 
 def getProfile(session):
-	assert type(session)==requests.sessions.Session
+	assert isinstance(session, (requests.sessions.Session, cloudscraper.CloudScraper))
 
 	page = session.get("https://peing.net/ja/stg", timeout=5)
 	soup = BeautifulSoup(page.content, "lxml")
@@ -196,7 +207,7 @@ def getProfile(session):
 	return json.loads(entity.get("data-user"))
 
 def setProfile(session,*,name="",profile=None,is_receive_baton=None):
-	assert type(session)==requests.sessions.Session
+	assert isinstance(session, (requests.sessions.Session, cloudscraper.CloudScraper))
 	assert type(profile) in (str,None)
 	assert type(is_receive_baton) in (bool,None)
 
@@ -228,7 +239,7 @@ def setProfile(session,*,name="",profile=None,is_receive_baton=None):
 		return errorCodes.PEING_ERROR
 
 def getLoginUser(session):
-	assert type(session)==requests.sessions.Session
+	assert isinstance(session, (requests.sessions.Session, cloudscraper.CloudScraper))
 
 	page = session.get("https://peing.net/ja/me/home", timeout=5)
 	soup = BeautifulSoup(page.content, "lxml")
@@ -239,3 +250,5 @@ def getLoginUser(session):
 
 
 #GET /api/v2/me/friends?page=1
+
+getUserInfo("yamahubuki")
