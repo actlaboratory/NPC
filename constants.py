@@ -9,9 +9,9 @@ import wx
 APP_FULL_NAME = "windows Native Peing Connector"#アプリケーションの完全な名前
 APP_NAME="NPC"#アプリケーションの名前
 APP_ICON = None
-APP_VERSION="1.5.0"
-APP_LAST_RELEASE_DATE="2025-08-24"
-APP_COPYRIGHT_YEAR="2021-2025"
+APP_VERSION="1.6.0"
+APP_LAST_RELEASE_DATE="2026-02-01"
+APP_COPYRIGHT_YEAR="2021-2026"
 APP_LICENSE="Apache License 2.0"
 APP_DEVELOPERS="yamahubuki, ACT Laboratory"
 APP_DEVELOPERS_URL="https://actlab.org/"

@@ -1,7 +1,7 @@
 		windows Native Peing Connector -NPC-
 
-	バージョン:　　ver.1.5.0
-	リリース:　　　2025-08-24
+	バージョン:　　ver.1.6.0
+	リリース:　　　2026-02-01
 	開発・配布元:　ACT Laboratory　(https://actlab.org/)
 	主要開発者:　　吹雪
 　　ソフト種別:　　オープンソースソフトウェア　(GitHubリポジトリ:https://github.com/actlaboratory/NPC/)
